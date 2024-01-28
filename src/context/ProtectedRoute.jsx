@@ -1,21 +1,21 @@
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
-import { createContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebaseConfig';
+import { createContext, useEffect, useState } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export const AuthContext = createContext();
 
-export default function ProtectedRoute({ children }) {
-  const [authUser, setAuthUser] = useState(null);
-  const navigate = useNavigate();
+export default function ProtectedRoute() {
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setAuthUser(user);
+        setIsAuth(true);
       } else {
-        setAuthUser(false);
+        setIsAuth(false);
       }
     });
     return () => {
@@ -23,18 +23,9 @@ export default function ProtectedRoute({ children }) {
     };
   }, []);
 
-  if (!authUser) {
-    navigate("/restaurant-login"); // Change to right path
-    return;
-  }
-
-  return (
-    <ProtectedRoute.Provider value={authUser}>
-      {children}
-    </ProtectedRoute.Provider>
-  );
+  return isAuth ? <Outlet /> : <Navigate to="/restaurant/signin" />;
 }
 
 ProtectedRoute.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node
 }

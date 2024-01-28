@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { onAuthStateChanged } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebaseConfig";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { onAuthStateChanged } from 'firebase/auth';
+import { Navigate, Outlet } from 'react-router-dom';
+import { auth } from '../../firebaseConfig';
 
-export default function UnprotectedRoute({ children }) {
+export default function UnprotectedRoute() {
   const [isAuth, setIsAuth] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const listen = onAuthStateChanged(auth, (user) => {
@@ -21,16 +21,9 @@ export default function UnprotectedRoute({ children }) {
     };
   }, []);
 
-  if (isAuth) {
-    navigate('/restaurant/dashboard');
-    return;
-  }
-
-  return (
-    children
-  )
+  return !isAuth ? <Outlet /> : <Navigate to="/restaurant/home" />; 
 }
 
 UnprotectedRoute.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node
 }
