@@ -18,7 +18,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 const drawerWidth = 300;
 
-const tabList = [
+const upperTabs = [
   {
     name: "Overview",
     path: "/overview",
@@ -34,6 +34,9 @@ const tabList = [
     path: "/reviews",
     icon: ReviewsRoundedIcon,
   },
+]
+
+const lowerTabs = [
   {
     name: "Restaurant",
     path: "/restaurant",
@@ -44,18 +47,9 @@ const tabList = [
     path: "/hostProfile",
     icon: null,
   },
-];
+]
 
 const Sidebar = (props) => {
-  const upperTabs = tabList.filter(
-    (tab) =>
-      tab.path !== "/restaurant" &&
-      tab.path !== "/hostProfile" &&
-      tab.path !== null
-  );
-  const lowerTabs = tabList.filter(
-    (tab) => tab.path === "/restaurant" || tab.path === "/hostProfile"
-  );
 
   const [open, setOpen] = useState(false);
 
