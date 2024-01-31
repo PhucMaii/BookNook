@@ -5,6 +5,7 @@ import { theme } from './theme/theme.config';
 import './App.css';
 import ProtectedRoute from './context/ProtectedRoute';
 import UnprotectedRoute from './context/UnprotectedRoute';
+import TestPage from './pages/TestPage';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
 
           </Route>
           <Route element={<UnprotectedRoute/>}>
-
+          <Route path="/test" element={<TestPage />} />
           </Route>
           
         </Routes>
