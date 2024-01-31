@@ -40,12 +40,10 @@ const lowerTabs = [
   {
     name: "Restaurant",
     path: "/restaurant",
-    icon: null,
   },
   {
     name: "Profile",
     path: "/hostProfile",
-    icon: null,
   },
 ]
 
