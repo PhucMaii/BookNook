@@ -6,26 +6,63 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import Collapse from '@mui/material/Collapse';
-import { Button, Divider }  from "@mui/material";
-import LogoutIcon from '@mui/icons-material/Logout';
-import PieChartOutlinedIcon from '@mui/icons-material/PieChartOutlined';
-import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
-import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Collapse from "@mui/material/Collapse";
+import { Box, Button, Divider } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PieChartOutlinedIcon from "@mui/icons-material/PieChartOutlined";
+import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
+import ReviewsRoundedIcon from "@mui/icons-material/ReviewsRounded";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 const drawerWidth = 300;
-const logoURL = "https://cdn.discordapp.com/attachments/1198067297517051995/1199890391118381117/blue.JPG?ex=65c43002&is=65b1bb02&hm=1f6fc371eec1deffb670578da5f06d117e0b104ee6d212b8adca6574d7acb003&";
+
+const tabList = [
+  {
+    name: "Overview",
+    path: "/overview",
+    icon: GridViewOutlinedIcon,
+  },
+  {
+    name: "History",
+    path: "/history",
+    icon: PieChartOutlinedIcon,
+  },
+  {
+    name: "Reviews",
+    path: "/reviews",
+    icon: ReviewsRoundedIcon,
+  },
+  {
+    name: "Restaurant",
+    path: "/restaurant",
+    icon: null,
+  },
+  {
+    name: "Profile",
+    path: "/hostProfile",
+    icon: null,
+  },
+];
 
 const Sidebar = (props) => {
-    const [open, setOpen] = useState(false);
+  const upperTabs = tabList.filter(
+    (tab) =>
+      tab.path !== "/restaurant" &&
+      tab.path !== "/hostProfile" &&
+      tab.path !== null
+  );
+  const lowerTabs = tabList.filter(
+    (tab) => tab.path === "/restaurant" || tab.path === "/hostProfile"
+  );
 
-    const handleClick = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
     setOpen(!open);
-    };
-    
+  };
+
   return (
     <Drawer
       sx={{
@@ -36,7 +73,7 @@ const Sidebar = (props) => {
           boxSizing: "border-box",
           borderRight: "none",
         },
-        backgroundColor:"#ffffff",
+        backgroundColor: "#ffffff",
       }}
       variant="permanent"
       anchor="left"
@@ -45,34 +82,31 @@ const Sidebar = (props) => {
         <img
           style={{ maxWidth: "100%", height: "auto" }}
           alt="Blue Logo"
-          src={logoURL}
+          src={"../src/images/blueLogo.JPG"}
         />
       </Toolbar>
 
       <List
-        sx={{ width: "100%", maxWidth: 300, bgcolor: "background"}}
+        sx={{ width: "100%", maxWidth: 300, bgcolor: "background" }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
-        <ListItemButton style={{ marginBottom: "10px" }}>
-          <ListItemIcon>
-            <GridViewOutlinedIcon sx={{ color: "black" }}/>
-          </ListItemIcon>
-          <ListItemText primary="Overview"/>
-        </ListItemButton>
-        <ListItemButton style={{ marginBottom: "10px" }}>
-          <ListItemIcon>
-            <PieChartOutlinedIcon sx={{ color: "black" }}/>
-          </ListItemIcon>
-          <ListItemText primary="History" />
-        </ListItemButton>
-        <ListItemButton style={{ marginBottom: "10px" }}>
-          <ListItemIcon>
-            <ReviewsRoundedIcon sx={{ color: "black" }}/>
-          </ListItemIcon>
-          <ListItemText primary="Reviews" />
-        </ListItemButton>
-        <ListItemButton onClick={handleClick} style={{ marginBottom: "10px" }}>
+        {upperTabs.map((tab, index) => (
+          <ListItemButton
+            key={index}
+            style={{ marginBottom: "10px" }}
+            onClick={() => {
+              // Add logic for handling tab clicks (e.g., navigating to the specified path)
+              console.log(`Clicked on ${tab.name}`);
+            }}
+          >
+            <ListItemIcon>
+              {tab.icon && <tab.icon sx={{ color: "black" }} />}
+            </ListItemIcon>
+            <ListItemText primary={tab.name} />
+          </ListItemButton>
+        ))}
+         <ListItemButton onClick={handleClick} style={{ marginBottom: "10px" }}>
           <ListItemIcon>
             <SettingsOutlinedIcon sx={{ color: "black" }}/>
           </ListItemIcon>
@@ -81,21 +115,33 @@ const Sidebar = (props) => {
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 10 }}>
-              <ListItemText primary="Restaurant" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 10 }}>
-              <ListItemText primary="Profile" />
-            </ListItemButton>
+            {lowerTabs.map((nestedTab, index) => (
+              <ListItemButton
+                key={index}
+                sx={{ pl: 10 }}
+                onClick={() => {
+                  // Add logic for handling nested tab clicks (e.g., navigating to the specified path)
+                  console.log(`Clicked on ${nestedTab.name}`);
+                }}
+              >
+                <ListItemText primary={nestedTab.name} />
+              </ListItemButton>
+            ))}
           </List>
         </Collapse>
       </List>
-      <Divider/>
-      <div style={{ width: '80%', margin: 'auto', marginTop:'20px'}}>
-        <Button startIcon={<LogoutIcon/>} variant="filled" fullWidth sx={{backgroundColor:"#EEEFF1"}}>
+
+      <Divider />
+      <Box sx={{ m: 2 }}>
+        <Button
+          startIcon={<LogoutIcon />}
+          variant="filled"
+          fullWidth
+          sx={{ backgroundColor: "#EEEFF1" }}
+        >
           Sign Out
         </Button>
-      </div>
+      </Box>
     </Drawer>
   );
 };
