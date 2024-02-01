@@ -49,7 +49,7 @@ export default function HistoryPage() {
               <MenuItem>Last month</MenuItem>
             </Menu>
           </Box>
-          <Grid container columnSpacing={4} mt={2}>
+          <Grid container spacing={4} mt={2}>
             <HistoryOverview
               iconImg='/checked.png'
               numberOfReservation={114}

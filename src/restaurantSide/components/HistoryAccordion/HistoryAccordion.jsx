@@ -23,27 +23,26 @@ export default function HistoryAccordion({ data }) {
       }} 
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Box 
-          display="flex" 
-          alignItems="center"
-          justifyContent="space-between" 
-          width="100%" 
-        >
-          <Box display="flex" alignItems="center" gap={4}>
-            <PingStyled $isCompleted={data['Status'] === 'Completed'} />
-            <Avatar />
+        <Grid container alignItems="center">
+          <Grid item xs={12} md={6}>
+            <Box display="flex" alignItems="center" gap={4}>
+              <PingStyled $isCompleted={data['Status'] === 'Completed'} />
+              <Avatar />
+              <Box display="flex" flexDirection="column" alignItems="left">
+                <Typography fontWeight="light" variant="subtitle1">#000000</Typography>
+                <Typography fontWeight="bold" variant="h6">
+                  Jeremy Passion
+                </Typography>  
+                </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6} textAlign="center">
             <Box display="flex" flexDirection="column" alignItems="left">
-              <Typography fontWeight="light" variant="subtitle1">#000000</Typography>
-              <Typography fontWeight="bold" variant="h6">
-                Jeremy Passion
-              </Typography>  
-              </Box>
-          </Box>
-          <Box display="flex" flexDirection="column" alignItems="left">
-            <Typography>Number of guests: 2</Typography>
-            <Typography>Booked Time: 22 Jan 2024, 12:20 pm</Typography>
-          </Box>
-        </Box>
+              <Typography>Number of guests: 2</Typography>
+              <Typography>Booked Time: 22 Jan 2024, 12:20 pm</Typography>
+            </Box>
+          </Grid>
+        </Grid>
       </AccordionSummary>
       <AccordionDetails>
         <Grid container mx={4}>
@@ -53,7 +52,7 @@ export default function HistoryAccordion({ data }) {
                 return;
               }
               return (
-                <Grid key={index} item xs={4} textAlign="center" mt={2}>
+                <Grid key={index} item xs={12} sm={6} md={4} textAlign="left" mt={2}>
                   <Box display="flex" flexDirection="column">
                     <Typography variant="subtitle1">{key}</Typography>
                     <Typography fontWeight="bold" variant="h6">{data[key]}</Typography>
@@ -62,14 +61,14 @@ export default function HistoryAccordion({ data }) {
               )
             })
           }
-          <Grid item xs={4} textAlign="center" mt={2}>
+          <Grid item xs={12} sm={6} md={4} textAlign="left" mt={2}>
             <Box display="flex" flexDirection="column">
               <Typography variant="subtitle1">Status</Typography>
               <Typography 
                 color={data['Status'] === 'Completed' ? success : error} 
                 fontWeight="bold" 
                 variant="h6"
-                sx={{backgroundColor: data['Status'] === 'Completed' ? green[100] : red[100] , m: 'auto', px: 2, borderRadius: '10px'}}
+                sx={{backgroundColor: data['Status'] === 'Completed' ? green[100] : red[100] ,mr: 'auto', px: 2, borderRadius: '10px'}}
               >
                 {data['Status']}
               </Typography>

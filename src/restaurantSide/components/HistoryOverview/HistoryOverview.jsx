@@ -10,7 +10,7 @@ export default function HistoryOverview({
   status,
 }) {
   return (
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       <StatusTabStyled
         p={2}
         sx={{
