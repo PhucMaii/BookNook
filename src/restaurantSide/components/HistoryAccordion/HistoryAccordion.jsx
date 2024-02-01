@@ -1,0 +1,86 @@
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Grid, Typography } from '@mui/material';
+import React from 'react';
+import { PingStyled } from './styled';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { background, error, success } from '../../../theme/colors';
+import { green, red } from '@mui/material/colors';
+import PropTypes from 'prop-types';
+
+export default function HistoryAccordion({ data }) {
+
+  return (
+    <Accordion 
+      elevation={0}
+      sx={{
+        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+        borderRadius: '10px',
+        '&.MuiAccordion-root::before': {
+          backgroundColor: background
+        },
+        '&.MuiAccordion-root:last-of-type': {
+          borderRadius: '10px'
+        },
+      }} 
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Box 
+          display="flex" 
+          alignItems="center"
+          justifyContent="space-between" 
+          width="100%" 
+        >
+          <Box display="flex" alignItems="center" gap={4}>
+            <PingStyled $isCompleted={data['Status'] === 'Completed'} />
+            <Avatar />
+            <Box display="flex" flexDirection="column" alignItems="left">
+              <Typography fontWeight="light" variant="subtitle1">#000000</Typography>
+              <Typography fontWeight="bold" variant="h6">
+                Jeremy Passion
+              </Typography>  
+              </Box>
+          </Box>
+          <Box display="flex" flexDirection="column" alignItems="left">
+            <Typography>Number of guests: 2</Typography>
+            <Typography>Booked Time: 22 Jan 2024, 12:20 pm</Typography>
+          </Box>
+        </Box>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Grid container mx={4}>
+          {
+            data && Object.keys(data).map((key, index) => {
+              if (key === 'Status') {
+                return;
+              }
+              return (
+                <Grid key={index} item xs={4} textAlign="center" mt={2}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography variant="subtitle1">{key}</Typography>
+                    <Typography fontWeight="bold" variant="h6">{data[key]}</Typography>
+                  </Box>
+                </Grid>
+              )
+            })
+          }
+          <Grid item xs={4} textAlign="center" mt={2}>
+            <Box display="flex" flexDirection="column">
+              <Typography variant="subtitle1">Status</Typography>
+              <Typography 
+                color={data['Status'] === 'Completed' ? success : error} 
+                fontWeight="bold" 
+                variant="h6"
+                sx={{backgroundColor: data['Status'] === 'Completed' ? green[100] : red[100] , m: 'auto', px: 2, borderRadius: '10px'}}
+              >
+                {data['Status']}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
+  )
+}
+
+HistoryAccordion.propTypes = {
+  data: PropTypes.object
+}

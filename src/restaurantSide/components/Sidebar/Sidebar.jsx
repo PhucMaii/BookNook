@@ -109,7 +109,7 @@ const Sidebar = ({ children }) => {
         <IconButton onClick={() => setIsNavOpen(true)}>
           <MenuIcon />
         </IconButton>
-        <Box display='flex' gap={4}>
+        <Box display='flex'>
           <Drawer
             sx={{
               width: drawerWidth,
@@ -134,7 +134,7 @@ const Sidebar = ({ children }) => {
   }
 
   return (
-    <Box display='flex' gap={4}>
+    <Box display='flex'>
       <Drawer
         sx={{
           width: drawerWidth,
