@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Navigate, Outlet } from 'react-router-dom';
-import { auth } from '../../firebaseConfig';
+import { auth } from '../../../firebaseConfig';
 
 export default function UnprotectedRoute() {
   const [isAuth, setIsAuth] = useState(false);
