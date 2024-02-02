@@ -5,13 +5,13 @@ import { getFunctions } from 'firebase/functions';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyAZ5BEgh1fIT-dvITiQUB0Ve_Ea9IzgMJA',
-    authDomain: 'booknook-1f077.firebaseapp.com',
-    projectId: 'booknook-1f077',
-    storageBucket: 'booknook-1f077.appspot.com',
-    messagingSenderId: '982601127285',
-    appId: '1:982601127285:web:a0f901f4db04d0d7e4af3c',
-    measurementId: 'G-0HMJP5JYF0'
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGE_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MESUREMENT_ID
 };
 
 initializeApp(firebaseConfig);

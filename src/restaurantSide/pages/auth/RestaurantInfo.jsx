@@ -93,7 +93,7 @@ const RestaurantInformation = () => {
                             </Select>
                         </FormControl>
                         <TextField
-                            required
+                            // required
                             id="outlined-required"
                             label="Restaurant Image"
                             InputProps={{
