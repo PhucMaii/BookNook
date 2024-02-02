@@ -1,97 +1,57 @@
 import React from 'react'
-import RestaurantLogo from '../images/RestaurantLogo.png'
-import LoginImg from '../images/restaurantLoginImg.png'
-import emailAdd from '../icons/email.png'
-import passwordIcon from '../icons/password.png'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { InputAdornment } from '@mui/material'
-import '@fontsource/roboto/300.css';
 import Button from '@mui/material/Button';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import '@fontsource/roboto/300.css';
 import Divider from '@mui/material/Divider';
-import GoogleLogo from '../icons/googleLogo.png';
 import { Link } from 'react-router-dom';
-
-const theme = createTheme({
-  palette: {
-    blue: {
-      main: '#3498DB',
-      contrastText: '#242105'
-    },
-  },
-  typography: {
-    fontFamily: 'Inter, sans-serif',
-  },
-});
+import EmailIcon from '@mui/icons-material/Email';
+import KeyIcon from '@mui/icons-material/Key';
 
 const Login = () => {
   return (
     <div className='login-main-con'>
-      <Box display='grid' gridTemplateColumns="repeat(2, 1fr)" gap={2} sx={{ flexGrow: 1}} width={1920} height={1080} >
+      <Box display='grid' gridTemplateColumns="repeat(2, 1fr)" gap={2} sx={{ flexGrow: 1 }} width={1920} height={1080} >
         <Grid
           container spacing={2}
-          // direction="row"
-          // alignItems="center"
           justifyContent='center'
-        // alignContent='center'
-        // style={{ width: '960px'}}
         >
           <Grid item xs={6}>
-            {/* Restaurant Logo */}
-            <img src={RestaurantLogo} className='restaurantLogo' alt="Restaurant Logo" style={{ paddingBottom: '150px', justifyContent: 'center', width: '250px', height: '90px', paddingLeft: '100px', paddingTop: '180px'}} />
-            {/* Top Text */}
-            <ThemeProvider theme={theme}>
-              <Typography variant="h4" style={{ fontWeight: 'bold', fontSize: '42px' }}>Sign up</Typography>
-              <Typography variant="h6" style={{ color: 'grey', fontWeight: 'bold', fontSize: '16px', paddingBottom: '20px' }}>Enter your details below to create your account</Typography>
-            </ThemeProvider>
-            {/* Email Address */}
+            <img src='/restaurantLogo.png' className='restaurantLogo' alt="Restaurant Logo" style={{ paddingBottom: '150px', justifyContent: 'center', width: '250px', height: '90px', paddingLeft: '100px', paddingTop: '180px' }} />
+            <Typography variant="h4" style={{ fontWeight: 'bold', fontSize: '42px' }}>Sign up</Typography>
+            <Typography variant="h6" style={{ color: 'grey', fontWeight: 'bold', fontSize: '16px', paddingBottom: '20px' }}>Enter your details below to create your account</Typography>
             <TextField
               required
               id="outlined-required"
               label="Email Address"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <img src={emailAdd} alt="Email Address Icon" />
-                  </InputAdornment>
+                  <EmailIcon />
                 ),
               }} style={{ width: '450px', marginTop: '20px' }}
             />
-            {/* Password */}
             <TextField
               required
               id="outlined-required"
               label="Password"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <img src={passwordIcon} alt="Password Icon" />
-                  </InputAdornment>
+                  <KeyIcon />
                 ),
               }} style={{ width: '450px', marginTop: '20px' }}
             />
-            {/* Forgot Password */}
-            <Link component='button' style={{ marginLeft: '333px', marginTop: '100px'}}>Forgot Password?</Link>
-            {/* Create Account Btn */}
-            <ThemeProvider theme={theme}>
-              <Button variant="contained" sx={{ width: '450px', marginTop: '20px' }}>Create your Account</Button>
-            </ThemeProvider>
-            {/* The divider and the word OR */}
-            <Divider style={{ paddingTop: '20px', marginLeft: '0px', marginRight: '20px', width: '450px'}} variant='middle'>OR</Divider>
-            {/* Sign in with Google Button */}
-            <ThemeProvider theme={theme}>
-              <Button variant="outlined" sx={{ width: '450px', marginTop: '20px' }} ><img src={GoogleLogo} alt="Google Logo" style={{ marginRight: '10px'}} /> Sign in with Google</Button>
-            </ThemeProvider>
-            {/* Bottom Text */}
-            <Typography variant="h6" style={{ color: 'grey', fontWeight: 'bold', fontSize: '16px', paddingBottom: '20px', marginRight: '20px'}}align='end'>Already have an account? <Link component='button'>Sign In</Link></Typography>
+            <Link component='button' style={{ marginLeft: '333px', marginTop: '100px' }}>Forgot Password?</Link>
+            <Button variant="contained" color='secondary' sx={{ width: '450px', marginTop: '20px' }}>Create your Account</Button>
+
+            <Divider style={{ paddingTop: '20px', marginLeft: '0px', marginRight: '20px', width: '450px' }} variant='middle'>OR</Divider>
+            <Button variant="outlined" color='secondary' sx={{ width: '450px', marginTop: '20px' }} ><img src='/icons/googleLogo.png' alt="Google Logo" style={{ marginRight: '10px' }} /> Sign in with Google</Button>
+
+            <Typography variant="h6" style={{ color: 'grey', fontWeight: 'bold', fontSize: '16px', paddingBottom: '20px', marginRight: '20px' }} align='end'>Already have an account? <Link component='button'>Sign In</Link></Typography>
           </Grid>
         </Grid>
         <Grid item xs={6}>
-          <img src={LoginImg} className='signupImage' alt="Login Img" style={{ width: '100%', height: '1080px', overflow: 'hidden'}} />
+          <img src='/restaurantLoginImg' className='signupImage' alt="Login Img" style={{ width: '100%', height: '1080px', overflow: 'hidden' }} />
         </Grid>
       </Box>
     </div>

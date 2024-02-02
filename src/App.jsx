@@ -8,9 +8,10 @@ import UnprotectedRoute from './restaurantSide/context/UnprotectedRoute';
 import HomePage from './restaurantSide/pages/HomePage';
 import HistoryPage from './restaurantSide/pages/History/HistoryPage';
 import './App.css';
-import SignUp from './pages/SignUp'
-import Login from './pages/Login'
-import RestaurantInfo from './pages/RestaurantInfo'
+import SignUp from './restaurantSide/pages/Signup/SignUp';
+import Login from './restaurantSide/pages/Login';
+import RestaurantInfo from './restaurantSide/pages/RestaurantInfo';
+
 
 function App() {
 

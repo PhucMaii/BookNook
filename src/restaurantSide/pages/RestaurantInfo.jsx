@@ -1,43 +1,47 @@
 import * as React from 'react'
-import RestaurantLogo from '../images/RestaurantLogo.png'
-import EnterRnameIcon from '../icons/enterRestaurantName.png'
-import RestauantTypeIcon from '../icons/restaurantType.png'
-import AvgPriceIcon from '../icons/avgPrice.png'
-import LoginImg from '../images/restaurantLoginImg.png'
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { InputAdornment } from '@mui/material'
 import Button from '@mui/material/Button';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import '@fontsource/roboto/300.css';
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-
-
-const theme = createTheme({
-    palette: {
-        blue: {
-            main: '#3498DB',
-            contrastText: '#242105'
-        },
-    },
-    typography: {
-        fontFamily: 'Inter, sans-serif',
-    },
-});
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 
 const RestaurantInformation = () => {
 
     const [rType, setRType] = React.useState('');
     const [price, setPrice] = React.useState('');
 
-    const handleChange = (event) => {
+    const handleRestaurantTypeChange = (event) => {
         setRType(event.target.value);
     }
+
+    const handlePriceChange = (event) => {
+        setPrice(event.target.value);
+    }
+
+    const restaurantTypes = [
+        'Asian',
+        'Chinese',
+        'Japanese',
+        'Vietnamese',
+        'Indian',
+        'Italian',
+        'French',
+        'FastFood',
+        'Other',
+    ];
+
+    const averagePrices = [
+        'Less than $25',
+        '$25 - $50',
+        '$50 - $100',
+        '$100 - $200',
+        'Greater than $200',
+    ];
 
     return (
         <div className='restaurant-info-con'>
@@ -47,26 +51,18 @@ const RestaurantInformation = () => {
                     justifyContent='center'
                 >
                     <Grid item xs={6}>
-                        {/* Restaurant Logo */}
-                        <img src={RestaurantLogo} className='restaurantLogo' alt="Restaurant Logo" style={{ paddingBottom: '150px', justifyContent: 'center', width: '250px', height: '90px', paddingLeft: '100px', paddingTop: '180px' }} />
-                        {/* Top Text */}
-                        <ThemeProvider theme={theme}>
+                        <img src='/restaurantLogo.png' className='restaurantLogo' alt="Restaurant Logo" style={{ paddingBottom: '150px', justifyContent: 'center', width: '250px', height: '90px', paddingLeft: '100px', paddingTop: '180px' }} />
                             <Typography variant="h4" style={{ fontWeight: 'bold', fontSize: '34px', marginBottom: '20px' }}>Let us know more about your business</Typography>
-                        </ThemeProvider>
-                        {/* Restaurant Name */}
                         <TextField
                             required
                             id="outlined-required"
                             label="Restaurant Name"
                             InputProps={{
                                 startAdornment: (
-                                    <InputAdornment position="start">
-                                        <img src={EnterRnameIcon} alt="Restaurant Name Icon" />
-                                    </InputAdornment>
+                                    <RestaurantIcon />
                                 ),
                             }} style={{ width: '450px', marginTop: '20px' }}
                         />
-                        {/* Restaurant Type */}
                         <FormControl fullWidth>
                             <InputLabel id="restaurant-type">Restaurant Type</InputLabel>
                             <Select
@@ -74,22 +70,17 @@ const RestaurantInformation = () => {
                                 id="outlined-required"
                                 value={rType}
                                 label="Restaurant type"
-                                onChange={handleChange}
+                                onChange={handleRestaurantTypeChange}
                                 style={{ width: '450px', marginTop: '20px' }}
-                                
+
                             >
-                                <MenuItem value= 'Asian'>Asian</MenuItem>
-                                <MenuItem value= 'Chinese'>Chinese</MenuItem>
-                                <MenuItem value= 'Japanese'>Japanese</MenuItem>
-                                <MenuItem value= 'Vietamese'>Vietamese</MenuItem>
-                                <MenuItem value= 'Indian'>Indian</MenuItem>
-                                <MenuItem value= 'Italian'>Italian</MenuItem>
-                                <MenuItem value= 'French'>French</MenuItem>
-                                <MenuItem value= 'FastFood'>FastFood</MenuItem>
-                                <MenuItem value= 'Other'>Other</MenuItem>
+                                {restaurantTypes.map((type) => (
+                                    <MenuItem key={type} value={type}>
+                                        {type}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
-                        {/* Average Price */}
                         <FormControl fullWidth>
                             <InputLabel id="average price">Average Price</InputLabel>
                             <Select
@@ -97,36 +88,28 @@ const RestaurantInformation = () => {
                                 id="outlined-required"
                                 value={price}
                                 label="Restaurant type"
-                                onChange={handleChange}
+                                onChange={handlePriceChange}
                                 style={{ width: '450px', marginTop: '20px' }}
                             >
-                                <MenuItem value= 'Less than $25'>Less than $25</MenuItem>
-                                <MenuItem value= '$25 - $50'>$25 - $50</MenuItem>
-                                <MenuItem value= '$50 - $100'>$50 - $100</MenuItem>
-                                <MenuItem value= '$100 - $200'>$100 - $200</MenuItem>
-                                <MenuItem value= 'Greater than $200'>Greater than $200</MenuItem>
+                                {averagePrices.map((priceOption) => (
+                                    <MenuItem key={priceOption} value={priceOption}>
+                                        {priceOption}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
-                        {/* Restaurant Image */}
                         <TextField
                             required
                             id="outlined-required"
                             label="Restaurant Image"
                             InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                    </InputAdornment>
-                                ),
                             }} style={{ width: '450px', marginTop: '20px' }}
                         />
-                        {/* Submit Btn */}
-                        <ThemeProvider theme={theme}>
-                            <Button variant="contained" sx={{ width: '450px', marginTop: '20px' }}>Submit</Button>
-                        </ThemeProvider>
+                            <Button variant="contained" color='secondary' sx={{ width: '450px', marginTop: '20px' }}>Submit</Button>
                     </Grid>
                 </Grid>
                 <Grid item xs={6}>
-                    <img src={LoginImg} className='signupImage' alt="Login Img" style={{ width: '100%', height: '1080px', overflow: 'hidden' }} />
+                    <img src='/restaurantLoginImg.png' className='signupImage' alt="Login Img" style={{ width: '100%', height: '1080px', overflow: 'hidden' }} />
                 </Grid>
             </Box>
         </div>
