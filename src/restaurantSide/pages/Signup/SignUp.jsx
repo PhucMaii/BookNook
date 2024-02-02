@@ -16,7 +16,7 @@ import { grey } from '@mui/material/colors';
 const SignUp = () => {
   return (
     <Grid
-      container 
+      container
       columnSpacing={2}
       justifyContent='center'
       overflow="hidden"
@@ -102,18 +102,20 @@ const SignUp = () => {
               <Box display="flex" gap={2} alignItems="center">
                 <img src='/icons/googleLogo.png' alt="Google Logo" />
                 <Typography>Sign in with Google</Typography>
-
               </Box>
             </Button>
           </Box>
           <Typography variant="subtitle1" align='end' fontWeight='bold'>
-            Already have an account? <Link color="secondary" component='button'>Sign In</Link>
+            Already have an account? 
+            <Link color="secondary" component='button'>
+              Click here to sign in
+            </Link>
           </Typography>
 
         </Box>
       </Grid>
       <Grid item xs={6}>
-        <SideImg src='/restaurantLoginImg.png' alt="Login Img"/>
+        <SideImg src='/restaurantLoginImg.png' alt="Login Img" />
       </Grid>
     </Grid>
 

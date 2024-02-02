@@ -9,7 +9,7 @@ import HomePage from './restaurantSide/pages/HomePage';
 import HistoryPage from './restaurantSide/pages/History/HistoryPage';
 import './App.css';
 import SignUp from './restaurantSide/pages/Signup/SignUp';
-import Login from './restaurantSide/pages/Login';
+import Login from './restaurantSide/pages/Login/Login';
 import RestaurantInfo from './restaurantSide/pages/RestaurantInfo';
 
 
