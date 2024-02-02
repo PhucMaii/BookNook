@@ -1,6 +1,6 @@
 import React from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../firebaseConfig';
+import { auth } from '../../../firebaseConfig';
 import { createContext, useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
