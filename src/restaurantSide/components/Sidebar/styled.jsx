@@ -6,4 +6,5 @@ export const ListItemButtonStyled = styled(ListItemButton)`
   margin: auto !important;
   width: 80%;
   background-color: ${(props) => props.$currentTab && `${blueGrey} !important`};
+  border-radius: 10px !important;
 `;
