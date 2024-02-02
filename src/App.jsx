@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './theme/theme.config';
+import ProtectedRoute from './restaurantSide/context/ProtectedRoute';
+import UnprotectedRoute from './restaurantSide/context/UnprotectedRoute';
+import HomePage from './restaurantSide/pages/HomePage';
+import HistoryPage from './restaurantSide/pages/History/HistoryPage';
 import './App.css';
-import ProtectedRoute from './context/ProtectedRoute';
-import UnprotectedRoute from './context/UnprotectedRoute';
-
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
           <Route element={<UnprotectedRoute/>}>
 
           </Route>
-          
+          <Route path="/overview" element={<HomePage />} />
+          <Route path="/history" element={<HistoryPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

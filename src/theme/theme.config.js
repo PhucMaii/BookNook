@@ -1,4 +1,3 @@
-import { grey } from '@mui/material/colors';
 import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
@@ -11,8 +10,8 @@ export const theme = createTheme({
     },
     background: {
       default: '#F5F5F5',
-      paper: grey[50],
+      paper: '#FFFFFF',
     },
-    divider: '#101112',
+    divider: '#D0D5DD',
   },
 });
