@@ -16,6 +16,7 @@ import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import ReviewsRoundedIcon from "@mui/icons-material/ReviewsRounded";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
+
 const drawerWidth = 300;
 
 const upperTabs = [
@@ -47,10 +48,8 @@ const lowerTabs = [
   },
 ]
 
-const Sidebar = (props) => {
-
+const Sidebar = () => {
   const [open, setOpen] = useState(false);
-
   const handleClick = () => {
     setOpen(!open);
   };
