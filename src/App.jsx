@@ -8,9 +8,9 @@ import UnprotectedRoute from './restaurantSide/context/UnprotectedRoute';
 import HomePage from './restaurantSide/pages/HomePage';
 import HistoryPage from './restaurantSide/pages/History/HistoryPage';
 import './App.css';
-import SignUp from './restaurantSide/pages/Signup/SignUp';
-import Login from './restaurantSide/pages/Login/Login';
-import RestaurantInfo from './restaurantSide/pages/RestaurantInfo';
+import SignUp from './restaurantSide/pages/auth/SignUp';
+import Login from './restaurantSide/pages/auth/Login';
+import RestaurantInfo from './restaurantSide/pages/auth/RestaurantInfo';
 
 
 function App() {
@@ -27,7 +27,7 @@ function App() {
           </Route>
           <Route path="/restaurant/signup" element={<SignUp />} />
           <Route path="/restaurant/login" element={<Login />} />
-          <Route path="/restaurantInfo" element={<RestaurantInfo />} />
+          <Route path="/restaurant/create-info" element={<RestaurantInfo />} />
 
           <Route path="/overview" element={<HomePage />} />
           <Route path="/history" element={<HistoryPage />} />

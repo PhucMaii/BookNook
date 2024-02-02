@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import { Link } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
 import KeyIcon from '@mui/icons-material/Key';
-import { LogoImg, SideImg } from '../Signup/styled'
+import { LogoImg, SideImg } from './styled'
 import { grey } from '@mui/material/colors';
 
 const Login = () => {

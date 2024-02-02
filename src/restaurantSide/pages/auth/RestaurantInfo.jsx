@@ -9,10 +9,12 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
+import { restaurantTypes, averagePrices } from '../../utils/constants'
+import { LogoImg, SideImg } from './styled';
 
 const RestaurantInformation = () => {
 
-    const [rType, setRType] = React.useState('');
+    const [restaurantType, setRType] = React.useState('');
     const [price, setPrice] = React.useState('');
 
     const handleRestaurantTypeChange = (event) => {
@@ -23,55 +25,47 @@ const RestaurantInformation = () => {
         setPrice(event.target.value);
     }
 
-    const restaurantTypes = [
-        'Asian',
-        'Chinese',
-        'Japanese',
-        'Vietnamese',
-        'Indian',
-        'Italian',
-        'French',
-        'FastFood',
-        'Other',
-    ];
-
-    const averagePrices = [
-        'Less than $25',
-        '$25 - $50',
-        '$50 - $100',
-        '$100 - $200',
-        'Greater than $200',
-    ];
-
     return (
-        <div className='restaurant-info-con'>
-            <Box display='grid' gridTemplateColumns="repeat(2, 1fr)" gap={2} sx={{ flexGrow: 1 }} width={1920} height={1080}>
-                <Grid
-                    container spacing={2}
-                    justifyContent='center'
-                >
-                    <Grid item xs={6}>
-                        <img src='/restaurantLogo.png' className='restaurantLogo' alt="Restaurant Logo" style={{ paddingBottom: '150px', justifyContent: 'center', width: '250px', height: '90px', paddingLeft: '100px', paddingTop: '180px' }} />
-                            <Typography variant="h4" style={{ fontWeight: 'bold', fontSize: '34px', marginBottom: '20px' }}>Let us know more about your business</Typography>
+        <Grid
+            container
+            ColumnSpacing={2}
+            justifyContent='center'
+            overflow='hidden'
+            height='100vh'
+        >
+            <Grid item xs={6}>
+                <Box display='flex' flexDirection='column' margin='auto' width='50%'>
+                    <Box display='flex' justifyContent='center' my={6}>
+                        <LogoImg
+                            src='/restaurantLogo.png'
+                            className='restaurantLogo'
+                            alt="Restaurant Logo"
+                        />
+                    </Box>
+                    <Typography variant="h4" fontWeight='bold'>
+                        Let us know more about your busines
+                    </Typography>
+                    <Box display='flex' flexDirection='column' gap={3} mt={3}>
                         <TextField
                             required
+                            color="secondary"
                             id="outlined-required"
                             label="Restaurant Name"
                             InputProps={{
                                 startAdornment: (
                                     <RestaurantIcon />
                                 ),
-                            }} style={{ width: '450px', marginTop: '20px' }}
+                            }}
                         />
                         <FormControl fullWidth>
                             <InputLabel id="restaurant-type">Restaurant Type</InputLabel>
                             <Select
                                 labelId="restaurant-type"
+                                color="secondary"
                                 id="outlined-required"
-                                value={rType}
+                                value={restaurantType}
                                 label="Restaurant type"
                                 onChange={handleRestaurantTypeChange}
-                                style={{ width: '450px', marginTop: '20px' }}
 
                             >
                                 {restaurantTypes.map((type) => (
@@ -85,11 +79,11 @@ const RestaurantInformation = () => {
                             <InputLabel id="average price">Average Price</InputLabel>
                             <Select
                                 labelId="average-price"
+                                color="secondary"
                                 id="outlined-required"
                                 value={price}
                                 label="Restaurant type"
                                 onChange={handlePriceChange}
-                                style={{ width: '450px', marginTop: '20px' }}
                             >
                                 {averagePrices.map((priceOption) => (
                                     <MenuItem key={priceOption} value={priceOption}>
@@ -103,16 +97,16 @@ const RestaurantInformation = () => {
                             id="outlined-required"
                             label="Restaurant Image"
                             InputProps={{
-                            }} style={{ width: '450px', marginTop: '20px' }}
+                            }}
                         />
-                            <Button variant="contained" color='secondary' sx={{ width: '450px', marginTop: '20px' }}>Submit</Button>
-                    </Grid>
-                </Grid>
-                <Grid item xs={6}>
-                    <img src='/restaurantLoginImg.png' className='signupImage' alt="Login Img" style={{ width: '100%', height: '1080px', overflow: 'hidden' }} />
-                </Grid>
-            </Box>
-        </div>
+                        <Button variant="contained" color='secondary'>Submit</Button>
+                    </Box>
+                </Box>
+            </Grid>
+            <Grid item xs={6}>
+                <SideImg src='/restaurantLoginImg.png' className='signupImage' alt="Login Img"/>
+            </Grid>
+        </Grid>
     )
 }
 
