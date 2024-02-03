@@ -1,17 +1,32 @@
-import React from 'react'
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import * as React from 'react'
 import { Link } from 'react-router-dom';
-import EmailIcon from '@mui/icons-material/Email';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import KeyIcon from '@mui/icons-material/Key';
-import { LogoImg, SideImg } from './styled'
+import { LogoImg, SideImg } from './styled';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { grey } from '@mui/material/colors';
+import {
+  Grid, 
+  Box, 
+  TextField, 
+  Button, 
+  Typography, 
+  Divider, 
+  IconButton, 
+  OutlinedInput, 
+  InputAdornment,
+  FormControl, 
+  InputLabel
+} from '@mui/material'
 
 const Login = () => {
+  const [showPassword, setShowPassword] = React.useState(false)
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <Grid
       container
@@ -33,30 +48,41 @@ const Login = () => {
           </Typography>
           <Box display='flex' flexDirection='column' gap={3} mt={3}>
             <TextField
-              required
               color="secondary"
               id="outlined-required"
               label="Email Address"
               InputProps={{
                 startAdornment: (
-                  <EmailIcon />
+                  <EmailOutlinedIcon />
                 ),
               }}
               fullWidth
             />
-            <Box>
-              <TextField
-                required
-                color="secondary"
-                id="outlined-required"
-                label="Password"
-                InputProps={{
-                  startAdornment: (
-                    <KeyIcon />
-                  ),
-                }}
-                fullWidth
-              />
+            <Box display='flex' flexDirection='column' margin='auto' width='100%'>
+              <FormControl variant="outlined">
+                <InputLabel color='secondary'>Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  color='secondary'
+                  startAdornment={
+                    <KeyIcon/>
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
               <Link component='button'>
                 <Typography variant='subtitle2' align='end' fontWeight='bold'>
                   Forgot Password?
@@ -78,7 +104,7 @@ const Login = () => {
           </Box>
           <Typography variant="subtitle1" align='end' fontWeight='bold'>
             Don&apos;t have an account yet?
-            <Link component='button'>
+            <Link component='button' to='/restaurant/signup'>
               Click here to sign up
             </Link>
           </Typography>

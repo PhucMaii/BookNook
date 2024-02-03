@@ -1,19 +1,35 @@
-import React from 'react'
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import * as React from 'react'
 import { Link } from 'react-router-dom';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import EmailIcon from '@mui/icons-material/Email';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import KeyIcon from '@mui/icons-material/Key';
-import SettingsCellIcon from '@mui/icons-material/SettingsCell';
+import SmartphoneOutlinedIcon from '@mui/icons-material/SmartphoneOutlined';
 import { LogoImg, SideImg } from './styled';
 import { grey } from '@mui/material/colors';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import {
+  Grid,
+  Box,
+  TextField, 
+  Button, 
+  Typography,
+  Divider,
+  IconButton,
+  OutlinedInput, 
+  InputAdornment,
+  FormControl, 
+  InputLabel
+} from '@mui/material'
 
 const SignUp = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setConfirmPassword] = React.useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setConfirmPassword((show) => !show);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   return (
     <Grid
       container
@@ -37,7 +53,6 @@ const SignUp = () => {
           </Typography>
           <Box display="flex" flexDirection="column" gap={3} mt={3}>
             <TextField
-              required
               color="secondary"
               id="outlined-required"
               label="Restaurant Name"
@@ -49,45 +64,71 @@ const SignUp = () => {
               fullWidth
             />
             <TextField
-              required
+              color="secondary"
               id="outlined-required"
               label="Email Address"
               InputProps={{
                 startAdornment: (
-                  <EmailIcon />
+                  <EmailOutlinedIcon />
                 ),
               }}
               fullWidth
             />
+            <FormControl variant="outlined">
+                <InputLabel color='secondary'>Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  color='secondary'
+                  startAdornment={
+                    <KeyIcon/>
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
+              <FormControl variant="outlined">
+                <InputLabel color='secondary'>Confirm Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  color='secondary'
+                  startAdornment={
+                    <KeyIcon/>
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowConfirmPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
             <TextField
-              required
-              id="outlined-required"
-              label="Password"
-              InputProps={{
-                startAdornment: (
-                  <KeyIcon />
-                ),
-              }}
-              fullWidth
-            />
-            <TextField
-              required
-              id="outlined-required"
-              label="Confirm Password"
-              InputProps={{
-                startAdornment: (
-                  <KeyIcon />
-                ),
-              }}
-              fullWidth
-            />
-            <TextField
-              required
+              color="secondary"
               id="outlined-required"
               label="Contact Number"
               InputProps={{
                 startAdornment: (
-                  <SettingsCellIcon />
+                  <SmartphoneOutlinedIcon />
                 ),
               }}
               fullWidth
@@ -107,7 +148,7 @@ const SignUp = () => {
           </Box>
           <Typography variant="subtitle1" align='end' fontWeight='bold'>
             Already have an account? 
-            <Link color="secondary" component='button'>
+            <Link color="secondary" component='button' to='/restaurant/login'>
               Click here to sign in
             </Link>
           </Typography>

@@ -1,16 +1,20 @@
 import * as React from 'react'
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Select from '@mui/material/Select'
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
-import { restaurantTypes, averagePrices } from '../../utils/constants'
+import { restaurantTypes, averagePrices } from '../../utils/constants';
 import { LogoImg, SideImg } from './styled';
+import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
+import {
+    Grid,
+    Box,
+    TextField,
+    Button, 
+    Typography,
+    Select,
+    InputLabel,
+    MenuItem,
+    FormControl,
+    InputAdornment,
+} from '@mui/material'
 
 const RestaurantInformation = () => {
 
@@ -58,7 +62,7 @@ const RestaurantInformation = () => {
                             }}
                         />
                         <FormControl fullWidth>
-                            <InputLabel id="restaurant-type">Restaurant Type</InputLabel>
+                            <InputLabel id="restaurant-type" color='secondary'>Restaurant Type</InputLabel>
                             <Select
                                 labelId="restaurant-type"
                                 color="secondary"
@@ -66,7 +70,11 @@ const RestaurantInformation = () => {
                                 value={restaurantType}
                                 label="Restaurant type"
                                 onChange={handleRestaurantTypeChange}
-
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                      <RestaurantIcon />
+                                    </InputAdornment>
+                                  }
                             >
                                 {restaurantTypes.map((type) => (
                                     <MenuItem key={type} value={type}>
@@ -76,7 +84,7 @@ const RestaurantInformation = () => {
                             </Select>
                         </FormControl>
                         <FormControl fullWidth>
-                            <InputLabel id="average price">Average Price</InputLabel>
+                            <InputLabel id="average price" color='secondary'>Average Price</InputLabel>
                             <Select
                                 labelId="average-price"
                                 color="secondary"
@@ -84,6 +92,11 @@ const RestaurantInformation = () => {
                                 value={price}
                                 label="Restaurant type"
                                 onChange={handlePriceChange}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                      <AttachMoneyOutlinedIcon />
+                                    </InputAdornment>
+                                  }
                             >
                                 {averagePrices.map((priceOption) => (
                                     <MenuItem key={priceOption} value={priceOption}>
