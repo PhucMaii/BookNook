@@ -32,3 +32,23 @@ export const lowerTabs = [
       path: '/hostProfile',
     },
 ];
+
+export const restaurantTypes = [
+  'Asian',
+  'Chinese',
+  'Japanese',
+  'Vietnamese',
+  'Indian',
+  'Italian',
+  'French',
+  'FastFood',
+  'Other',
+];
+
+export const averagePrices = [
+  'Less than $25',
+  '$25 - $50',
+  '$50 - $100',
+  '$100 - $200',
+  'Greater than $200',
+];
