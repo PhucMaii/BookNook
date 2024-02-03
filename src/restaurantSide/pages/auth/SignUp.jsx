@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   Box,
@@ -28,7 +28,6 @@ import {
 } from '@firebase/auth';
 import { addDoc, collection } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
-import { AuthContext } from '../../context/AuthContext';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import RestaurantInformation from './RestaurantInfo';
 
@@ -45,14 +44,13 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { setUid } = useContext(AuthContext);
 
   const checkFieldsValid = () => {
     if (!email || !password || !confirmPassword) {
       setNotification({
         on: true,
         severity: 'error',
-        message: 'Please fill out all the field.',
+        message: 'Please fill out all the fields.',
       });
       return false;
     }
@@ -102,12 +100,11 @@ const SignUp = () => {
       const restaurantCollection = collection(db, 'restaurants');
       await addDoc(restaurantCollection, submittedData);
 
-      const userSignin = await signInWithEmailAndPassword(
+      await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      setUid(userSignin.user.uid);
 
       setNotification({
         on: true,

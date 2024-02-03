@@ -7,17 +7,17 @@ export const drawerWidth = 300;
 export const upperTabs = [
     {
       name: 'Overview',
-      path: '/overview',
+      path: '/restaurant/overview',
       icon: GridViewOutlinedIcon,
     },
     {
       name: 'History',
-      path: '/history',
+      path: '/restaurant/history',
       icon: PieChartOutlinedIcon,
     },
     {
       name: 'Reviews',
-      path: '/reviews',
+      path: '/restaurant/reviews',
       icon: ReviewsRoundedIcon,
     },
 ];
@@ -25,11 +25,11 @@ export const upperTabs = [
 export const lowerTabs = [
     {
       name: 'Restaurant',
-      path: '/restaurant',
+      path: '/restaurant/edit-tables&timeslots',
     },
     {
       name: 'Profile',
-      path: '/hostProfile',
+      path: '/restaurant/edit-profile',
     },
 ];
 

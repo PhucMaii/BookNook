@@ -19,16 +19,13 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<ProtectedRoute />}>
-
+              <Route path="/restaurant/overview" element={<HomePage />} />
+              <Route path="/restaurant/history" element={<HistoryPage />} />
             </Route>
             <Route element={<UnprotectedRoute />}>
-
+              <Route path="/restaurant/signup" element={<SignUp />} />
+              <Route path="/restaurant/login" element={<Login />} />
             </Route>
-            <Route path="/restaurant/signup" element={<SignUp />} />
-            <Route path="/restaurant/login" element={<Login />} />
-
-            <Route path="/restaurant/overview" element={<HomePage />} />
-            <Route path="/restaurant/history" element={<HistoryPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
