@@ -11,28 +11,30 @@ import './App.css';
 import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
 import RestaurantInfo from './restaurantSide/pages/auth/RestaurantInfo';
+import AuthProvider from './restaurantSide/context/AuthContext';
 
 
 function App() {
-
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<ProtectedRoute/>}>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<ProtectedRoute />}>
 
-          </Route>
-          <Route element={<UnprotectedRoute/>}>
+            </Route>
+            <Route element={<UnprotectedRoute />}>
 
-          </Route>
-          <Route path="/restaurant/signup" element={<SignUp />} />
-          <Route path="/restaurant/login" element={<Login />} />
-          <Route path="/restaurant/create-info" element={<RestaurantInfo />} />
+            </Route>
+            <Route path="/restaurant/signup" element={<SignUp />} />
+            <Route path="/restaurant/login" element={<Login />} />
+            <Route path="/restaurant/create-info" element={<RestaurantInfo />} />
 
-          <Route path="/overview" element={<HomePage />} />
-          <Route path="/history" element={<HistoryPage />} />
-        </Routes>
-      </BrowserRouter>
+            <Route path="/overview" element={<HomePage />} />
+            <Route path="/history" element={<HistoryPage />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

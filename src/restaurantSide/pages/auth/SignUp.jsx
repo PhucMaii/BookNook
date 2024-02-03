@@ -1,33 +1,143 @@
-import * as React from 'react'
-import { Link } from 'react-router-dom';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import KeyIcon from '@mui/icons-material/Key';
-import { LogoImg, SideImg } from './styled';
-import { grey } from '@mui/material/colors';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import React, { useContext, useState } from 'react'
 import {
   Grid,
   Box,
   TextField,
-  Button,
   Typography,
-  Divider,
-  IconButton,
-  OutlinedInput,
-  InputAdornment,
+  InputLabel,
   FormControl,
-  InputLabel
-} from '@mui/material'
+  InputAdornment,
+  Alert,
+  Snackbar,
+  OutlinedInput,
+  IconButton,
+  Divider,
+  Button,
+  
+} from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Link, useNavigate } from 'react-router-dom';
+import KeyIcon from '@mui/icons-material/Key';
+import { LogoImg, SideImg } from './styled';
+import { grey } from '@mui/material/colors';
+import { auth, db, googleProvider } from '../../../../firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from '@firebase/auth';
+import { addDoc, collection } from '@firebase/firestore';
+import { LoadingButton } from '@mui/lab';
+import { AuthContext } from '../../context/AuthContext';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
 
 const SignUp = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [notification, setNotification] = useState({
+    on: false,
+    severity: '',
+    message: ''
+  })
   const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setConfirmPassword] = React.useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleClickShowConfirmPassword = () => setConfirmPassword((show) => !show);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { setUid } = useContext(AuthContext);
+
+  const handleSignUp = async () => {
+    if (!email || !password || !confirmPassword) {
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: 'Please fill out all the field.'
+      })
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: 'Confirm password is unmatch.'
+      })
+      return;
+    }
+
+    if (password.length < 6) {
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: 'Password length is too short.'
+      })
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const submittedData = {
+        email: userCredential.user.email,
+        uid: userCredential.user.uid
+      }
+
+      const restaurantCollection = collection(db, 'restaurants');
+      await addDoc(restaurantCollection, submittedData);
+
+      const userSignin = await signInWithEmailAndPassword(auth, email, password);
+      setUid(userSignin.user.uid);
+
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Registered account successfully.'
+      })
+      setIsLoading(false);
+      navigate('/restaurant/create-info');
+    } catch (error) {
+      setIsLoading(false);
+      console.log('Fail to create user: ', error)
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: `Fail to create user: ${error.message}`
+      })
+    }
+  }
+
+  const handleGoogleSignup = async () => {
+    setIsLoading(true);
+    try {
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const submittedData = {
+        email: userCredential.user.email
+      }
+      const restaurantCollection = collection(db, 'restaurants');
+      await addDoc(restaurantCollection, submittedData);
+      setNotification(
+        {
+          on: true,
+          severity: 'success',
+          message: 'Registered account successfully.'
+        }
+      )
+      setIsLoading(false);
+      navigate('/restaurant/create-info')
+    } catch (error) {
+      setIsLoading(false);
+      console.log('Fail to create user: ', error)
+      setNotification(
+        {
+          on: true,
+          severity: 'error',
+          message: `Fail to create user: ${error.message}`
+        }
+      )
+    }
+  }
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
   return (
     <Grid
       container
@@ -36,6 +146,13 @@ const SignUp = () => {
       overflow='hidden'
       height='100vh'
     >
+      <Snackbar
+        open={notification.on}
+        autoHideDuration={5000}
+        onClose={() => setNotification({ on: false })}
+      >
+        <Alert severity={notification.severity}>{notification.message}</Alert>
+      </Snackbar>
       <Grid item xs={12} md={6}>
         <Box display='flex' flexDirection='column' margin='auto' width='50%'>
           <Box display='flex' justifyContent='center' my={6}>
@@ -54,6 +171,8 @@ const SignUp = () => {
               color='secondary'
               id='outlined-required'
               label='Email Address'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <EmailOutlinedIcon />
@@ -74,7 +193,7 @@ const SignUp = () => {
                   <InputAdornment position='end'>
                     <IconButton
                       aria-label='toggle password visibility'
-                      onClick={handleClickShowPassword}
+                      onClick={() => setShowPassword((show) => !show)}
                       onMouseDown={handleMouseDownPassword}
                       edge='end'
                     >
@@ -83,6 +202,8 @@ const SignUp = () => {
                   </InputAdornment>
                 }
                 label='Password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
             <FormControl variant='outlined'>
@@ -98,7 +219,7 @@ const SignUp = () => {
                   <InputAdornment position='end'>
                     <IconButton
                       aria-label='toggle password visibility'
-                      onClick={handleClickShowConfirmPassword}
+                      onClick={() => setShowConfirmPassword((show) => !show)}
                       onMouseDown={handleMouseDownPassword}
                       edge='end'
                     >
@@ -106,18 +227,26 @@ const SignUp = () => {
                     </IconButton>
                   </InputAdornment>
                 }
-                label='Password'
+                label='Confirm Password'
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </FormControl>
-            <Button variant='contained' color='secondary'>
+            <LoadingButton
+              onClick={handleSignUp}
+              loading={isLoading}
+              loadingIndicator="Registering account..."
+              variant='contained'
+              color='secondary'
+            >
               Create your Account
-            </Button>
+            </LoadingButton>
             <Divider variant='middle'>
               <Typography variant='body2'>Or</Typography>
             </Divider>
-            <Button variant='outlined' color='secondary'>
-              <Box display='flex' gap={2} alignItems='center'>
-                <img src='/icons/googleLogo.png' alt='Google Logo' />
+            <Button variant="outlined" color='secondary' onClick={handleGoogleSignup}>
+              <Box display="flex" gap={2} alignItems="center">
+                <img src='/icons/googleLogo.png' alt="Google Logo" />
                 <Typography>Sign in with Google</Typography>
               </Box>
             </Button>

@@ -5,8 +5,6 @@ import { createContext, useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-export const AuthContext = createContext();
-
 export default function ProtectedRoute() {
   const [isAuth, setIsAuth] = useState(false);
 
