@@ -35,22 +35,22 @@ const Login = () => {
       overflow='hidden'
       maxHeight='100%'
     >
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <Box display='flex' flexDirection='column' margin='auto' width='50%'>
           <Box display='flex' justifyContent='center' my={6}>
             <LogoImg
               src='/restaurantLogo.png'
-              alt="Restaurant Logo" />
+              alt='Restaurant Logo' />
           </Box>
-          <Typography variant="h3" fontWeight="bold">Login</Typography>
-          <Typography variant="subtitle1" color={grey[500]} fontWeight="bold">
+          <Typography variant='h3' fontWeight='bold'>Login</Typography>
+          <Typography variant='subtitle1' color={grey[500]} fontWeight='bold'>
             Enter your credentials to access your account
           </Typography>
           <Box display='flex' flexDirection='column' gap={3} mt={3}>
             <TextField
-              color="secondary"
-              id="outlined-required"
-              label="Email Address"
+              color='secondary'
+              id='outlined-required'
+              label='Email Address'
               InputProps={{
                 startAdornment: (
                   <EmailOutlinedIcon />
@@ -59,50 +59,50 @@ const Login = () => {
               fullWidth
             />
             <Box display='flex' flexDirection='column' margin='auto' width='100%'>
-              <FormControl variant="outlined">
+              <FormControl variant='outlined'>
                 <InputLabel color='secondary'>Password</InputLabel>
                 <OutlinedInput
-                  id="outlined-adornment-password"
+                  id='outlined-adornment-password'
                   type={showPassword ? 'text' : 'password'}
                   color='secondary'
                   startAdornment={
                     <KeyIcon/>
                   }
                   endAdornment={
-                    <InputAdornment position="end">
+                    <InputAdornment position='end'>
                       <IconButton
-                        aria-label="toggle password visibility"
+                        aria-label='toggle password visibility'
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
-                        edge="end"
+                        edge='end'
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   }
-                  label="Password"
+                  label='Password'
                 />
               </FormControl>
               <Link component='button'>
-                <Typography variant='subtitle2' align='end' fontWeight='bold'>
+                <Typography textAlign='right' variant='subtitle2' fontWeight='bold'>
                   Forgot Password?
                 </Typography>
               </Link>
             </Box>
-            <Button variant="contained" color='secondary'>
+            <Button variant='contained' color='secondary'>
               Create your Account
             </Button>
             <Divider variant='middle'>
               <Typography variant='body2'>Or</Typography>
             </Divider>
-            <Button variant="outlined" color='secondary'>
-              <Box display="flex" gap={2} alignItems="center">
-                <img src='/icons/googleLogo.png' alt="Google Logo" />
+            <Button variant='outlined' color='secondary'>
+              <Box display='flex' gap={2} alignItems='center'>
+                <img src='/icons/googleLogo.png' alt='Google Logo' />
                 <Typography>Sign in with Google</Typography>
               </Box>
             </Button>
           </Box>
-          <Typography variant="subtitle1" align='end' fontWeight='bold'>
+          <Typography textAlign='right' variant='subtitle1' fontWeight='bold'>
             Don&apos;t have an account yet?
             <Link component='button' to='/restaurant/signup'>
               Click here to sign up
@@ -112,8 +112,8 @@ const Login = () => {
       </Grid>
       <Box>
       </Box>
-      <Grid item xs={6}>
-        <SideImg src='/restaurantLoginImg.png' alt="Login Img" />
+      <Grid item xs={12} md={6}>
+        <SideImg src='/restaurantLoginImg.png' alt='Login Img' />
       </Grid>
     </Grid>
   )

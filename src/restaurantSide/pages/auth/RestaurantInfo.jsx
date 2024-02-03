@@ -3,11 +3,13 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { restaurantTypes, averagePrices } from '../../utils/constants';
 import { LogoImg, SideImg } from './styled';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import SmartphoneOutlinedIcon from '@mui/icons-material/SmartphoneOutlined';
 import {
     Grid,
     Box,
     TextField,
-    Button, 
+    Button,
     Typography,
     Select,
     InputLabel,
@@ -18,11 +20,11 @@ import {
 
 const RestaurantInformation = () => {
 
-    const [restaurantType, setRType] = React.useState('');
+    const [restaurantType, setRestaurantType] = React.useState('');
     const [price, setPrice] = React.useState('');
 
     const handleRestaurantTypeChange = (event) => {
-        setRType(event.target.value);
+        setRestaurantType(event.target.value);
     }
 
     const handlePriceChange = (event) => {
@@ -37,44 +39,44 @@ const RestaurantInformation = () => {
             overflow='hidden'
             height='100vh'
         >
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
                 <Box display='flex' flexDirection='column' margin='auto' width='50%'>
                     <Box display='flex' justifyContent='center' my={6}>
                         <LogoImg
                             src='/restaurantLogo.png'
                             className='restaurantLogo'
-                            alt="Restaurant Logo"
+                            alt='Restaurant Logo'
                         />
                     </Box>
-                    <Typography variant="h4" fontWeight='bold'>
+                    <Typography variant='h4' fontWeight='bold'>
                         Let us know more about your busines
                     </Typography>
                     <Box display='flex' flexDirection='column' gap={3} mt={3}>
                         <TextField
                             required
-                            color="secondary"
-                            id="outlined-required"
-                            label="Restaurant Name"
+                            color='secondary'
+                            id='outlined-required'
+                            label='Restaurant Name'
                             InputProps={{
                                 startAdornment: (
-                                    <RestaurantIcon />
+                                    <DriveFileRenameOutlineIcon />
                                 ),
                             }}
                         />
                         <FormControl fullWidth>
-                            <InputLabel id="restaurant-type" color='secondary'>Restaurant Type</InputLabel>
+                            <InputLabel id='restaurant-type' color='secondary'>Restaurant Type</InputLabel>
                             <Select
-                                labelId="restaurant-type"
-                                color="secondary"
-                                id="outlined-required"
+                                labelId='restaurant-type'
+                                color='secondary'
+                                id='outlined-required'
                                 value={restaurantType}
-                                label="Restaurant type"
+                                label='Restaurant type'
                                 onChange={handleRestaurantTypeChange}
                                 startAdornment={
-                                    <InputAdornment position="start">
-                                      <RestaurantIcon />
+                                    <InputAdornment position='start'>
+                                        <RestaurantIcon />
                                     </InputAdornment>
-                                  }
+                                }
                             >
                                 {restaurantTypes.map((type) => (
                                     <MenuItem key={type} value={type}>
@@ -84,19 +86,19 @@ const RestaurantInformation = () => {
                             </Select>
                         </FormControl>
                         <FormControl fullWidth>
-                            <InputLabel id="average price" color='secondary'>Average Price</InputLabel>
+                            <InputLabel id='average price' color='secondary'>Average Price</InputLabel>
                             <Select
-                                labelId="average-price"
-                                color="secondary"
-                                id="outlined-required"
+                                labelId='average-price'
+                                color='secondary'
+                                id='outlined-required'
                                 value={price}
-                                label="Restaurant type"
+                                label='Restaurant type'
                                 onChange={handlePriceChange}
                                 startAdornment={
-                                    <InputAdornment position="start">
-                                      <AttachMoneyOutlinedIcon />
+                                    <InputAdornment position='start'>
+                                        <AttachMoneyOutlinedIcon />
                                     </InputAdornment>
-                                  }
+                                }
                             >
                                 {averagePrices.map((priceOption) => (
                                     <MenuItem key={priceOption} value={priceOption}>
@@ -106,18 +108,30 @@ const RestaurantInformation = () => {
                             </Select>
                         </FormControl>
                         <TextField
-                            // required
-                            id="outlined-required"
-                            label="Restaurant Image"
+                            color='secondary'
+                            id='outlined-required'
+                            label='Restaurant Image'
                             InputProps={{
                             }}
                         />
-                        <Button variant="contained" color='secondary'>Submit</Button>
+                        <TextField
+                            type='number'
+                            color='secondary'
+                            id='outlined-required'
+                            label='Contact Number'
+                            InputProps={{
+                                startAdornment: (
+                                    <SmartphoneOutlinedIcon />
+                                ),
+                            }}
+                            fullWidth
+                        />
+                        <Button variant='contained' color='secondary'>Submit</Button>
                     </Box>
                 </Box>
             </Grid>
             <Grid item xs={6}>
-                <SideImg src='/restaurantLoginImg.png' className='signupImage' alt="Login Img"/>
+                <SideImg src='/restaurantLoginImg.png' className='signupImage' alt='Login Img' />
             </Grid>
         </Grid>
     )
