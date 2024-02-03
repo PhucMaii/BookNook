@@ -72,15 +72,16 @@ const RestaurantInformation = () => {
             userSnapshot.forEach(async (doc) => {
                 await updateDoc(doc.ref, submittedData);
             })
-            setNotification(
-                {
-                    on: true,
-                    severity: 'success',
-                    message: 'Updated info successfully.'
-                }
-            )
-            setIsLoading(false)
-            navigate('/overview')
+            setNotification({
+                on: true,
+                severity: 'success',
+                message: 'Updated info successfully.'
+            });
+
+            setTimeout(() => {
+                setIsLoading(false);
+                navigate('/overview');
+            }, 2000)
         } catch (error) {
             console.log('Fail to update info: ', error);
         }
@@ -120,7 +121,9 @@ const RestaurantInformation = () => {
                             label="Restaurant Name"
                             InputProps={{
                                 startAdornment: (
-                                    <DriveFileRenameOutlineIcon />
+                                    <InputAdornment position="start">
+                                        <DriveFileRenameOutlineIcon />
+                                    </InputAdornment>
                                 ),
                             }}
                             onChange={(e) => setRestaurantName(e.target.value)}
@@ -132,7 +135,9 @@ const RestaurantInformation = () => {
                             color='secondary'
                             InputProps={{
                                 startAdornment: (
-                                    <SettingsCellIcon />
+                                    <InputAdornment position="start">
+                                        <SettingsCellIcon />
+                                    </InputAdornment>
                                 ),
                             }}
                             fullWidth
@@ -192,10 +197,11 @@ const RestaurantInformation = () => {
                         />
                         <LoadingButton
                             loading={isLoading}
-                            loadingIndicator="Updating Info..."
+                            loadingIndicator="Updating..."
                             variant="contained"
                             color='secondary'
                             onClick={handleUpdateInfo}
+                            endIcon
                         >
                             Submit
                         </LoadingButton>

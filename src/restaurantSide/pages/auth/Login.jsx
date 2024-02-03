@@ -53,7 +53,9 @@ const Login = () => {
               label='Email Address'
               InputProps={{
                 startAdornment: (
-                  <EmailOutlinedIcon />
+                  <InputAdornment position="start">
+                    <EmailOutlinedIcon />
+                  </InputAdornment>
                 ),
               }}
               fullWidth
@@ -66,7 +68,9 @@ const Login = () => {
                   type={showPassword ? 'text' : 'password'}
                   color='secondary'
                   startAdornment={
-                    <KeyIcon/>
+                    <InputAdornment position="start">
+                      <KeyIcon/>
+                    </InputAdornment>
                   }
                   endAdornment={
                     <InputAdornment position='end'>
@@ -84,7 +88,7 @@ const Login = () => {
                 />
               </FormControl>
               <Link component='button'>
-                <Typography textAlign='right' variant='subtitle2' fontWeight='bold'>
+                <Typography textAlign='right' variant='subtitle2'>
                   Forgot Password?
                 </Typography>
               </Link>
@@ -102,7 +106,7 @@ const Login = () => {
               </Box>
             </Button>
           </Box>
-          <Typography textAlign='right' variant='subtitle1' fontWeight='bold'>
+          <Typography mt={1} textAlign='right' variant='subtitle2'>
             Don&apos;t have an account yet?
             <Link component='button' to='/restaurant/signup'>
               Click here to sign up

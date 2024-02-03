@@ -88,10 +88,13 @@ const SignUp = () => {
       setNotification({
         on: true,
         severity: 'success',
-        message: 'Registered account successfully.'
+        message: 'Creating account...'
       })
-      setIsLoading(false);
-      navigate('/restaurant/create-info');
+
+      setTimeout(() => {
+        setIsLoading(false);
+        navigate('/restaurant/create-info');
+      }, 2000);
     } catch (error) {
       setIsLoading(false);
       console.log('Fail to create user: ', error)
@@ -175,7 +178,9 @@ const SignUp = () => {
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{
                 startAdornment: (
-                  <EmailOutlinedIcon />
+                  <InputAdornment position="start">
+                    <EmailOutlinedIcon />
+                  </InputAdornment>
                 ),
               }}
               fullWidth
@@ -187,7 +192,9 @@ const SignUp = () => {
                 type={showPassword ? 'text' : 'password'}
                 color='secondary'
                 startAdornment={
-                  <KeyIcon />
+                  <InputAdornment position="start">
+                    <KeyIcon />
+                  </InputAdornment>
                 }
                 endAdornment={
                   <InputAdornment position='end'>
@@ -213,7 +220,9 @@ const SignUp = () => {
                 type={showConfirmPassword ? 'text' : 'password'}
                 color='secondary'
                 startAdornment={
-                  <KeyIcon />
+                  <InputAdornment position="start">
+                    <KeyIcon />
+                  </InputAdornment>
                 }
                 endAdornment={
                   <InputAdornment position='end'>
@@ -235,7 +244,7 @@ const SignUp = () => {
             <LoadingButton
               onClick={handleSignUp}
               loading={isLoading}
-              loadingIndicator="Registering account..."
+              loadingIndicator="Registering..."
               variant='contained'
               color='secondary'
             >
@@ -247,11 +256,11 @@ const SignUp = () => {
             <Button variant="outlined" color='secondary' onClick={handleGoogleSignup}>
               <Box display="flex" gap={2} alignItems="center">
                 <img src='/icons/googleLogo.png' alt="Google Logo" />
-                <Typography>Sign in with Google</Typography>
+                <Typography>Continue with Google</Typography>
               </Box>
             </Button>
           </Box>
-          <Typography textAlign='right' variant='subtitle1' fontWeight='bold'>
+          <Typography textAlign='right' variant='subtitle2'>
             Already have an account?
             <Link color='secondary' component='button' to='/restaurant/login'>
               Click here to sign in
