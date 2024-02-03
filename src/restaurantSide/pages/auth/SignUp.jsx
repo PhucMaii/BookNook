@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react';
 import {
   Grid,
   Box,
@@ -13,132 +13,155 @@ import {
   IconButton,
   Divider,
   Button,
-  
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import KeyIcon from '@mui/icons-material/Key';
 import { LogoImg, SideImg } from './styled';
 import { grey } from '@mui/material/colors';
 import { auth, db, googleProvider } from '../../../../firebaseConfig';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from '@firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from '@firebase/auth';
 import { addDoc, collection } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
 import { AuthContext } from '../../context/AuthContext';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import RestaurantInformation from './RestaurantInfo';
 
 const SignUp = () => {
+  const [activeStep, setActiveStep] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [notification, setNotification] = useState({
     on: false,
     severity: '',
-    message: ''
-  })
+    message: '',
+  });
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
   const { setUid } = useContext(AuthContext);
 
-  const handleSignUp = async () => {
+  const checkFieldsValid = () => {
     if (!email || !password || !confirmPassword) {
       setNotification({
         on: true,
         severity: 'error',
-        message: 'Please fill out all the field.'
-      })
-      return;
+        message: 'Please fill out all the field.',
+      });
+      return false;
     }
 
     if (password !== confirmPassword) {
       setNotification({
         on: true,
         severity: 'error',
-        message: 'Confirm password is unmatch.'
-      })
-      return;
+        message: 'Confirm password is unmatch.',
+      });
+      return false;
     }
 
     if (password.length < 6) {
       setNotification({
         on: true,
         severity: 'error',
-        message: 'Password length is too short.'
-      })
+        message: 'Password length is too short.',
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1);
+  };
+
+  const handleSignUp = async () => {
+    const isAllFieldsValid = checkFieldsValid();
+    if (!isAllFieldsValid) {
       return;
     }
 
     setIsLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const submittedData = {
         email: userCredential.user.email,
-        uid: userCredential.user.uid
-      }
+        uid: userCredential.user.uid,
+      };
 
       const restaurantCollection = collection(db, 'restaurants');
       await addDoc(restaurantCollection, submittedData);
 
-      const userSignin = await signInWithEmailAndPassword(auth, email, password);
+      const userSignin = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       setUid(userSignin.user.uid);
 
       setNotification({
         on: true,
         severity: 'success',
-        message: 'Registered account successfully.'
-      })
-      setIsLoading(false);
-      navigate('/restaurant/create-info');
+        message: 'Creating account...',
+      });
+
+      setTimeout(() => {
+        setIsLoading(false);
+        handleNext();
+      }, 2000);
     } catch (error) {
       setIsLoading(false);
-      console.log('Fail to create user: ', error)
+      console.log('Fail to create user: ', error);
       setNotification({
         on: true,
         severity: 'error',
-        message: `Fail to create user: ${error.message}`
-      })
+        message: `Fail to create user: ${error.message}`,
+      });
     }
-  }
+  };
 
   const handleGoogleSignup = async () => {
     setIsLoading(true);
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const submittedData = {
-        email: userCredential.user.email
-      }
+        email: userCredential.user.email,
+      };
       const restaurantCollection = collection(db, 'restaurants');
       await addDoc(restaurantCollection, submittedData);
-      setNotification(
-        {
-          on: true,
-          severity: 'success',
-          message: 'Registered account successfully.'
-        }
-      )
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Registered account successfully.',
+      });
       setIsLoading(false);
-      navigate('/restaurant/create-info')
+      handleNext();
     } catch (error) {
       setIsLoading(false);
-      console.log('Fail to create user: ', error)
-      setNotification(
-        {
-          on: true,
-          severity: 'error',
-          message: `Fail to create user: ${error.message}`
-        }
-      )
+      console.log('Fail to create user: ', error);
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: `Fail to create user: ${error.message}`,
+      });
     }
-  }
+  };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  return (
+  const signupForm = () => (
     <Grid
       container
       columnSpacing={2}
@@ -162,7 +185,9 @@ const SignUp = () => {
               alt='Restaurant Logo'
             />
           </Box>
-          <Typography variant='h3' fontWeight='bold'>Sign up</Typography>
+          <Typography variant='h3' fontWeight='bold'>
+            Sign up
+          </Typography>
           <Typography variant='subtitle1' color={grey[500]} fontWeight='bold'>
             Enter your details below to create your account
           </Typography>
@@ -175,7 +200,9 @@ const SignUp = () => {
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{
                 startAdornment: (
-                  <EmailOutlinedIcon />
+                  <InputAdornment position='start'>
+                    <EmailOutlinedIcon />
+                  </InputAdornment>
                 ),
               }}
               fullWidth
@@ -187,7 +214,9 @@ const SignUp = () => {
                 type={showPassword ? 'text' : 'password'}
                 color='secondary'
                 startAdornment={
-                  <KeyIcon />
+                  <InputAdornment position='start'>
+                    <KeyIcon />
+                  </InputAdornment>
                 }
                 endAdornment={
                   <InputAdornment position='end'>
@@ -213,7 +242,9 @@ const SignUp = () => {
                 type={showConfirmPassword ? 'text' : 'password'}
                 color='secondary'
                 startAdornment={
-                  <KeyIcon />
+                  <InputAdornment position='start'>
+                    <KeyIcon />
+                  </InputAdornment>
                 }
                 endAdornment={
                   <InputAdornment position='end'>
@@ -235,7 +266,7 @@ const SignUp = () => {
             <LoadingButton
               onClick={handleSignUp}
               loading={isLoading}
-              loadingIndicator="Registering account..."
+              loadingIndicator='Registering...'
               variant='contained'
               color='secondary'
             >
@@ -244,28 +275,37 @@ const SignUp = () => {
             <Divider variant='middle'>
               <Typography variant='body2'>Or</Typography>
             </Divider>
-            <Button variant="outlined" color='secondary' onClick={handleGoogleSignup}>
-              <Box display="flex" gap={2} alignItems="center">
-                <img src='/icons/googleLogo.png' alt="Google Logo" />
-                <Typography>Sign in with Google</Typography>
+            <Button
+              variant='outlined'
+              color='secondary'
+              onClick={handleGoogleSignup}
+            >
+              <Box display='flex' gap={2} alignItems='center'>
+                <img src='/icons/googleLogo.png' alt='Google Logo' />
+                <Typography>Continue with Google</Typography>
               </Box>
             </Button>
           </Box>
-          <Typography textAlign='right' variant='subtitle1' fontWeight='bold'>
+          <Typography textAlign='right' variant='subtitle2'>
             Already have an account?
             <Link color='secondary' component='button' to='/restaurant/login'>
               Click here to sign in
             </Link>
           </Typography>
-
         </Box>
       </Grid>
       <Grid item xs={6}>
         <SideImg src='/restaurantLoginImg.png' alt='Login Img' />
       </Grid>
     </Grid>
+  );
 
-  )
-}
+  return (
+    <>
+      {activeStep === 0 && signupForm()}
+      {activeStep === 1 && <RestaurantInformation />}
+    </>
+  );
+};
 
-export default SignUp
+export default SignUp;

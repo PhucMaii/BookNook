@@ -10,9 +10,7 @@ import HistoryPage from './restaurantSide/pages/History/HistoryPage';
 import './App.css';
 import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
-import RestaurantInfo from './restaurantSide/pages/auth/RestaurantInfo';
 import AuthProvider from './restaurantSide/context/AuthContext';
-
 
 function App() {
   return (
@@ -28,10 +26,9 @@ function App() {
             </Route>
             <Route path="/restaurant/signup" element={<SignUp />} />
             <Route path="/restaurant/login" element={<Login />} />
-            <Route path="/restaurant/create-info" element={<RestaurantInfo />} />
 
-            <Route path="/overview" element={<HomePage />} />
-            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/restaurant/overview" element={<HomePage />} />
+            <Route path="/restaurant/history" element={<HistoryPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
