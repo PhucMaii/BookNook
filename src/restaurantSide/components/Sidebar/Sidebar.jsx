@@ -16,6 +16,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { blueGrey } from '../../../theme/colors';
 import { ListItemButtonStyled } from './styled';
 import { drawerWidth, lowerTabs, upperTabs } from '../../utils/constants';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../../firebaseConfig';
 
 const Sidebar = ({ children }) => {
   const [currentTab, setCurrentTab] = useState('');
@@ -36,6 +38,14 @@ const Sidebar = ({ children }) => {
   const handleChangeTab = (tab) => {
     navigate(tab.path);
   };
+
+  const handleSignout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) { 
+      console.log('Fail to sign out: ', error);
+    }
+  }
 
   const content = (
     <>
@@ -96,6 +106,7 @@ const Sidebar = ({ children }) => {
           variant='filled'
           fullWidth
           sx={{ backgroundColor: blueGrey }}
+          onClick={handleSignout}
         >
           Sign Out
         </Button>

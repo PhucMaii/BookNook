@@ -1,29 +1,14 @@
-import React from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../../firebaseConfig';
-import { createContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { AuthContext } from './AuthContext';
+import { SplashScreen } from '../../lib/utils';
 
 export default function ProtectedRoute() {
-  const [isAuth, setIsAuth] = useState(false);
-
-  useEffect(() => {
-    const listen = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAuth(true);
-      } else {
-        setIsAuth(false);
-      }
-    });
-    return () => {
-      listen();
-    };
-  }, []);
-
-  return isAuth ? <Outlet /> : <Navigate to="/restaurant/signin" />;
+  const { uid } = useContext(AuthContext);
+  
+  if (uid === null) {
+    return <SplashScreen/>
+  }
+  return uid ? <Outlet /> : <Navigate to="/restaurant/login" />;
 }
 
-ProtectedRoute.propTypes = {
-  children: PropTypes.node
-}

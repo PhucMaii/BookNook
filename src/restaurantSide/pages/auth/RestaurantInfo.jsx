@@ -7,7 +7,6 @@ import { AuthContext } from '../../context/AuthContext';
 import { collection, getDocs, query, updateDoc, where } from '@firebase/firestore';
 import { db } from '../../../../firebaseConfig';
 import { Alert, Snackbar } from '@mui/material';
-import { useNavigate } from 'react-router';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
@@ -22,6 +21,7 @@ import {
     FormControl,
     InputAdornment,
 } from '@mui/material'
+import { useNavigate } from 'react-router-dom';
 
 const RestaurantInformation = () => {
     const [restaurantType, setRestaurantType] = useState('');
@@ -35,8 +35,8 @@ const RestaurantInformation = () => {
         message: ''
     })
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
     const { uid } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleRestaurantTypeChange = (event) => {
         setRestaurantType(event.target.value);
@@ -76,7 +76,7 @@ const RestaurantInformation = () => {
                 on: true,
                 severity: 'success',
                 message: 'Updated info successfully.'
-            });
+            }); 
 
             setTimeout(() => {
                 setIsLoading(false);
@@ -84,6 +84,11 @@ const RestaurantInformation = () => {
             }, 2000)
         } catch (error) {
             console.log('Fail to update info: ', error);
+            setNotification({
+                on: true,
+                severity: 'error',
+                message: 'Fail to update info: ' + error.code
+            })
         }
     }
 
