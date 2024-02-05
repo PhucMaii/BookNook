@@ -20,11 +20,10 @@ import { Link } from 'react-router-dom';
 import KeyIcon from '@mui/icons-material/Key';
 import { LogoImg, SideImg } from './styled';
 import { grey } from '@mui/material/colors';
-import { auth, db, googleProvider } from '../../../../firebaseConfig';
+import { auth, db } from '../../../../firebaseConfig';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInWithPopup,
 } from '@firebase/auth';
 import { addDoc, collection } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
@@ -127,33 +126,6 @@ const SignUp = () => {
     }
   };
 
-  const handleGoogleSignup = async () => {
-    setIsLoading(true);
-    try {
-      const userCredential = await signInWithPopup(auth, googleProvider);
-      const submittedData = {
-        email: userCredential.user.email,
-      };
-      const restaurantCollection = collection(db, 'restaurants');
-      await addDoc(restaurantCollection, submittedData);
-      setNotification({
-        on: true,
-        severity: 'success',
-        message: 'Registered account successfully.',
-      });
-      setIsLoading(false);
-      handleNext();
-    } catch (error) {
-      setIsLoading(false);
-      console.log('Fail to create user: ', error);
-      setNotification({
-        on: true,
-        severity: 'error',
-        message: `Fail to create user: ${error.message}`,
-      });
-    }
-  };
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -163,7 +135,6 @@ const SignUp = () => {
       container
       columnSpacing={2}
       justifyContent='center'
-      overflow='hidden'
       height='100vh'
     >
       <Snackbar
@@ -275,7 +246,7 @@ const SignUp = () => {
             <Button
               variant='outlined'
               color='secondary'
-              onClick={handleGoogleSignup}
+              onClick={handleNext}
             >
               <Box display='flex' gap={2} alignItems='center'>
                 <img src='/icons/googleLogo.png' alt='Google Logo' />
