@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Grid,
   Box,
@@ -24,12 +24,14 @@ import { auth, db, googleProvider } from '../../../../firebaseConfig';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signInWithPopup,
+  signOut,
+  signInWithPopup
 } from '@firebase/auth';
 import { addDoc, collection } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import RestaurantInformation from './RestaurantInfo';
+import { AuthContext } from '../../context/AuthContext';
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -44,6 +46,14 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { setRestaurantIds } = useContext(AuthContext);
+
+  useEffect(() => {
+    const handleSignout = async () => {
+      await signOut(auth);
+    }
+    handleSignout();
+  }, [])
 
   const checkFieldsValid = () => {
     if (!email || !password || !confirmPassword) {
@@ -98,7 +108,8 @@ const SignUp = () => {
       };
 
       const restaurantCollection = collection(db, 'restaurants');
-      await addDoc(restaurantCollection, submittedData);
+      const docData = await addDoc(restaurantCollection, submittedData);
+      setRestaurantIds((prevIds) => ({...prevIds, docId: docData.id}))
 
       await signInWithEmailAndPassword(
         auth,
@@ -127,32 +138,32 @@ const SignUp = () => {
     }
   };
 
-  const handleGoogleSignup = async () => {
-    setIsLoading(true);
+  const handleSignupWithGoogle = async () => {
     try {
+      setIsLoading(true);
       const userCredential = await signInWithPopup(auth, googleProvider);
       const submittedData = {
         email: userCredential.user.email,
-      };
+        uid: userCredential.user.uid,
+      }
       const restaurantCollection = collection(db, 'restaurants');
-      await addDoc(restaurantCollection, submittedData);
+      const docData = await addDoc(restaurantCollection, submittedData);
+      setRestaurantIds((prevIds) => ({...prevIds, docId: docData.id}));
+      
       setNotification({
         on: true,
         severity: 'success',
-        message: 'Registered account successfully.',
+        message: 'Registering...',
       });
-      setIsLoading(false);
-      handleNext();
-    } catch (error) {
-      setIsLoading(false);
-      console.log('Fail to create user: ', error);
-      setNotification({
-        on: true,
-        severity: 'error',
-        message: `Fail to create user: ${error.message}`,
-      });
+
+      setTimeout(() => {
+        handleNext();
+        setIsLoading(false);
+      }, 2000)  
+    } catch (error) { 
+      console.log('Fail to sign up with Google: ', error);
     }
-  };
+  }
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -163,7 +174,6 @@ const SignUp = () => {
       container
       columnSpacing={2}
       justifyContent='center'
-      overflow='hidden'
       height='100vh'
     >
       <Snackbar
@@ -275,7 +285,7 @@ const SignUp = () => {
             <Button
               variant='outlined'
               color='secondary'
-              onClick={handleGoogleSignup}
+              onClick={handleSignupWithGoogle}
             >
               <Box display='flex' gap={2} alignItems='center'>
                 <img src='/icons/googleLogo.png' alt='Google Logo' />
