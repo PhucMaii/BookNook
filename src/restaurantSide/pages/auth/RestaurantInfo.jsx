@@ -59,6 +59,7 @@ const RestaurantInformation = () => {
       setIsLoading(true);
       const userCredential = await signInWithPopup(auth, googleProvider);
       const submittedData = {
+        uid: userCredential.user.uid,
         email: userCredential.user.email,
         name: restaurantName,
         type: restaurantType,
