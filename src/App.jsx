@@ -6,7 +6,7 @@ import { theme } from './theme/theme.config';
 import ProtectedRoute from './restaurantSide/context/ProtectedRoute';
 import UnprotectedRoute from './restaurantSide/context/UnprotectedRoute';
 import HomePage from './restaurantSide/pages/HomePage';
-import HistoryPage from './restaurantSide/pages/History/HistoryPage';
+import HistoryPage from './restaurantSide/pages/HistoryPage';
 import './App.css';
 import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';

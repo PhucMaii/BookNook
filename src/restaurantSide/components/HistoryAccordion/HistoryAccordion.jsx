@@ -5,9 +5,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { background, error, success } from '../../../theme/colors';
 import { green, red } from '@mui/material/colors';
 import PropTypes from 'prop-types';
+import { convertTimestampToDate } from '../../utils/time';
 
 export default function HistoryAccordion({ data }) {
-
   return (
     <Accordion 
       elevation={0}
@@ -29,17 +29,17 @@ export default function HistoryAccordion({ data }) {
               <PingStyled $isCompleted={data['Status'] === 'Completed'} />
               <Avatar />
               <Box display="flex" flexDirection="column" alignItems="left">
-                <Typography fontWeight="light" variant="subtitle1">#000000</Typography>
+                <Typography fontWeight="light" variant="subtitle1">{data['Booking Id']}</Typography>
                 <Typography fontWeight="bold" variant="h6">
-                  Jeremy Passion
+                  {data['Customer Name']}
                 </Typography>  
                 </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={6} textAlign="center">
             <Box display="flex" flexDirection="column" alignItems="left">
-              <Typography>Number of guests: 2</Typography>
-              <Typography>Booked Time: 22 Jan 2024, 12:20 pm</Typography>
+              <Typography>Number of guests: {data['Number of guests']}</Typography>
+              <Typography>Booked Time:{convertTimestampToDate(data['Booked Time'])}</Typography>
             </Box>
           </Grid>
         </Grid>
@@ -68,7 +68,12 @@ export default function HistoryAccordion({ data }) {
                 color={data['Status'] === 'Completed' ? success : error} 
                 fontWeight="bold" 
                 variant="h6"
-                sx={{backgroundColor: data['Status'] === 'Completed' ? green[100] : red[100] ,mr: 'auto', px: 2, borderRadius: '10px'}}
+                sx={{
+                  backgroundColor: data['Status'] === 'Completed' ? green[100] : red[100] ,
+                  mr: 'auto', 
+                  px: 2, 
+                  borderRadius: '10px'
+                }}
               >
                 {data['Status']}
               </Typography>
