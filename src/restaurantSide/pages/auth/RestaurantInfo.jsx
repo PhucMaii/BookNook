@@ -35,7 +35,7 @@ const RestaurantInformation = () => {
     message: '',
   });
   const [isLoading, setIsLoading] = useState(false);
-  const { uid } = useContext(AuthContext);
+  const { restaurantIds } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleRestaurantTypeChange = (event) => {
@@ -66,7 +66,7 @@ const RestaurantInformation = () => {
         imgURL,
       };
       const restaurantCollection = collection(db, 'restaurants');
-      const restaurantQuery = query(restaurantCollection, where('uid', '==', uid));
+      const restaurantQuery = query(restaurantCollection, where('uid', '==', restaurantIds.uid));
       const querySnapshot = await getDocs(restaurantQuery);
       querySnapshot.forEach(async (doc) => {
         const docRef = doc.ref;

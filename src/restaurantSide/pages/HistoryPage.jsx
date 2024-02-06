@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@mui/material';
 import HistoryOverview from '../components/HistoryOverview/HistoryOverview';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import HistoryAccordion from '../components/HistoryAccordion/HistoryAccordion';
 import { AuthContext } from '../context/AuthContext';
 import {
@@ -18,6 +17,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   where,
 } from 'firebase/firestore';
@@ -25,9 +25,11 @@ import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
 
 export default function HistoryPage() {
-  const [dateRange, setDateRange] = useState('');
+  const [dateRange, setDateRange] = useState('Today');
   const [isLoading, setIsLoading] = useState(true);
   const [historyList, setHistoryList] = useState([]);
+  const [numberOfCompleted, setNumberOfCompleted] = useState(0);
+  const [numberOfCancelled, setNumberOfCancelled] = useState(0);
   const [tempHistoryList, setTempHistoryList] = useState([]);
   const [overviewTab, setOverviewTab] = useState('');
   const { restaurantIds } = useContext(AuthContext);
@@ -49,14 +51,14 @@ export default function HistoryPage() {
   }, [dateRange])
 
   const filterByStatus = () => {
-    const newList = historyList.filter((reservation) => {
+    const tempList = generateDateRange();
+    const newList = tempList.filter((reservation) => {
       if (overviewTab === 'none') {
         return reservation;
       } else {
         return reservation.Status === overviewTab
       }
     })
-
     setTempHistoryList(newList);
   }
 
@@ -87,50 +89,58 @@ export default function HistoryPage() {
       startDate.setDate(startDate.getDate() - 3);
       startDate.setHours(0, 0, 0, 0);
     }
+    const { endDate } = generateToday();
+    
+    let completed = 0;
+    let cancelled = 0;
+    const tempList = historyList.filter((reservation) => {
+      if (reservation['Booked Time'] > startDate && reservation['Booked Time'] < endDate) {
+        if (reservation['Status'] === 'Completed') {
+          completed++;
+        } else if (reservation['Status'] === 'Cancelled') {
+          cancelled++;
+        }
+        return reservation;
+      }
+    }).sort((a, b) => b['Booked Time'] - a['Booked Time']); // Sort latest to oldest
+
+    setNumberOfCompleted(completed);
+    setNumberOfCancelled(cancelled);
+
+    setTempHistoryList(tempList);
+    return tempList;
+  }
+
+  const generateToday = () => {
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
     const endDate = new Date();
     const currentHours = endDate.getHours();
     const currentMinutes = endDate.getMinutes();
     const currentSeconds = endDate.getSeconds();
     endDate.setHours(currentHours, currentMinutes, currentSeconds);
 
-    // const newList = historyList.filter((reservation) => {
-    //   console.log(reservation);
-
-    // });
-
-      // return date.isAfter(startDate) && date.isBefore(endDate);
-      // setTempHistoryList(newList);
-      return { startDate, endDate };
+    return { startDate, endDate }
   }
-
-
 
   const fetchHistory = async () => {
     setIsLoading(true);
     try {
       const tempList = [];
 
-      const startDate = new Date();
-      startDate.setHours(0, 0, 0, 0);
-      const endDate = new Date();
-      const currentHours = endDate.getHours();
-      const currentMinutes = endDate.getMinutes();
-      const currentSeconds = endDate.getSeconds();
-      endDate.setHours(currentHours, currentMinutes, currentSeconds);
+      const { startDate, endDate } = generateToday();
 
       const reservationCollection = collection(db, 'reservations');
-      console.log(restaurantIds.docId);
       const historyQuery = query(
         reservationCollection,
         and (
           where('restaurantId', '==', restaurantIds.docId),
-          where('date', '>=', startDate),
-          where('date', '<=', endDate),
           where('status', 'in', ['Completed', 'Cancelled'])
-        )
+        ),
+        orderBy('date')
       );
       const querySnapshot = await getDocs(historyQuery);
-      querySnapshot.forEach(async (document) => {
+      const reservationPromises = querySnapshot.docs.map(async (document) => {
         const id = document.id;
         const reservationData = document.data();
         const tableRef = doc(db, 'diningTables', reservationData.tableId);
@@ -155,14 +165,33 @@ export default function HistoryPage() {
 
         tempList.push(formattedData);
       });
-
+      // Wait for all the async functions inside a loop to finish
+      await Promise.all(reservationPromises);
       setHistoryList(tempList);
-      setTempHistoryList(tempList);
+      
+      let completed = 0;
+      let cancelled = 0;
+
+      // Get history reservation for today in the first render
+      const filteredTempList = tempList.filter((reservation) => {
+        if (reservation['Booked Time'] > startDate && reservation['Booked Time'] < endDate) {
+          if (reservation['Status'] === 'Completed') {
+            completed++;
+          } else if (reservation['Status'] === 'Cancelled') {
+            cancelled++;
+          }
+          return reservation;
+        }
+      })
+      setNumberOfCompleted(completed);
+      setNumberOfCancelled(cancelled);
+
+      setTempHistoryList(filteredTempList);      
 
       // Wait until the list is loaded
       setTimeout(() => {
         setIsLoading(false);
-      }, 200);
+      }, 1000);
     } catch (error) {
       setIsLoading(false);
       console.log('Fail to fetch history, ', error);
@@ -197,7 +226,6 @@ export default function HistoryPage() {
               onChange={(e) => setDateRange(e.target.value)}
               variant='outlined'
               value={dateRange}
-              endIcon={<ArrowForwardIosIcon />}
             >
               <MenuItem value='Today'>Today</MenuItem>
               <MenuItem value='Last 3 days'>Last 3 days</MenuItem>
@@ -208,7 +236,7 @@ export default function HistoryPage() {
           <Grid container spacing={4} mt={2}>
             <HistoryOverview
               iconImg='/checked.png'
-              numberOfReservation={114}
+              numberOfReservation={numberOfCompleted}
               onClick={() => {
                 if (overviewTab !== 'Completed') {
                   setOverviewTab('Completed');
@@ -221,7 +249,7 @@ export default function HistoryPage() {
             />
             <HistoryOverview
               iconImg='/cancel.png'
-              numberOfReservation={3}
+              numberOfReservation={numberOfCancelled}
               onClick={() => {
                 if (overviewTab !== 'Cancelled') {
                   setOverviewTab('Cancelled');
