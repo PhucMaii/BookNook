@@ -39,7 +39,7 @@ export default function HistoryAccordion({ data }) {
           <Grid item xs={12} md={6} textAlign="center">
             <Box display="flex" flexDirection="column" alignItems="left">
               <Typography>Number of guests: {data['Number of guests']}</Typography>
-              <Typography>Booked Time:{convertTimestampToDate(data['Booked Time'])}</Typography>
+              <Typography>Booked Time: {convertTimestampToDate(data['Booked Time'])}</Typography>
             </Box>
           </Grid>
         </Grid>
@@ -55,7 +55,11 @@ export default function HistoryAccordion({ data }) {
                 <Grid key={index} item xs={12} sm={6} md={4} textAlign="left" mt={2}>
                   <Box display="flex" flexDirection="column">
                     <Typography variant="subtitle1">{key}</Typography>
-                    <Typography fontWeight="bold" variant="h6">{data[key]}</Typography>
+                    <Typography fontWeight="bold" variant="h6">
+                      {
+                        key === 'Booked Time' ? convertTimestampToDate(data[key]) : data[key]
+                      }
+                    </Typography>
                   </Box>
                 </Grid>
               )

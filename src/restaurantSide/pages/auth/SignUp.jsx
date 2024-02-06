@@ -27,7 +27,7 @@ import {
   signOut,
   signInWithPopup
 } from '@firebase/auth';
-import { addDoc, collection } from '@firebase/firestore';
+import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import RestaurantInformation from './RestaurantInfo';
@@ -54,6 +54,22 @@ const SignUp = () => {
     }
     handleSignout();
   }, [])
+
+  const checkIsUserInDB = async (email) => {
+    try {
+      const restaurantCollection = collection(db, 'restaurants');
+      const restaurantQuery = query(restaurantCollection, where('email', '==', email));
+      const querySnapshot = await getDocs(restaurantQuery);
+
+      let id;
+      querySnapshot.forEach((doc) => {
+        id = doc.id;
+      })
+      return id ? true : false;
+    } catch (error) {
+      console.log('Fail to check user in DB: ', error);
+    }
+  }
 
   const checkFieldsValid = () => {
     if (!email || !password || !confirmPassword) {
@@ -92,11 +108,26 @@ const SignUp = () => {
   const handleSignUp = async () => {
     const isAllFieldsValid = checkFieldsValid();
     if (!isAllFieldsValid) {
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: 'Please fill out all fields'
+      })
       return;
     }
 
     setIsLoading(true);
     try {
+      const isUserInDB = await checkIsUserInDB(email);
+      if (isUserInDB) {
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email Exists Already'
+        })
+        setIsLoading(false);
+        return;
+      }
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -109,7 +140,7 @@ const SignUp = () => {
 
       const restaurantCollection = collection(db, 'restaurants');
       const docData = await addDoc(restaurantCollection, submittedData);
-      setRestaurantIds((prevIds) => ({...prevIds, docId: docData.id}))
+      setRestaurantIds(() => ({uid: userCredential.user.uid, docId: docData.id}))
 
       await signInWithEmailAndPassword(
         auth,
@@ -142,13 +173,24 @@ const SignUp = () => {
     try {
       setIsLoading(true);
       const userCredential = await signInWithPopup(auth, googleProvider);
+      const isUserInDB = await checkIsUserInDB(userCredential.user.email);
+      if (isUserInDB) {
+        await userCredential.user.delete();
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email Exists Already'
+        })
+        setIsLoading(false);
+        return;
+      }
       const submittedData = {
         email: userCredential.user.email,
         uid: userCredential.user.uid,
       }
       const restaurantCollection = collection(db, 'restaurants');
       const docData = await addDoc(restaurantCollection, submittedData);
-      setRestaurantIds((prevIds) => ({...prevIds, docId: docData.id}));
+      setRestaurantIds(() => ({uid: userCredential.user.uid, docId: docData.id}));
       
       setNotification({
         on: true,
