@@ -1,9 +1,43 @@
-import { Grid, Typography, Box } from '@mui/material';
-import React from 'react';
+import {
+  Grid,
+  Typography,
+  Box,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+  TextField,
+  Button,
+  InputAdornment,
+  Select,
+  MenuItem,
+  Menu,
+} from '@mui/material';
+import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar/Sidebar';
 import HomepageCard from '../components/HomepageCard/HomepageCard';
+import SearchIcon from '@mui/icons-material/Search';
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 
 export default function HomePage() {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [filter, setFilter] = useState('');
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSelect = (value) => {
+    setFilter(value);
+    handleClose();
+  };
+
   const cardContent = [
     {
       img: '/Reservation.png',
@@ -22,14 +56,31 @@ export default function HomePage() {
     },
   ];
 
+  const tableContent = [
+    {
+      customerName: 'Jane Cooper',
+      tableName: 'Table 2',
+      time: '9:00AM',
+      status: 'seated',
+    },
+    {
+      customerName: 'Wade Warren',
+      tableName: 'Table 3',
+      time: '10:00AM',
+      status: 'Confirmed',
+    },
+    {
+      customerName: 'Esther Howard',
+      tableName: 'Table 1',
+      time: '11:00AM',
+      status: 'Unconfirmed',
+    },
+  ];
+
   return (
     <Sidebar>
       <Box display='flex' flexDirection='column' gap={4} width='100%' mx={8}>
-        <Grid
-          container
-          spacing={3}
-          marginTop={0.5}
-        >
+        <Grid container spacing={3} marginTop={0.5}>
           {cardContent.map((card, index) => (
             <Grid key={index} item xs={12} sm={6} md={4}>
               <HomepageCard
@@ -40,9 +91,101 @@ export default function HomePage() {
             </Grid>
           ))}
         </Grid>
+
         <Typography sx={{ fontFamily: 'Roboto', fontSize: 34, marginTop: 2 }}>
           Today Reservations
         </Typography>
+
+        <Paper>
+          <Grid
+            container
+            spacing={2}
+            alignItems='center'
+            padding={'10px'}
+            justifyContent={'space-between'}
+          >
+            <Grid item xs={6}>
+              <TextField
+                color='secondary'
+                fullWidth
+                variant='standard'
+                placeholder='Search name, table name, etc.'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={2}>
+              <Button
+                style={{ color: '#64748B' }}
+                startIcon={<FilterAltOutlinedIcon />}
+                aria-controls='filter-menu'
+                aria-haspopup='true'
+                onClick={handleClick}
+              >
+                {filter || 'Filter'}
+              </Button>
+              <Menu
+                id='filter-menu'
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={() => handleSelect('seated')}>
+                  Seated
+                </MenuItem>
+                <MenuItem onClick={() => handleSelect('confirmed')}>
+                  Confirmed
+                </MenuItem>
+                <MenuItem onClick={() => handleSelect('unseated')}>
+                  Unconfirmed
+                </MenuItem>
+                <MenuItem onClick={() => handleSelect('1')}>
+                  Newest to Oldest
+                </MenuItem>
+                <MenuItem onClick={() => handleSelect('2')}>
+                  Oldest to Newest
+                </MenuItem>
+                <MenuItem onClick={() => handleSelect('3d')}>A to Z</MenuItem>
+                <MenuItem onClick={() => handleSelect('u4ated')}>
+                  Z to A
+                </MenuItem>
+              </Menu>
+            </Grid>
+          </Grid>
+
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>CUSTOMER</TableCell>
+                <TableCell>TABLE</TableCell>
+                <TableCell>TIME</TableCell>
+                <TableCell>STATUS</TableCell>
+                <TableCell>ACTIONS</TableCell> {/* Added for edit button */}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableContent.map((row) => (
+                <TableRow key={row.customerName}>
+                  <TableCell>{row.customerName}</TableCell>
+                  <TableCell>{row.tableName}</TableCell>
+                  <TableCell>{row.time}</TableCell>
+                  <TableCell>{row.status}</TableCell>
+                  <TableCell>
+                    <Button variant="filled" style={{ color: '#64748B', backgroundColor: '#E7EAEE' }}>
+                      EDIT
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
       </Box>
     </Sidebar>
   );
