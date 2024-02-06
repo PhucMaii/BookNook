@@ -4,11 +4,11 @@ import { AuthContext } from './AuthContext';
 import { SplashScreen } from '../../lib/utils';
 
 export default function ProtectedRoute() {
-  const { uid } = useContext(AuthContext);
+  const { restaurantIds } = useContext(AuthContext);
   
-  if (uid === null) {
+  if (restaurantIds.uid === null) {
     return <SplashScreen/>
   }
-  return uid ? <Outlet /> : <Navigate to="/restaurant/login" />;
+  return restaurantIds.uid ? <Outlet /> : <Navigate to="/restaurant/login" />;
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   Grid, 
   Box, 
@@ -25,6 +25,7 @@ import { getAdditionalUserInfo, signInWithEmailAndPassword, signInWithPopup } fr
 import { auth, db, googleProvider } from '../../../../firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { handleErrorMsg } from '../../utils/error';
+import { AuthContext } from '../../context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -37,13 +38,19 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { setRestaurantIds } = useContext(AuthContext);
 
-  const checkIsUserInDB = async () => {
+  const checkIsUserInDB = async (email) => {
     try {
       const restaurantCollection = collection(db, 'restaurants');
       const restaurantQuery = query(restaurantCollection, where('email', '==', email));
       const querySnapshot = await getDocs(restaurantQuery);
-      return !querySnapshot.empty;
+
+      let id;
+      querySnapshot.forEach((doc) => {
+        id = doc.id;
+      })
+      return id ? id : false;
     } catch (error) {
       console.log('Fail to check user in DB: ', error);
     }
@@ -65,7 +72,7 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      const isUserValid = await checkIsUserInDB();
+      const isUserValid = await checkIsUserInDB(email);
       if (!isUserValid) {
         setNotification({
           on: true,
@@ -76,6 +83,8 @@ const Login = () => {
         return;
       }
       await signInWithEmailAndPassword(auth, email, password);
+
+      setRestaurantIds((prevIds) => ({...prevIds, docId: isUserValid}));
       
       setNotification({
         on: true,
@@ -114,6 +123,20 @@ const Login = () => {
         setIsLoading(false);
         return;
       }
+
+      const isUserValid = await checkIsUserInDB(userCredentials.user.email);
+
+      if (!isUserValid) {
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'User Not Found'
+        })
+        setIsLoading(false);
+        return;
+      }
+
+      setRestaurantIds((prevIds) => ({...prevIds, docId: isUserValid}));      
 
       setNotification({
         on: true,

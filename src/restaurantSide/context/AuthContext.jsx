@@ -6,16 +6,19 @@ import { auth } from '../../../firebaseConfig';
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
-    const [uid, setUid] = useState(null);
+    const [restaurantIds, setRestaurantIds] = useState({
+        uid: null,
+        docId: null,
+    });
 
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
           // User is signed in
-          setUid(user.uid);
+          setRestaurantIds({...restaurantIds, uid: user.uid});
         } else {
           // User is signed out
-          setUid('');
+          setRestaurantIds({});
         }
       });
       return () => unsubscribe();
@@ -23,7 +26,7 @@ export default function AuthProvider({ children }) {
   
     
     return (
-        <AuthContext.Provider value={{uid, setUid}}>
+        <AuthContext.Provider value={{restaurantIds, setRestaurantIds}}>
             { children }
         </AuthContext.Provider>
     )

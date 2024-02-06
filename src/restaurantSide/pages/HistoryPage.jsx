@@ -23,7 +23,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
-import { convertTimestampToDate } from '../utils/time';
 
 export default function HistoryPage() {
   const [dateRange, setDateRange] = useState('');
@@ -31,7 +30,7 @@ export default function HistoryPage() {
   const [historyList, setHistoryList] = useState([]);
   const [tempHistoryList, setTempHistoryList] = useState([]);
   const [overviewTab, setOverviewTab] = useState('');
-  const { uid } = useContext(AuthContext);
+  const { restaurantIds } = useContext(AuthContext);
 
   useEffect(() => {
     fetchHistory();
@@ -120,10 +119,11 @@ export default function HistoryPage() {
       endDate.setHours(currentHours, currentMinutes, currentSeconds);
 
       const reservationCollection = collection(db, 'reservations');
+      console.log(restaurantIds.docId);
       const historyQuery = query(
         reservationCollection,
         and (
-          where('restaurantId', '==', uid),
+          where('restaurantId', '==', restaurantIds.docId),
           where('date', '>=', startDate),
           where('date', '<=', endDate),
           where('status', 'in', ['Completed', 'Cancelled'])
