@@ -8,7 +8,7 @@ export const IconImg = styled.img`
 `;
 
 export const StatusTabStyled = styled(Box)`
-  background-color: ${grey[200]};
+  background-color: ${(props) => props.$isCurrentTab ? grey[400] : grey[200]};
   border-radius: 20px;
   cursor: pointer;
 `;

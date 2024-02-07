@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import SettingsCellIcon from '@mui/icons-material/SettingsCell';
 import { restaurantTypes, averagePrices } from '../../utils/constants';
 import { LogoImg, SideImg } from './styled';
-import { addDoc, collection } from '@firebase/firestore';
-import { auth, db, googleProvider } from '../../../../firebaseConfig';
+import { collection, getDocs, query, where, updateDoc, } from '@firebase/firestore';
+import { db } from '../../../../firebaseConfig';
 import { Alert, Snackbar } from '@mui/material';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
@@ -21,7 +21,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { signInWithPopup } from 'firebase/auth';
+import { AuthContext } from '../../context/AuthContext';
 
 const RestaurantInformation = () => {
   const [restaurantType, setRestaurantType] = useState('');
@@ -35,6 +35,7 @@ const RestaurantInformation = () => {
     message: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const { restaurantIds } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleRestaurantTypeChange = (event) => {
@@ -57,18 +58,21 @@ const RestaurantInformation = () => {
 
     try {
       setIsLoading(true);
-      const userCredential = await signInWithPopup(auth, googleProvider);
       const submittedData = {
-        uid: userCredential.user.uid,
-        email: userCredential.user.email,
         name: restaurantName,
         type: restaurantType,
         avgPrice: price,
         phoneNumber: contactNumber,
         imgURL,
       };
+
       const restaurantCollection = collection(db, 'restaurants');
-      await addDoc(restaurantCollection, submittedData);
+      const restaurantQuery = query(restaurantCollection, where('uid', '==', restaurantIds.uid));
+      const querySnapshot = await getDocs(restaurantQuery);
+      querySnapshot.forEach(async (doc) => {
+        const docRef = doc.ref;
+        await updateDoc(docRef, submittedData);
+      })
       setNotification({
         on: true,
         severity: 'success',
@@ -201,10 +205,7 @@ const RestaurantInformation = () => {
               loading={isLoading}
               loadingIndicator='Creating...'
             >
-              <Box display='flex' gap={2} alignItems='center'>
-                <img src='/icons/googleLogo.png' alt='Google Logo' />
-                <Typography>Create Account</Typography>
-              </Box>
+              Create Account
             </LoadingButton>
           </Box>
         </Box>
