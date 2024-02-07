@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Grid } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
+import { CardStyled } from './styled';
 
 const HomepageCard = ({ title, data, icon }) => {
   return (
-    <Card sx={{borderRadius:'14px', maxWidth:'100%', boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',}}>
-      <Grid container spacing={2} alignItems="center" margin={'auto'}>
+    <CardStyled>
+      <Grid container spacing={2} justifyContent="center" alignItems="center" margin={'auto'}>
         <Grid item xs={4}>
           <div
             style={{
@@ -24,22 +25,22 @@ const HomepageCard = ({ title, data, icon }) => {
           </div>
         </Grid>
         <Grid item xs={8}>
-          <Typography sx={{ fontFamily: 'Barlow', fontWeight: 'bold', fontSize: 46}}>
+          <Typography fontWeight="bold" variant="h4">
             {data}
           </Typography>
-          <Typography sx={{ fontFamily: 'Barlow', fontSize: 16, marginBottom: 5 }}>
+          <Typography>
             {title}
           </Typography>
         </Grid>
       </Grid>
-    </Card>
+    </CardStyled>
   );
 };
 
 HomepageCard.propTypes = {
-  title: PropTypes.String,
+  title: PropTypes.string,
   data: PropTypes.number,
-  icon: PropTypes.String,
+  icon: PropTypes.string,
 };
 
 export default HomepageCard;

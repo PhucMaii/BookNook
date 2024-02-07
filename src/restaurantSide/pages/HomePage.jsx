@@ -11,7 +11,6 @@ import {
   TextField,
   Button,
   InputAdornment,
-  Select,
   MenuItem,
   Menu,
 } from '@mui/material';
@@ -20,6 +19,7 @@ import Sidebar from '../components/Sidebar/Sidebar';
 import HomepageCard from '../components/HomepageCard/HomepageCard';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
+import { blueGrey } from '../../theme/colors';
 
 export default function HomePage() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -101,8 +101,8 @@ export default function HomePage() {
             container
             spacing={2}
             alignItems='center'
-            padding={'10px'}
-            justifyContent={'space-between'}
+            padding={2}
+            justifyContent='space-between'
           >
             <Grid item xs={6}>
               <TextField
@@ -177,7 +177,7 @@ export default function HomePage() {
                   <TableCell>{row.time}</TableCell>
                   <TableCell>{row.status}</TableCell>
                   <TableCell>
-                    <Button variant="filled" style={{ color: '#64748B', backgroundColor: '#E7EAEE' }}>
+                    <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
                       EDIT
                     </Button>
                   </TableCell>
