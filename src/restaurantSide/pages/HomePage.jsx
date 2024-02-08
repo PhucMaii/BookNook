@@ -128,8 +128,8 @@ export default function HomePage() {
                 <TableCell>CUSTOMER</TableCell>
                 <TableCell>TABLE</TableCell>
                 <TableCell>TIME</TableCell>
-                <TableCell>STATUS</TableCell>
-                <TableCell>ACTIONS</TableCell> {/* Added for edit button */}
+                <TableCell style={{textAlign:'center'}}>STATUS</TableCell>
+                <TableCell>ACTIONS</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -138,7 +138,9 @@ export default function HomePage() {
                   <TableCell>{row.customerName}</TableCell>
                   <TableCell>{row.tableName}</TableCell>
                   <TableCell>{row.time}</TableCell>
-                  <TableCell><StatusText text={row.status} textColor={}/></TableCell>
+                  <TableCell style={{width:'20%'}}> 
+                    <StatusText text={row.status} type={row.status === 'seated' ? 'success' : row.status === 'Confirmed' ? 'warning' : 'error'}/>
+                  </TableCell>
                   <TableCell>
                     <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
                       EDIT
