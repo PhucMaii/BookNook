@@ -108,14 +108,14 @@ export default function HomePage() {
                 <MenuItem onClick={() => handleSelect('unseated')}>
                   Unconfirmed
                 </MenuItem>
-                <MenuItem onClick={() => handleSelect('1')}>
+                <MenuItem onClick={() => handleSelect('Newest to Oldest')}>
                   Newest to Oldest
                 </MenuItem>
-                <MenuItem onClick={() => handleSelect('2')}>
+                <MenuItem onClick={() => handleSelect('Oldest to Newest')}>
                   Oldest to Newest
                 </MenuItem>
-                <MenuItem onClick={() => handleSelect('3d')}>A to Z</MenuItem>
-                <MenuItem onClick={() => handleSelect('u4ated')}>
+                <MenuItem onClick={() => handleSelect('A to Z')}>A to Z</MenuItem>
+                <MenuItem onClick={() => handleSelect('Z to A')}>
                   Z to A
                 </MenuItem>
               </Menu>
@@ -128,8 +128,8 @@ export default function HomePage() {
                 <TableCell>CUSTOMER</TableCell>
                 <TableCell>TABLE</TableCell>
                 <TableCell>TIME</TableCell>
-                <TableCell style={{textAlign:'center'}}>STATUS</TableCell>
-                <TableCell>ACTIONS</TableCell>
+                <TableCell align='center' >STATUS</TableCell>
+                <TableCell align='center'>ACTIONS</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -141,7 +141,7 @@ export default function HomePage() {
                   <TableCell style={{width:'20%'}}> 
                     <StatusText text={row.status} type={row.status === 'seated' ? 'success' : row.status === 'Confirmed' ? 'warning' : 'error'}/>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align='center'>
                     <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
                       EDIT
                     </Button>
