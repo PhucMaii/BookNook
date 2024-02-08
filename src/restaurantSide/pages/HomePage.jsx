@@ -20,6 +20,8 @@ import HomepageCard from '../components/HomepageCard/HomepageCard';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { blueGrey } from '../../theme/colors';
+import { cardContent, tableContent } from '../utils/constants';
+import StatusText from '../components/StatusText/StatusText';
 
 export default function HomePage() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -38,45 +40,6 @@ export default function HomePage() {
     handleClose();
   };
 
-  const cardContent = [
-    {
-      img: '/Reservation.png',
-      title: 'Total Reservations',
-      data: 75,
-    },
-    {
-      img: '/Arrive.png',
-      title: 'Total Arrived',
-      data: 50,
-    },
-    {
-      img: '/Review.png',
-      title: 'Avg Review Stars',
-      data: 4.2,
-    },
-  ];
-
-  const tableContent = [
-    {
-      customerName: 'Jane Cooper',
-      tableName: 'Table 2',
-      time: '9:00AM',
-      status: 'seated',
-    },
-    {
-      customerName: 'Wade Warren',
-      tableName: 'Table 3',
-      time: '10:00AM',
-      status: 'Confirmed',
-    },
-    {
-      customerName: 'Esther Howard',
-      tableName: 'Table 1',
-      time: '11:00AM',
-      status: 'Unconfirmed',
-    },
-  ];
-
   return (
     <Sidebar>
       <Box display='flex' flexDirection='column' gap={4} width='100%' mx={8}>
@@ -92,7 +55,7 @@ export default function HomePage() {
           ))}
         </Grid>
 
-        <Typography sx={{ fontFamily: 'Roboto', fontSize: 34, marginTop: 2 }}>
+        <Typography  variant='h5'>
           Today Reservations
         </Typography>
 
@@ -175,7 +138,7 @@ export default function HomePage() {
                   <TableCell>{row.customerName}</TableCell>
                   <TableCell>{row.tableName}</TableCell>
                   <TableCell>{row.time}</TableCell>
-                  <TableCell>{row.status}</TableCell>
+                  <TableCell><StatusText text={row.status} textColor={}/></TableCell>
                   <TableCell>
                     <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
                       EDIT
