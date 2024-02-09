@@ -22,11 +22,11 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/restaurant/overview" element={<HomePage />} />
               <Route path="/restaurant/history" element={<HistoryPage />} />
+              <Route path='/restaurant/edit-profile' element={<SettingsPage/>} />
             </Route>
             <Route element={<UnprotectedRoute />}>
               <Route path="/restaurant/signup" element={<SignUp />} />
               <Route path="/restaurant/login" element={<Login />} />
-              <Route path='/restaurant/settings' element={<SettingsPage/>} />
             </Route>
           </Routes>
         </BrowserRouter>
