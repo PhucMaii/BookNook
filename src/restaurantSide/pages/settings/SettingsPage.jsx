@@ -117,7 +117,6 @@ export default function SettingsPage() {
                 container
                 columnSpacing={2}
                 width='100vw'
-
             >
                 <Grid item xs={12} md={12} >
                     <Box display='flex' flexDirection='column' height={500}>
@@ -182,9 +181,10 @@ export default function SettingsPage() {
                                     >
                                         <Typography variant='h6' width={145}> Phone Number:</Typography>
                                         <TextField
+                                            type='number'
                                             fullWidth
-                                            id='Restaurant Name'
-                                            defaultValue='Miku Restaurant'
+                                            id='Phone Number'
+                                            
                                             color='secondary'
                                         />
                                     </Box>
@@ -200,7 +200,6 @@ export default function SettingsPage() {
                                         <TextField
                                             fullWidth
                                             id='Restaurant Name'
-                                            defaultValue='Miku Restaurant'
                                             color='secondary'
                                         />
                                     </Box>
@@ -214,8 +213,7 @@ export default function SettingsPage() {
                                         <Typography variant='h6' width={145}> Address:</Typography>
                                         <TextField
                                             fullWidth
-                                            id='Restaurant Name'
-                                            defaultValue='Miku Restaurant'
+                                            id='Address'
                                             color='secondary'
                                         />
                                     </Box>
