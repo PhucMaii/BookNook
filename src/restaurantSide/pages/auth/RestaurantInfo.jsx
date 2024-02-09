@@ -22,8 +22,10 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import AddressInput from '../../components/AddressInput';
 
 const RestaurantInformation = () => {
+  const [address, setAddress] = useState(null);
   const [restaurantType, setRestaurantType] = useState('');
   const [price, setPrice] = useState('');
   const [restaurantName, setRestaurantName] = useState('');
@@ -47,7 +49,7 @@ const RestaurantInformation = () => {
   };
 
   const handleUpdateInfo = async () => {
-    if (!restaurantName || !restaurantType || !contactNumber || !price) {
+    if (!restaurantName || !restaurantType || !contactNumber || !price || !address) {
       setNotification({
         on: true,
         severity: 'error',
@@ -60,6 +62,7 @@ const RestaurantInformation = () => {
       setIsLoading(true);
       const submittedData = {
         name: restaurantName,
+        address: address.description,
         type: restaurantType,
         avgPrice: price,
         phoneNumber: contactNumber,
@@ -128,6 +131,7 @@ const RestaurantInformation = () => {
               }}
               onChange={(e) => setRestaurantName(e.target.value)}
             />
+            <AddressInput onDataReceived={(data) => setAddress(data)}/>
             <TextField
               type='number'
               id='outlined-required'
