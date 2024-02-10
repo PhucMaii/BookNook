@@ -13,52 +13,25 @@ import {
     IconButton,
     Paper
 } from '@mui/material'
-import PropTypes from 'prop-types'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AddressInput from '../../components/AddressInput';
 import DummyImage from '/settingsDummyImg.png'
+import SettingsPagePanel from './SettingsPagePanel'
+import EditProfileProps from './EditProfileProps'
 
-function SettingsPagePanel(props) {
-    const { children, value, index, ...other } = props;
-    return (
-        <div
-            role='tabpanel'
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-}
-SettingsPagePanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-}
+
 export default function SettingsPage() {
     const [address, setAddress] = useState(null);
     const [value, setValue] = useState(0);
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
     const [showSettingsOldPassword, setSettingsOldPassword] = useState(false);
     const [showSettingsNewPassword, setSettingsNewPassword] = useState(false);
     const [showSettingsConfirmPassword, setSettingsConfirmPassword] = useState(false);
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
+    };
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
     };
     return (
         <Sidebar>
@@ -103,8 +76,8 @@ export default function SettingsPage() {
                                         textColor='black'
                                         indicatorColor='secondary'
                                     >
-                                        <Tab label='General' {...a11yProps(0)} />
-                                        <Tab label='Settings' {...a11yProps(1)} />
+                                        <Tab label='General' {...EditProfileProps(0)} />
+                                        <Tab label='Settings' {...EditProfileProps(1)} />
                                     </Tabs>
                                 </Box>
                                 <Box display='flex' flexDirection='column'>
