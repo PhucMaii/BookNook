@@ -230,7 +230,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>
-              <Link component='button'>
+              <Link component='button' to='/restaurant/forgotpasswordhost'>
                 <Typography textAlign='right' variant='subtitle2'>
                   Forgot Password?
                 </Typography>
