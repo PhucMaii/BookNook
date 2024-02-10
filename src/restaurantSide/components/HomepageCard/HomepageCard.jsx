@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid } from '@mui/material';
 import { CardStyled, IconBackground } from './styled';
 
 const HomepageCard = ({ title, data, icon }) => {
+console.log()
   return (
     <CardStyled>
       <Grid

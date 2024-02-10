@@ -23,6 +23,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
+import { generateToday } from '../utils/time';
 
 export default function HistoryPage() {
   const [dateRange, setDateRange] = useState('Today');
@@ -109,18 +110,6 @@ export default function HistoryPage() {
 
     setTempHistoryList(tempList);
     return tempList;
-  }
-
-  const generateToday = () => {
-    const startDate = new Date();
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date();
-    const currentHours = endDate.getHours();
-    const currentMinutes = endDate.getMinutes();
-    const currentSeconds = endDate.getSeconds();
-    endDate.setHours(currentHours, currentMinutes, currentSeconds);
-
-    return { startDate, endDate }
   }
 
   const fetchHistory = async () => {
