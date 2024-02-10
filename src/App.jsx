@@ -12,6 +12,7 @@ import './App.css';
 import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
 import AuthProvider from './restaurantSide/context/AuthContext';
+import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
 
 function App() {
   return (
@@ -25,10 +26,12 @@ function App() {
               <Route path='/restaurant/edit-profile' element={<SettingsPage/>} />
             </Route>
             <Route element={<UnprotectedRoute />}>
+              <Route path="/restaurant/forgot-password" element={<ForgotPasswordHost />} />  
               <Route path="/restaurant/login" element={<Login />} />
             </Route>
             <Route path="/restaurant/signup" element={<SignUp />} />
           </Routes>
+            
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
