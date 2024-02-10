@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Grid,
   Box,
@@ -20,15 +20,18 @@ import { Link } from 'react-router-dom';
 import KeyIcon from '@mui/icons-material/Key';
 import { LogoImg, SideImg } from './styled';
 import { grey } from '@mui/material/colors';
-import { auth, db } from '../../../../firebaseConfig';
+import { auth, db, googleProvider } from '../../../../firebaseConfig';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
+  signInWithPopup
 } from '@firebase/auth';
-import { addDoc, collection } from '@firebase/firestore';
+import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import RestaurantInformation from './RestaurantInfo';
+import { AuthContext } from '../../context/AuthContext';
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -43,6 +46,30 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { setRestaurantIds } = useContext(AuthContext);
+
+  useEffect(() => {
+    const handleSignout = async () => {
+      await signOut(auth);
+    }
+    handleSignout();
+  }, [])
+
+  const checkIsUserInDB = async (email) => {
+    try {
+      const restaurantCollection = collection(db, 'restaurants');
+      const restaurantQuery = query(restaurantCollection, where('email', '==', email));
+      const querySnapshot = await getDocs(restaurantQuery);
+
+      let id;
+      querySnapshot.forEach((doc) => {
+        id = doc.id;
+      })
+      return id ? true : false;
+    } catch (error) {
+      console.log('Fail to check user in DB: ', error);
+    }
+  }
 
   const checkFieldsValid = () => {
     if (!email || !password || !confirmPassword) {
@@ -81,11 +108,26 @@ const SignUp = () => {
   const handleSignUp = async () => {
     const isAllFieldsValid = checkFieldsValid();
     if (!isAllFieldsValid) {
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: 'Please fill out all fields'
+      })
       return;
     }
 
     setIsLoading(true);
     try {
+      const isUserInDB = await checkIsUserInDB(email);
+      if (isUserInDB) {
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email Exists Already'
+        })
+        setIsLoading(false);
+        return;
+      }
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -97,7 +139,8 @@ const SignUp = () => {
       };
 
       const restaurantCollection = collection(db, 'restaurants');
-      await addDoc(restaurantCollection, submittedData);
+      const docData = await addDoc(restaurantCollection, submittedData);
+      setRestaurantIds(() => ({uid: userCredential.user.uid, docId: docData.id}))
 
       await signInWithEmailAndPassword(
         auth,
@@ -125,6 +168,44 @@ const SignUp = () => {
       });
     }
   };
+
+  const handleSignupWithGoogle = async () => {
+    try {
+      setIsLoading(true);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const isUserInDB = await checkIsUserInDB(userCredential.user.email);
+      if (isUserInDB) {
+        await userCredential.user.delete();
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email Exists Already'
+        })
+        setIsLoading(false);
+        return;
+      }
+      const submittedData = {
+        email: userCredential.user.email,
+        uid: userCredential.user.uid,
+      }
+      const restaurantCollection = collection(db, 'restaurants');
+      const docData = await addDoc(restaurantCollection, submittedData);
+      setRestaurantIds(() => ({uid: userCredential.user.uid, docId: docData.id}));
+      
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Registering...',
+      });
+
+      setTimeout(() => {
+        handleNext();
+        setIsLoading(false);
+      }, 2000)  
+    } catch (error) { 
+      console.log('Fail to sign up with Google: ', error);
+    }
+  }
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -246,7 +327,7 @@ const SignUp = () => {
             <Button
               variant='outlined'
               color='secondary'
-              onClick={handleNext}
+              onClick={handleSignupWithGoogle}
             >
               <Box display='flex' gap={2} alignItems='center'>
                 <img src='/icons/googleLogo.png' alt='Google Logo' />

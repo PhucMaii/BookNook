@@ -1,21 +1,31 @@
 import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../../firebaseConfig';
+import { auth, db } from '../../../firebaseConfig';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
-    const [uid, setUid] = useState(null);
+    const [restaurantIds, setRestaurantIds] = useState({
+        uid: null,
+        docId: null,
+    });
 
     useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
           // User is signed in
-          setUid(user.uid);
+            const restaurantCollection = collection(db, 'restaurants');
+            const restaurantQuery = query(restaurantCollection, where('uid', '==', user.uid));
+            const querySnapshot = await getDocs(restaurantQuery);
+            querySnapshot.docs.forEach((doc) => {
+                const id = doc.id;
+                setRestaurantIds({docId: id, uid: user.uid});
+            })
         } else {
           // User is signed out
-          setUid('');
+          setRestaurantIds({});
         }
       });
       return () => unsubscribe();
@@ -23,7 +33,7 @@ export default function AuthProvider({ children }) {
   
     
     return (
-        <AuthContext.Provider value={{uid, setUid}}>
+        <AuthContext.Provider value={{restaurantIds, setRestaurantIds}}>
             { children }
         </AuthContext.Provider>
     )
