@@ -24,7 +24,7 @@ function App() {
               <Route path="/restaurant/history" element={<HistoryPage />} />
             </Route>
             <Route element={<UnprotectedRoute />}>
-              <Route path="/restaurant/forgotpasswordhost" element={<ForgotPasswordHost />} />  
+              <Route path="/restaurant/forgot-password" element={<ForgotPasswordHost />} />  
               <Route path="/restaurant/login" element={<Login />} />
             </Route>
             <Route path="/restaurant/signup" element={<SignUp />} />
