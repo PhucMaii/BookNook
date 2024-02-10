@@ -7,6 +7,7 @@ import ProtectedRoute from './restaurantSide/context/ProtectedRoute';
 import UnprotectedRoute from './restaurantSide/context/UnprotectedRoute';
 import HomePage from './restaurantSide/pages/HomePage';
 import HistoryPage from './restaurantSide/pages/HistoryPage';
+import SettingsPage from './restaurantSide/pages/settings/SettingsPage'
 import './App.css';
 import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
@@ -21,6 +22,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/restaurant/overview" element={<HomePage />} />
               <Route path="/restaurant/history" element={<HistoryPage />} />
+              <Route path='/restaurant/edit-profile' element={<SettingsPage/>} />
             </Route>
             <Route element={<UnprotectedRoute />}>
               <Route path="/restaurant/login" element={<Login />} />
