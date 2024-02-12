@@ -217,6 +217,7 @@ const SignUp = () => {
       columnSpacing={2}
       justifyContent='center'
       height='100vh'
+      overflow='hidden'
     >
       <Snackbar
         open={notification.on}

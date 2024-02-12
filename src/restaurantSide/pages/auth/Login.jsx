@@ -187,9 +187,9 @@ const Login = () => {
           </Typography>
           <Box display='flex' flexDirection='column' gap={3} mt={3}>
             <TextField
-              color='secondary'
-              id='outlined-required'
+              id='outlined-basic'
               label='Email Address'
+              color='secondary'
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -230,7 +230,7 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>
-              <Link component='button'>
+              <Link component='button' to='/restaurant/forgot-password'>
                 <Typography textAlign='right' variant='subtitle2'>
                   Forgot Password?
                 </Typography>
