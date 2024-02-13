@@ -37,6 +37,7 @@ import {
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
 import { generateToday, sortTimeAscend } from '../utils/time';
+import { HomepageEditModal } from '../components/HomepageEditModal/HomepageEditModal';
 
 export default function HomePage() {
   const [filter, setFilter] = useState('All');
@@ -350,9 +351,7 @@ export default function HomePage() {
                     />
                   </TableCell>
                   <TableCell align='center'>
-                    <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
-                      EDIT
-                    </Button>
+                    <HomepageEditModal/>
                   </TableCell>
                 </TableRow>
               ))}
