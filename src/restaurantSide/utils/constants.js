@@ -7,17 +7,17 @@ export const drawerWidth = 300;
 export const upperTabs = [
     {
       name: 'Overview',
-      path: '/overview',
+      path: '/restaurant/overview',
       icon: GridViewOutlinedIcon,
     },
     {
       name: 'History',
-      path: '/history',
+      path: '/restaurant/history',
       icon: PieChartOutlinedIcon,
     },
     {
       name: 'Reviews',
-      path: '/reviews',
+      path: '/restaurant/reviews',
       icon: ReviewsRoundedIcon,
     },
 ];
@@ -25,11 +25,11 @@ export const upperTabs = [
 export const lowerTabs = [
     {
       name: 'Restaurant',
-      path: '/restaurant',
+      path: '/restaurant/edit-tables&timeslots',
     },
     {
       name: 'Profile',
-      path: '/hostProfile',
+      path: '/restaurant/edit-profile',
     },
 ];
 
@@ -51,4 +51,43 @@ export const averagePrices = [
   '$50 - $100',
   '$100 - $200',
   'Greater than $200',
+];
+
+export const cardContent = [
+  {
+    img: '/Reservation.png',
+    title: 'Total Reservations',
+    data: 75,
+  },
+  {
+    img: '/Arrive.png',
+    title: 'Total Arrived',
+    data: 50,
+  },
+  {
+    img: '/Review.png',
+    title: 'Avg Review Stars',
+    data: 4.2,
+  },
+];
+
+export const tableContent = [
+  {
+    customerName: 'Jane Cooper',
+    tableName: 'Table 2',
+    time: '9:00AM',
+    status: 'seated',
+  },
+  {
+    customerName: 'Wade Warren',
+    tableName: 'Table 3',
+    time: '10:00AM',
+    status: 'Confirmed',
+  },
+  {
+    customerName: 'Esther Howard',
+    tableName: 'Table 1',
+    time: '11:00AM',
+    status: 'Unconfirmed',
+  },
 ];

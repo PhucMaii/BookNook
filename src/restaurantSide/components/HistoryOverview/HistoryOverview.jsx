@@ -6,19 +6,23 @@ import { grey } from '@mui/material/colors';
 
 export default function HistoryOverview({
   iconImg,
+  isCurrentTab,
   numberOfReservation,
-  status,
+  status, 
+  onClick,
 }) {
   return (
     <Grid item xs={12} md={6}>
       <StatusTabStyled
+        onClick={onClick}
         p={2}
         sx={{
           '&:hover': {
-            backgroundColor: grey[300],
+            backgroundColor: grey[400],
             boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
           },
         }}
+        $isCurrentTab={isCurrentTab === status}
       >
         <Grid container alignItems='center'>
           <Grid item xs={4}>
@@ -40,6 +44,8 @@ export default function HistoryOverview({
 
 HistoryOverview.propTypes = {
   iconImg: PropTypes.string,
+  isCurrentTab: PropTypes.string,
   numberOfReservation: PropTypes.number,
+  onClick: PropTypes.func,
   status: PropTypes.string,
 };

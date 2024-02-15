@@ -6,13 +6,13 @@ import { theme } from './theme/theme.config';
 import ProtectedRoute from './restaurantSide/context/ProtectedRoute';
 import UnprotectedRoute from './restaurantSide/context/UnprotectedRoute';
 import HomePage from './restaurantSide/pages/HomePage';
-import HistoryPage from './restaurantSide/pages/History/HistoryPage';
+import HistoryPage from './restaurantSide/pages/HistoryPage';
+import SettingsPage from './restaurantSide/pages/settings/SettingsPage'
 import './App.css';
 import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
-import RestaurantInfo from './restaurantSide/pages/auth/RestaurantInfo';
 import AuthProvider from './restaurantSide/context/AuthContext';
-
+import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
 
 function App() {
   return (
@@ -21,18 +21,17 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<ProtectedRoute />}>
-
+              <Route path="/restaurant/overview" element={<HomePage />} />
+              <Route path="/restaurant/history" element={<HistoryPage />} />
+              <Route path='/restaurant/edit-profile' element={<SettingsPage/>} />
             </Route>
             <Route element={<UnprotectedRoute />}>
-
+              <Route path="/restaurant/forgot-password" element={<ForgotPasswordHost />} />  
+              <Route path="/restaurant/login" element={<Login />} />
             </Route>
             <Route path="/restaurant/signup" element={<SignUp />} />
-            <Route path="/restaurant/login" element={<Login />} />
-            <Route path="/restaurant/create-info" element={<RestaurantInfo />} />
-
-            <Route path="/overview" element={<HomePage />} />
-            <Route path="/history" element={<HistoryPage />} />
           </Routes>
+            
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
