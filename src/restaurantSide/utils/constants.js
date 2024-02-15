@@ -62,7 +62,11 @@ export const timeSelect = [
   '2:00 PM',
   '3:00 PM',
   '4:00 PM',
-  '5:00 PM'
+  '5:00 PM',
+  '6:00 PM',
+  '7:00 PM',
+  '8:00 PM',
+  '9:00 PM'
 ]
 
 export const guestSelect = [1,2,3,4,5,6,7,8,9]

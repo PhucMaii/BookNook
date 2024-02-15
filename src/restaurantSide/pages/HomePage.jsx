@@ -47,10 +47,12 @@ export default function HomePage() {
   const [reviewStars, setReviewStars] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [tableIdList, setTableIdList] = useState([]);
 
   const { restaurantIds } = useContext(AuthContext);
 
   useEffect(() => {
+    fetchTable()
     fetchData();
     fetchReviews();
   }, []);
@@ -141,11 +143,38 @@ export default function HomePage() {
     setReviewStars(avgStar)
   }
 
+  const fetchTable = async() => {
+    setIsLoading(true)
+    try {
+      const tempTableIdList = [];
+      const tableCollection = collection(db, 'diningTables')
+      const tableQuery = query(
+        tableCollection,
+        where('restaurantId', '==', restaurantIds.docId),
+      );
+      const tableQuerySnapshot = await getDocs(tableQuery);
+      tableQuerySnapshot.docs.map((document) => {
+        const tableData = document.data();
+
+        const formattedTableData = {
+          tableNumber: tableData.tableNumber,
+          tableCapacity: tableData.capacity,
+          tableId: document.id
+        };
+
+        tempTableIdList.push(formattedTableData)
+      })
+      setTableIdList(tempTableIdList)
+    } catch (error) {
+      setIsLoading(false);
+      console.log('Fail to fetch reviews, ', error);
+    }
+  }
+
   const fetchReviews = async () => {
     setIsLoading(true);
     try {
       const tempReviewList = [];
-
       const reviewCollection = collection(db, 'reviews');
       const reviewQuery = query(
         reviewCollection,
@@ -188,7 +217,7 @@ export default function HomePage() {
 
       const reservationPromises = querySnapshot.docs.map(async (document) => {
         const reservationData = document.data();
-
+        const reservationId = document.id;
         const tableRef = doc(db, 'diningTables', reservationData.tableId);
         const tableSnapshot = await getDoc(tableRef);
         const tableData = tableSnapshot.data();
@@ -204,11 +233,15 @@ export default function HomePage() {
         const date = reservationData.date.toDate();
 
         const formattedData = {
+          reservationId,
+          userId: reservationData.userId,
+          numberOfGuests: reservationData.numberOfGuests,
           customerName: userData.name,
           tableNumber: tableData.tableNumber,
           time: timeSlotData.startTime,
           status: reservationData.status,
-          date: date
+          date: date,
+          email: userData.email
         };
 
         tempList.push(formattedData);
@@ -351,7 +384,7 @@ export default function HomePage() {
                     />
                   </TableCell>
                   <TableCell align='center'>
-                    <HomepageEditModal/>
+                    <HomepageEditModal data={row} tableData={tableIdList}/>
                   </TableCell>
                 </TableRow>
               ))}
