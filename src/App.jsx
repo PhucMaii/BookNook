@@ -13,6 +13,7 @@ import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
 import AuthProvider from './restaurantSide/context/AuthContext';
 import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
+import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
               <Route path="/restaurant/overview" element={<HomePage />} />
               <Route path="/restaurant/history" element={<HistoryPage />} />
               <Route path='/restaurant/edit-profile' element={<SettingsPage/>} />
+              <Route path="/restaurant/edit-tables&timeslots" element={<EditTableTimeSlot />} />
             </Route>
             <Route element={<UnprotectedRoute />}>
               <Route path="/restaurant/forgot-password" element={<ForgotPasswordHost />} />  

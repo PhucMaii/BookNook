@@ -22,7 +22,7 @@ import EditProfileProps from './EditProfileProps'
 
 
 export default function SettingsPage() {
-    const [address, setAddress] = useState(null);
+    const [_address, setAddress] = useState(null);
     const [value, setValue] = useState(0);
     const [showSettingsOldPassword, setSettingsOldPassword] = useState(false);
     const [showSettingsNewPassword, setSettingsNewPassword] = useState(false);
