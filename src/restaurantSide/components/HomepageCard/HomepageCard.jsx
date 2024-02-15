@@ -4,7 +4,6 @@ import { Typography, Grid } from '@mui/material';
 import { CardStyled, IconBackground } from './styled';
 
 const HomepageCard = ({ title, data, icon }) => {
-console.log()
   return (
     <CardStyled>
       <Grid

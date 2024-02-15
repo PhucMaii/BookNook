@@ -37,6 +37,7 @@ import {
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
 import { generateToday, sortTimeAscend } from '../utils/time';
+import { HomepageEditModal } from '../components/HomepageEditModal/HomepageEditModal';
 
 export default function HomePage() {
   const [filter, setFilter] = useState('All');
@@ -45,6 +46,7 @@ export default function HomePage() {
   const [arrivedData, setArrivedData] = useState(0);
   const [reviewStars, setReviewStars] = useState(0);
   const [tableData, setTableData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const { restaurantIds } = useContext(AuthContext);
 
@@ -59,27 +61,34 @@ export default function HomePage() {
         setTableData(reservationList);
         break;
       case 'Completed':
-        const filteredData = reservationList.filter((row) => {
+        const CompleteFilteredData = reservationList.filter((row) => {
           return row.status === 'Completed';
         })
-        setTableData(filteredData);
+        setTableData(CompleteFilteredData);
         break;
       case 'Incomplete':
-        setTableData(reservationList);
+        const IncompleteFilteredData = reservationList.filter((row) => {
+          return row.status === 'Incomplete';
+        })
+        setTableData(IncompleteFilteredData);
         break;
       case 'Cancelled':
-        setTableData(reservationList);
+        const CancelledFilteredData = reservationList.filter((row) => {
+          return row.status === 'Cancelled';
+        })
+        setTableData(CancelledFilteredData);
         break;
 
       case 'Newest to Oldest':
-        let newtoOldTimefilterData = sortTimeAscend(reservationList).reverse();
-        
+        const newtoOldTimefilterData = sortTimeAscend(reservationList).reverse();
         setTableData(newtoOldTimefilterData);
         break;
 
       case 'Oldest to Newest':
-        setTableData(reservationList);
+        const oldToNewTimefilterData = sortTimeAscend(reservationList);
+        setTableData(oldToNewTimefilterData);
         break;
+
       default:
         setTableData(reservationList);
         break;
@@ -87,6 +96,20 @@ export default function HomePage() {
 
   const handleSelect = (e) => {
     setFilter(e.target.value)
+  }
+
+  const handleKeyDown = (event) => {
+    setTableData(reservationList)
+    if (event.key === 'Enter') {
+      handleSearch(searchTerm);
+    }
+  };
+
+  const handleSearch = (word) => {
+    const filteredItems = tableData.filter(item => 
+      item.customerName.includes(word) || item.tableNumber.toString().includes(word)
+    );
+    setTableData(filteredItems)
   }
 
   const getArrivedData = (data) => {
@@ -114,12 +137,8 @@ export default function HomePage() {
       totalStar += i
     })
     const avgStar = (totalStar / reviews.length).toFixed(1)
-    console.log('avg', avgStar)
-    setReviewStars(avgStar)
-  }
 
-  const filterTable = (data, filter) => {
-    data.map
+    setReviewStars(avgStar)
   }
 
   const fetchReviews = async () => {
@@ -258,7 +277,7 @@ export default function HomePage() {
                 color='secondary'
                 fullWidth
                 variant='standard'
-                placeholder='Search name, table name, etc.'
+                placeholder='Hit ENTER to search name, table name, etc.'
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>
@@ -266,6 +285,9 @@ export default function HomePage() {
                     </InputAdornment>
                   ),
                 }}
+                value={searchTerm}
+                onInput={(event) => setSearchTerm(event.target.value)}
+                onKeyDown={handleKeyDown}
               />
             </Grid>
 
@@ -329,9 +351,7 @@ export default function HomePage() {
                     />
                   </TableCell>
                   <TableCell align='center'>
-                    <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
-                      EDIT
-                    </Button>
+                    <HomepageEditModal/>
                   </TableCell>
                 </TableRow>
               ))}

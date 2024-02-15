@@ -52,3 +52,17 @@ export const averagePrices = [
   '$100 - $200',
   'Greater than $200',
 ];
+
+export const timeSelect = [
+  '9:00 AM',
+  '10:00 AM',
+  '11:00 AM',
+  '12:00 AM',
+  '1:00 PM',
+  '2:00 PM',
+  '3:00 PM',
+  '4:00 PM',
+  '5:00 PM'
+]
+
+export const guestSelect = [1,2,3,4,5,6,7,8,9]

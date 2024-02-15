@@ -29,7 +29,7 @@ export const sortTimeAscend = (data) => {
     const convertTo24Hour = (time12h) => {
         const [time, period] = time12h.split(' ');
         const [hours, minutes] = time.split(':');
-        let hours24 = parseInt(hours, 10);
+        let hours24 = parseInt(hours);
 
         if (period === 'PM' && hours24 !== 12) {
             hours24 += 12;

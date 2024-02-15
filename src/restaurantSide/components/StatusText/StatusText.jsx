@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { error, errorBackground, success, successBackground, warning, warningBackground } from '../../../theme/colors';
 
 export default function StatusText({ text, type }) {
-  console.log(type,'type')
   const [textColor, setTextColor] = useState({
     backgroundColor: null,
     color: null
@@ -11,7 +10,7 @@ export default function StatusText({ text, type }) {
 
   useEffect(() => {
     getColor();
-  }, [])
+  }, [type])
 
   const getColor = () => {
     if (type === 'success') {
