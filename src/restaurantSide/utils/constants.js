@@ -5,32 +5,32 @@ import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 export const drawerWidth = 300;
 
 export const upperTabs = [
-    {
-      name: 'Overview',
-      path: '/restaurant/overview',
-      icon: GridViewOutlinedIcon,
-    },
-    {
-      name: 'History',
-      path: '/restaurant/history',
-      icon: PieChartOutlinedIcon,
-    },
-    {
-      name: 'Reviews',
-      path: '/restaurant/reviews',
-      icon: ReviewsRoundedIcon,
-    },
+  {
+    name: 'Overview',
+    path: '/restaurant/overview',
+    icon: GridViewOutlinedIcon,
+  },
+  {
+    name: 'History',
+    path: '/restaurant/history',
+    icon: PieChartOutlinedIcon,
+  },
+  {
+    name: 'Reviews',
+    path: '/restaurant/reviews',
+    icon: ReviewsRoundedIcon,
+  },
 ];
-  
+
 export const lowerTabs = [
-    {
-      name: 'Restaurant',
-      path: '/restaurant/edit-tables&timeslots',
-    },
-    {
-      name: 'Profile',
-      path: '/restaurant/edit-profile',
-    },
+  {
+    name: 'Restaurant',
+    path: '/restaurant/edit-tables&timeslots',
+  },
+  {
+    name: 'Profile',
+    path: '/restaurant/edit-profile',
+  },
 ];
 
 export const restaurantTypes = [

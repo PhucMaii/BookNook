@@ -338,7 +338,7 @@ const SignUp = () => {
           </Box>
           <Typography textAlign='right' variant='subtitle2'>
             Already have an account?
-            <Link color='secondary' component='button' to='/restaurant/login'>
+            <Link color='secondary' component='button' to='/'>
               Click here to sign in
             </Link>
           </Typography>
