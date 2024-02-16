@@ -12,6 +12,7 @@ import Login from './restaurantSide/pages/auth/Login';
 import AuthProvider from './restaurantSide/context/AuthContext';
 import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
 import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
+import CustomerSignup from './customerSide/pages/auth/CustomerSignup'
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
             <Route path="/restaurant/forgot-password" element={<ForgotPasswordHost />} />  
             <Route path="/" element={<Login />} />
             <Route path="/restaurant/signup" element={<SignUp />} />
-            <Route path='/customer/login' element={<CustomerLogin/>}/>
+            <Route path='/customer/login' element={<CustomerLogin/>} />
+            <Route path='/customer/signup' element={<CustomerSignup/>} />
           </Routes>
             
         </BrowserRouter>
