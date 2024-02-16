@@ -20,6 +20,8 @@ import {
   InputLabel
 } from '@mui/material'
 
+
+
 const CustomerLogin = () => {
   const [showPassword, setShowPassword] = React.useState(false)
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -104,7 +106,7 @@ const CustomerLogin = () => {
           </Box>
           <Typography textAlign='right' variant='subtitle1' fontWeight='bold'>
             Don&apos;t have an account yet?
-            <Link component='button' to='/restaurant/signup'>
+            <Link component='button' to='/customer/signup'>
               Click here to sign up
             </Link>
           </Typography>
