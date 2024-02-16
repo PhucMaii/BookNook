@@ -11,6 +11,7 @@ import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
 import AuthProvider from './restaurantSide/context/AuthContext';
 import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
+import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/restaurant/forgot-password" element={<ForgotPasswordHost />} />  
             <Route path="/" element={<Login />} />
             <Route path="/restaurant/signup" element={<SignUp />} />
+            <Route path='/customer/login' element={<CustomerLogin/>}/>
           </Routes>
             
         </BrowserRouter>
