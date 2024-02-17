@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid } from '@mui/material';
 import { CardStyled, IconBackground } from './styled';

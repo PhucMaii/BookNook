@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { error, errorBackground, success, successBackground, warning, warningBackground } from '../../../theme/colors';
+import PropTypes from 'prop-types'
 
 export default function StatusText({ text, type }) {
   const [textColor, setTextColor] = useState({
@@ -38,4 +39,9 @@ export default function StatusText({ text, type }) {
       {text}
     </Typography>
   );
+}
+
+StatusText.propTypes = {
+  text: PropTypes.string,
+  type: PropTypes.string
 }

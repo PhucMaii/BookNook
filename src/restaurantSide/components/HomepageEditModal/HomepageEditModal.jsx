@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -6,13 +6,14 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { blueGrey } from '../../../theme/colors';
-import { Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Divider, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs';
 import { guestSelect, timeSelect } from '../../utils/constants';
-import { doc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
+import PropTypes from 'prop-types';
 
 const style = {
   position: 'absolute',
@@ -25,35 +26,58 @@ const style = {
   p: 4,
 };
 
-const saveEdit = () => {
-  const reservationRef = doc(db, 'reservations', data.reservationId)
-  const userRef = doc(db, 'users', data.userId)
-
-  const tempResObj = {
-    date: date,
-    numberOfGuests: guestNumber,
-    status: stauts,
-
-  }
-}
-
-export const HomepageEditModal = ({ data, tableData }) => {
-  console.log(data, 'data')
+export const HomepageEditModal = ({ data, tableData, updateUI}) => {
   const [open, setOpen] = useState(false);
-
-  //Store Table ID instaed of Table Number
-  
-  const [tableId, setTableId] = useState();
+  const [tableId, setTableId] = useState(data.tableId);
   const [date, setDate] = useState(dayjs(data.date));
   const [time, setTime] = useState(data.time);
   const [guestNumber, setGuestNumber] = useState(data.numberOfGuests);
-  const [stauts, setStatus] = useState(data.status);
-  const [name, setName] = useState(data.customerName);
-  const [email, setEmail] = useState(data.email);
+  const [status, setStatus] = useState(data.status);
+
+  // setUpdatedData({...updatedData, date: value})
+  const [updatedData, setUpdatedData] = useState({
+    tableId: null,
+    date: null,
+    time: null,
+    numberOfGuests: null,
+    status: null
+  });
   // const [phoneNumber, setPhoneNumber] = useState();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const saveEdit = () => {
+    const reservationRef = doc(db, 'reservations', data.reservationId);
+
+    const submittedData = {};
+    Object.keys(updatedData).map((key) => {
+      if (updatedData[key]) {
+        submittedData[key] = updatedData[key]; 
+      }
+    });
+
+    console.log(submittedData, 'submittedData');
+
+    updateDoc(reservationRef, submittedData)
+      .then(() => {
+        console.log('Document successfully updated!');
+      })
+      .catch((error) => {
+        console.error('Error updating document: ', error);
+      })
+
+      const targetTable = tableData.find((table) => table.tableId === tableId);
+      const updatedUIData = {
+        ...data,
+        ...submittedData,
+        tableNumber: targetTable.tableNumber,
+      };
+
+      updateUI(data.reservationId, updatedUIData);
+      console.log(updatedUIData, 'updatedUIData' );
+
+  }
 
   return (
     <div>
@@ -84,7 +108,13 @@ export const HomepageEditModal = ({ data, tableData }) => {
                 <Typography fontWeight={'bold'} variant='h4'>Edit Reservation</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Button variant='contained' color='secondary'>SAVE</Button>
+                <Button
+                variant='contained'
+                color='secondary'
+                onClick={() => {
+                  saveEdit();
+                  handleClose();
+                }}>SAVE</Button>
               </Grid>
             </Grid>
 
@@ -105,7 +135,10 @@ export const HomepageEditModal = ({ data, tableData }) => {
                     labelId='tableSelectLabel'
                     value={tableId}
                     label='Table Number'
-                    onChange={(e) => setTableId(e.target.value) }
+                    onChange={(e) => {
+                      setTableId(e.target.value)
+                      setUpdatedData({...updatedData, tableId: e.target.value})
+                    }}
                   >
                     {tableData && tableData.map((item, index) =>
                       <MenuItem key={index} value={item.tableId}>{item.tableNumber}</MenuItem>
@@ -122,7 +155,13 @@ export const HomepageEditModal = ({ data, tableData }) => {
                   <DatePicker
                     label="datePicker"
                     value={date}
-                    onChange={(newValue) => setDate(newValue)}
+                    onChange={(newValue) => {
+                      // Converting Dayjs date object to a JavaScript Date object
+                      const jsDate = newValue.toDate();
+                      console.log(jsDate)
+                      // Update the state with the new selected date
+                      setDate(jsDate);
+                    }}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -137,7 +176,10 @@ export const HomepageEditModal = ({ data, tableData }) => {
                     labelId='timeSelectLabel'
                     value={time}
                     label='Time'
-                    onChange={(e) => setTime(e.target.value) }
+                    onChange={(e) => {
+                      setTime(e.target.value)
+                      setUpdatedData({...updatedData, time: e.target.value})
+                    }}
                   >
                     {timeSelect.map((item, index) =>
                       <MenuItem key={index} value={item}>{item}</MenuItem>
@@ -156,7 +198,10 @@ export const HomepageEditModal = ({ data, tableData }) => {
                     labelId='guestSelectLabel'
                     value={guestNumber}
                     label='No. Guests'
-                    onChange={(e) => setGuestNumber(e.target.value) }
+                    onChange={(e) => {
+                      setGuestNumber(e.target.value) 
+                      setUpdatedData({...updatedData, numberOfGuests: e.target.value})
+                    }}
                   >
                     {guestSelect.map((item, index) =>
                       <MenuItem key={index} value={item}>{item}</MenuItem>
@@ -173,12 +218,14 @@ export const HomepageEditModal = ({ data, tableData }) => {
                   <Select
                     color='secondary'
                     labelId='statusSelectLabel'
-                    value={stauts}
+                    value={status}
                     label='Status'
-                    onChange={(e) => setStatus(e.target.value) }
+                    onChange={(e) => {
+                      setStatus(e.target.value)
+                      setUpdatedData({...updatedData, status: e.target.value})}}
                   >
-                    <MenuItem value={'Completed'}>Seated</MenuItem>
-                    <MenuItem value={'Incomplete'}>Confirmed</MenuItem>
+                    <MenuItem value={'Completed'}>Completed</MenuItem>
+                    <MenuItem value={'Incomplete'}>Incomplete</MenuItem>
                     <MenuItem value={'Cancelled'}>Cancelled</MenuItem>
                   </Select>
                 </FormControl>
@@ -194,13 +241,13 @@ export const HomepageEditModal = ({ data, tableData }) => {
                   <Typography>Client Name:</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField fullWidth color='secondary' label={'Client Name'} onChange={(e) => setName(e.target.value) } defaultValue={name} />
+                  <Typography>{data.customerName}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography>Email:</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField fullWidth color='secondary' label={'Email'} onChange={(e) => setEmail(e.target.value) } defaultValue={email} />
+                  <Typography>{data.email}</Typography>
                 </Grid>
 
                 {/* TODO: When data is updated with user phoneNumber. */}
@@ -220,3 +267,9 @@ export const HomepageEditModal = ({ data, tableData }) => {
     </div>
   );
 };
+
+HomepageEditModal.propTypes = {
+  data: PropTypes.object,
+  tableData: PropTypes.array,
+  updateUI: PropTypes.func
+}

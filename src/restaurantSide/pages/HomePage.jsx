@@ -9,10 +9,8 @@ import {
   TableBody,
   Paper,
   TextField,
-  Button,
   InputAdornment,
   MenuItem,
-  Menu,
   Select,
   InputLabel,
   FormControl,
@@ -21,7 +19,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar/Sidebar';
 import HomepageCard from '../components/HomepageCard/HomepageCard';
 import SearchIcon from '@mui/icons-material/Search';
-import { blueGrey } from '../../theme/colors';
 import StatusText from '../components/StatusText/StatusText';
 import { AuthContext } from '../context/AuthContext';
 import {
@@ -52,49 +49,50 @@ export default function HomePage() {
   const { restaurantIds } = useContext(AuthContext);
 
   useEffect(() => {
-    fetchTable()
-    fetchData();
-    fetchReviews();
-  }, []);
+    if (restaurantIds) {
+      fetchTable()
+      fetchData();
+      fetchReviews();
+    }
+  }, [restaurantIds]);
 
   useEffect(() => {
     switch (filter) {
-      case 'All':
+      case 'All': {
         setTableData(reservationList);
         break;
-      case 'Completed':
-        const CompleteFilteredData = reservationList.filter((row) => {
-          return row.status === 'Completed';
-        })
-        setTableData(CompleteFilteredData);
+      }
+      case 'Completed': {
+        const completeFilteredData = reservationList.filter((row) => row.status === 'Completed');
+        setTableData(completeFilteredData);
         break;
-      case 'Incomplete':
-        const IncompleteFilteredData = reservationList.filter((row) => {
-          return row.status === 'Incomplete';
-        })
-        setTableData(IncompleteFilteredData);
+      }
+      case 'Incomplete': {
+        const incompleteFilteredData = reservationList.filter((row) => row.status === 'Incomplete');
+        setTableData(incompleteFilteredData);
         break;
-      case 'Cancelled':
-        const CancelledFilteredData = reservationList.filter((row) => {
-          return row.status === 'Cancelled';
-        })
-        setTableData(CancelledFilteredData);
+      }
+      case 'Cancelled': {
+        const cancelledFilteredData = reservationList.filter((row) => row.status === 'Cancelled');
+        setTableData(cancelledFilteredData);
         break;
-
-      case 'Newest to Oldest':
-        const newtoOldTimefilterData = sortTimeAscend(reservationList).reverse();
-        setTableData(newtoOldTimefilterData);
+      }
+      case 'Newest to Oldest': {
+        const newToOldTimeFilterData = sortTimeAscend(reservationList).reverse();
+        setTableData(newToOldTimeFilterData);
         break;
-
-      case 'Oldest to Newest':
-        const oldToNewTimefilterData = sortTimeAscend(reservationList);
-        setTableData(oldToNewTimefilterData);
+      }
+      case 'Oldest to Newest': {
+        const oldToNewTimeFilterData = sortTimeAscend(reservationList);
+        setTableData(oldToNewTimeFilterData);
         break;
-
-      default:
+      }
+      default: {
         setTableData(reservationList);
         break;
-    }},[filter]);
+      }
+    }
+  }, [filter]);
 
   const handleSelect = (e) => {
     setFilter(e.target.value)
@@ -138,7 +136,7 @@ export default function HomePage() {
     reviews.map((i) => {
       totalStar += i
     })
-    const avgStar = (totalStar / reviews.length).toFixed(1)
+    const avgStar = parseFloat((totalStar / reviews.length).toFixed(1))
 
     setReviewStars(avgStar)
   }
@@ -237,6 +235,7 @@ export default function HomePage() {
           userId: reservationData.userId,
           numberOfGuests: reservationData.numberOfGuests,
           customerName: userData.name,
+          tableId: reservationData.tableId,
           tableNumber: tableData.tableNumber,
           time: timeSlotData.startTime,
           status: reservationData.status,
@@ -261,6 +260,17 @@ export default function HomePage() {
     }
   };
 
+  const updateReservation = (reservationId, updatedData) => {
+    // updatedData = {tableId: 1, numberofGuest: 4, status: 'Confirmed', ...}
+    const tableDataCopy = tableData.map((item) => {
+      if (item.reservationId == reservationId) {
+        return updatedData;
+      }
+      return item;
+    })
+    setTableData(tableDataCopy)
+  }
+
   if (isLoading) {
     return (
       <Sidebar>
@@ -276,7 +286,7 @@ export default function HomePage() {
           <Grid item xs={12} sm={6} md={4}>
             <HomepageCard
               data={reservationList.length}
-              title="Total Rewservation"
+              title="Total Reservation"
               icon='/Reservation.png' />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
@@ -368,7 +378,7 @@ export default function HomePage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tableData.map((row, index) => (
+              {tableData.length > 0 && tableData.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>{row.customerName}</TableCell>
                   <TableCell>{row.tableNumber}</TableCell>
@@ -384,7 +394,7 @@ export default function HomePage() {
                     />
                   </TableCell>
                   <TableCell align='center'>
-                    <HomepageEditModal data={row} tableData={tableIdList}/>
+                    <HomepageEditModal data={row} tableData={tableIdList} updateUI={updateReservation}/>
                   </TableCell>
                 </TableRow>
               ))}
