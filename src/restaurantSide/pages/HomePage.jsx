@@ -22,6 +22,7 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { blueGrey } from '../../theme/colors';
 import { cardContent, tableContent } from '../utils/constants';
 import StatusText from '../components/StatusText/StatusText';
+import ProtectedRoute from '../context/ProtectedRoute';
 
 export default function HomePage() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,117 +42,120 @@ export default function HomePage() {
   };
 
   return (
-    <Sidebar>
-      <Box display='flex' flexDirection='column' gap={4} width='100%' mx={8}>
-        <Grid container spacing={3} marginTop={0.5}>
-          {cardContent.map((card, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4}>
-              <HomepageCard
-                data={card.data}
-                title={card.title}
-                icon={card.img}
-              />
-            </Grid>
-          ))}
-        </Grid>
-
-        <Typography  variant='h5'>
-          Today Reservations
-        </Typography>
-
-        <Paper>
-          <Grid
-            container
-            spacing={2}
-            alignItems='center'
-            padding={2}
-            justifyContent='space-between'
-          >
-            <Grid item xs={6}>
-              <TextField
-                color='secondary'
-                fullWidth
-                variant='standard'
-                placeholder='Search name, table name, etc.'
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={2}>
-              <Button
-                style={{ color: '#64748B' }}
-                startIcon={<FilterAltOutlinedIcon />}
-                aria-controls='filter-menu'
-                aria-haspopup='true'
-                onClick={handleClick}
-              >
-                {filter || 'Filter'}
-              </Button>
-              <Menu
-                id='filter-menu'
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={() => handleSelect('seated')}>
-                  Seated
-                </MenuItem>
-                <MenuItem onClick={() => handleSelect('confirmed')}>
-                  Confirmed
-                </MenuItem>
-                <MenuItem onClick={() => handleSelect('unseated')}>
-                  Unconfirmed
-                </MenuItem>
-                <MenuItem onClick={() => handleSelect('Newest to Oldest')}>
-                  Newest to Oldest
-                </MenuItem>
-                <MenuItem onClick={() => handleSelect('Oldest to Newest')}>
-                  Oldest to Newest
-                </MenuItem>
-                <MenuItem onClick={() => handleSelect('A to Z')}>A to Z</MenuItem>
-                <MenuItem onClick={() => handleSelect('Z to A')}>
-                  Z to A
-                </MenuItem>
-              </Menu>
-            </Grid>
+    <ProtectedRoute>
+      <Sidebar>
+        <Box display='flex' flexDirection='column' gap={4} width='100%' mx={8}>
+          <Grid container spacing={3} marginTop={0.5}>
+            {cardContent.map((card, index) => (
+              <Grid key={index} item xs={12} sm={6} md={4}>
+                <HomepageCard
+                  data={card.data}
+                  title={card.title}
+                  icon={card.img}
+                />
+              </Grid>
+            ))}
           </Grid>
 
-          <Table sx={{ minWidth: 650 }}>
-            <TableHead>
-              <TableRow>
-                <TableCell>CUSTOMER</TableCell>
-                <TableCell>TABLE</TableCell>
-                <TableCell>TIME</TableCell>
-                <TableCell align='center' >STATUS</TableCell>
-                <TableCell align='center'>ACTIONS</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tableContent.map((row) => (
-                <TableRow key={row.customerName}>
-                  <TableCell>{row.customerName}</TableCell>
-                  <TableCell>{row.tableName}</TableCell>
-                  <TableCell>{row.time}</TableCell>
-                  <TableCell style={{width:'20%'}}> 
-                    <StatusText text={row.status} type={row.status === 'seated' ? 'success' : row.status === 'Confirmed' ? 'warning' : 'error'}/>
-                  </TableCell>
-                  <TableCell align='center'>
-                    <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
-                      EDIT
-                    </Button>
-                  </TableCell>
+          <Typography  variant='h5'>
+            Today Reservations
+          </Typography>
+
+          <Paper>
+            <Grid
+              container
+              spacing={2}
+              alignItems='center'
+              padding={2}
+              justifyContent='space-between'
+            >
+              <Grid item xs={6}>
+                <TextField
+                  color='secondary'
+                  fullWidth
+                  variant='standard'
+                  placeholder='Search name, table name, etc.'
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={2}>
+                <Button
+                  style={{ color: '#64748B' }}
+                  startIcon={<FilterAltOutlinedIcon />}
+                  aria-controls='filter-menu'
+                  aria-haspopup='true'
+                  onClick={handleClick}
+                >
+                  {filter || 'Filter'}
+                </Button>
+                <Menu
+                  id='filter-menu'
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={() => handleSelect('seated')}>
+                    Seated
+                  </MenuItem>
+                  <MenuItem onClick={() => handleSelect('confirmed')}>
+                    Confirmed
+                  </MenuItem>
+                  <MenuItem onClick={() => handleSelect('unseated')}>
+                    Unconfirmed
+                  </MenuItem>
+                  <MenuItem onClick={() => handleSelect('Newest to Oldest')}>
+                    Newest to Oldest
+                  </MenuItem>
+                  <MenuItem onClick={() => handleSelect('Oldest to Newest')}>
+                    Oldest to Newest
+                  </MenuItem>
+                  <MenuItem onClick={() => handleSelect('A to Z')}>A to Z</MenuItem>
+                  <MenuItem onClick={() => handleSelect('Z to A')}>
+                    Z to A
+                  </MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
+
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>CUSTOMER</TableCell>
+                  <TableCell>TABLE</TableCell>
+                  <TableCell>TIME</TableCell>
+                  <TableCell align='center' >STATUS</TableCell>
+                  <TableCell align='center'>ACTIONS</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
-      </Box>
-    </Sidebar>
+              </TableHead>
+              <TableBody>
+                {tableContent.map((row) => (
+                  <TableRow key={row.customerName}>
+                    <TableCell>{row.customerName}</TableCell>
+                    <TableCell>{row.tableName}</TableCell>
+                    <TableCell>{row.time}</TableCell>
+                    <TableCell style={{width:'20%'}}> 
+                      <StatusText text={row.status} type={row.status === 'seated' ? 'success' : row.status === 'Confirmed' ? 'warning' : 'error'}/>
+                    </TableCell>
+                    <TableCell align='center'>
+                      <Button variant="filled" style={{ color: '#64748B', backgroundColor: blueGrey }}>
+                        EDIT
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Paper>
+        </Box>
+      </Sidebar>
+
+    </ProtectedRoute>
   );
 }
