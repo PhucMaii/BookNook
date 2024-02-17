@@ -24,6 +24,7 @@ import {
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
 import { generateToday } from '../utils/time';
+import ProtectedRoute from '../context/ProtectedRoute';
 
 export default function HistoryPage() {
   const [dateRange, setDateRange] = useState('Today');
@@ -196,66 +197,69 @@ export default function HistoryPage() {
   }
 
   return (
-    <Sidebar>
-      <Box display='flex' flexDirection='column' gap={4} width='100%' mx={4}>
-        <Typography variant='h4' mt={4} fontWeight='bold'>
-          BOOKING HISTORY
-        </Typography>
-        <Paper
-          width='100%'
-          sx={{ p: 2, mt: 4, borderRadius: '20px' }}
-          elevation={0}
-        >
-          <Box display='flex' justifyContent='space-between'>
-            <Typography variant='h5' fontWeight='medium'>
-              Overview
-            </Typography>
-            <Select
-              color='secondary'
-              onChange={(e) => setDateRange(e.target.value)}
-              variant='outlined'
-              value={dateRange}
-            >
-              <MenuItem value='Today'>Today</MenuItem>
-              <MenuItem value='Last 3 days'>Last 3 days</MenuItem>
-              <MenuItem value='Last week'>Last week</MenuItem>
-              <MenuItem value='Last month'>Last month</MenuItem>
-            </Select>
-          </Box>
-          <Grid container spacing={4} mt={2}>
-            <HistoryOverview
-              iconImg='/checked.png'
-              numberOfReservation={numberOfCompleted}
-              onClick={() => {
-                if (overviewTab !== 'Completed') {
-                  setOverviewTab('Completed');
-                } else {
-                  setOverviewTab('none');
-                }
-              }}
-              status='Completed'
-              isCurrentTab={overviewTab}
-            />
-            <HistoryOverview
-              iconImg='/cancel.png'
-              numberOfReservation={numberOfCancelled}
-              onClick={() => {
-                if (overviewTab !== 'Cancelled') {
-                  setOverviewTab('Cancelled');
-                } else {
-                  setOverviewTab('none');
-                }
-              }}
-              status='Cancelled'
-              isCurrentTab={overviewTab}
-            />
-          </Grid>
-        </Paper>
-        {tempHistoryList.length > 0 &&
-          tempHistoryList.map((reservation, index) => {
-            return <HistoryAccordion key={index} data={reservation} />;
-          })}
-      </Box>
-    </Sidebar>
+    <ProtectedRoute>
+      <Sidebar>
+        <Box display='flex' flexDirection='column' gap={4} width='100%' mx={4}>
+          <Typography variant='h4' mt={4} fontWeight='bold'>
+            BOOKING HISTORY
+          </Typography>
+          <Paper
+            width='100%'
+            sx={{ p: 2, mt: 4, borderRadius: '20px' }}
+            elevation={0}
+          >
+            <Box display='flex' justifyContent='space-between'>
+              <Typography variant='h5' fontWeight='medium'>
+                Overview
+              </Typography>
+              <Select
+                color='secondary'
+                onChange={(e) => setDateRange(e.target.value)}
+                variant='outlined'
+                value={dateRange}
+              >
+                <MenuItem value='Today'>Today</MenuItem>
+                <MenuItem value='Last 3 days'>Last 3 days</MenuItem>
+                <MenuItem value='Last week'>Last week</MenuItem>
+                <MenuItem value='Last month'>Last month</MenuItem>
+              </Select>
+            </Box>
+            <Grid container spacing={4} mt={2}>
+              <HistoryOverview
+                iconImg='/checked.png'
+                numberOfReservation={numberOfCompleted}
+                onClick={() => {
+                  if (overviewTab !== 'Completed') {
+                    setOverviewTab('Completed');
+                  } else {
+                    setOverviewTab('none');
+                  }
+                }}
+                status='Completed'
+                isCurrentTab={overviewTab}
+              />
+              <HistoryOverview
+                iconImg='/cancel.png'
+                numberOfReservation={numberOfCancelled}
+                onClick={() => {
+                  if (overviewTab !== 'Cancelled') {
+                    setOverviewTab('Cancelled');
+                  } else {
+                    setOverviewTab('none');
+                  }
+                }}
+                status='Cancelled'
+                isCurrentTab={overviewTab}
+              />
+            </Grid>
+          </Paper>
+          {tempHistoryList.length > 0 &&
+            tempHistoryList.map((reservation, index) => {
+              return <HistoryAccordion key={index} data={reservation} />;
+            })}
+        </Box>
+      </Sidebar>
+
+    </ProtectedRoute>
   );
 }

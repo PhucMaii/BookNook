@@ -1,6 +1,6 @@
 import { green, red, yellow } from '@mui/material/colors';
 
-export const background = '#F5F5F5'
+export const background = '#F5F5F5';
 export const blueGrey = '#E7EAEE';
 
 export const success = green[700];

@@ -1,14 +1,24 @@
 import React, { useContext } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import { SplashScreen } from '../../lib/utils';
+import PropTypes from 'prop-types';
 
-export default function ProtectedRoute() {
+export default function ProtectedRoute({ children }) {
   const { restaurantIds } = useContext(AuthContext);
+  const navigate = useNavigate();
   
   if (restaurantIds.uid === null) {
     return <SplashScreen/>
   }
-  return restaurantIds.uid ? <Outlet /> : <Navigate to="/restaurant/login" />;
+
+  if (!restaurantIds.uid) {
+    navigate('/restaurant/login');
+  }
+  
+  return children;
 }
 
+ProtectedRoute.propTypes = {
+  children: PropTypes.node
+}

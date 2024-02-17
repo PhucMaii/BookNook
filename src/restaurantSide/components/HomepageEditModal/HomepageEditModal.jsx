@@ -37,17 +37,13 @@ const saveEdit = () => {
   }
 }
 
-const fetchTableId = async () => {
-
-}
-
 export const HomepageEditModal = ({ data, tableData }) => {
   console.log(data, 'data')
   const [open, setOpen] = useState(false);
 
   //Store Table ID instaed of Table Number
   
-  const [tableNumber, setTableNumber] = useState();
+  const [tableId, setTableId] = useState();
   const [date, setDate] = useState(dayjs(data.date));
   const [time, setTime] = useState(data.time);
   const [guestNumber, setGuestNumber] = useState(data.numberOfGuests);
@@ -56,17 +52,8 @@ export const HomepageEditModal = ({ data, tableData }) => {
   const [email, setEmail] = useState(data.email);
   // const [phoneNumber, setPhoneNumber] = useState();
 
-  const updateTable = (e) => { setTableNumber(e.target.value) }
-  const updateTime = (e) => { setTime(e.target.value) }
-  const updateGuestNumber = (e) => { setGuestNumber(e.target.value); }
-  const updateStatus = (e) => { setStatus(e.target.value); }
-  const updateName = (e) => { setName(e.target.value); }
-  const updateEmail = (e) => { setEmail(e.target.value); }
-  // const updatePhoneNumber = (e) => {setPhoneNumber(e.target.value);}
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(tableNumber, 'number')
 
   return (
     <div>
@@ -116,9 +103,9 @@ export const HomepageEditModal = ({ data, tableData }) => {
                   <Select
                     color='secondary'
                     labelId='tableSelectLabel'
-                    value={tableNumber}
+                    value={tableId}
                     label='Table Number'
-                    onChange={(e) => setTableNumber(e.target.value) }
+                    onChange={(e) => setTableId(e.target.value) }
                   >
                     {tableData && tableData.map((item, index) =>
                       <MenuItem key={index} value={item.tableId}>{item.tableNumber}</MenuItem>
@@ -150,7 +137,7 @@ export const HomepageEditModal = ({ data, tableData }) => {
                     labelId='timeSelectLabel'
                     value={time}
                     label='Time'
-                    onChange={updateTime}
+                    onChange={(e) => setTime(e.target.value) }
                   >
                     {timeSelect.map((item, index) =>
                       <MenuItem key={index} value={item}>{item}</MenuItem>
@@ -169,7 +156,7 @@ export const HomepageEditModal = ({ data, tableData }) => {
                     labelId='guestSelectLabel'
                     value={guestNumber}
                     label='No. Guests'
-                    onChange={updateGuestNumber}
+                    onChange={(e) => setGuestNumber(e.target.value) }
                   >
                     {guestSelect.map((item, index) =>
                       <MenuItem key={index} value={item}>{item}</MenuItem>
@@ -188,7 +175,7 @@ export const HomepageEditModal = ({ data, tableData }) => {
                     labelId='statusSelectLabel'
                     value={stauts}
                     label='Status'
-                    onChange={updateStatus}
+                    onChange={(e) => setStatus(e.target.value) }
                   >
                     <MenuItem value={'Completed'}>Seated</MenuItem>
                     <MenuItem value={'Incomplete'}>Confirmed</MenuItem>
@@ -207,13 +194,13 @@ export const HomepageEditModal = ({ data, tableData }) => {
                   <Typography>Client Name:</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField fullWidth color='secondary' label={'Client Name'} onChange={updateName} defaultValue={name} />
+                  <TextField fullWidth color='secondary' label={'Client Name'} onChange={(e) => setName(e.target.value) } defaultValue={name} />
                 </Grid>
                 <Grid item xs={6}>
                   <Typography>Email:</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField fullWidth color='secondary' label={'Email'} onChange={updateEmail} defaultValue={email} />
+                  <TextField fullWidth color='secondary' label={'Email'} onChange={(e) => setEmail(e.target.value) } defaultValue={email} />
                 </Grid>
 
                 {/* TODO: When data is updated with user phoneNumber. */}
