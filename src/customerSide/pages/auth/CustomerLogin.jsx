@@ -91,13 +91,13 @@ const CustomerLogin = () => {
                 </Typography>
               </Link>
             </Box>
-            <Button variant='contained' color='primary' style={{ color: 'white'}}>
+            <Button variant='contained'  style={{ color: 'white'}}>
               Create your Account
             </Button>
             <Divider variant='middle'>
               <Typography variant='body2'>Or</Typography>
             </Divider>
-            <Button variant='outlined' color='primary'>
+            <Button variant='outlined' >
               <Box display='flex' gap={2} alignItems='center'>
                 <img src='/icons/googleLogo.png' alt='Google Logo' />
                 <Typography>Sign in with Google</Typography>
