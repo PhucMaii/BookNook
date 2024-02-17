@@ -11,7 +11,7 @@ import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
 import AuthProvider from './restaurantSide/context/AuthContext';
 import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
-import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot';
+import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot/EditTable&TimeSlot';
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
             <Route path="/restaurant/forgot-password" element={<ForgotPasswordHost />} />  
             <Route path="/" element={<Login />} />
             <Route path="/restaurant/signup" element={<SignUp />} />
+            <Route path="/restaurant/edit-tables&timeslots" element={<EditTableTimeSlot />} />
           </Routes>
             
         </BrowserRouter>

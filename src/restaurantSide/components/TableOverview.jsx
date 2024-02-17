@@ -7,7 +7,12 @@ import { error, success, warning } from '../../theme/colors';
 
 export default function TableOverview() {
   return (
-    <Paper sx={{width: '100%', m: 4}}>
+    <Paper sx={{
+        width: '100%', 
+        m: 2, 
+        boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
+        p: 2
+    }}>
         <Grid container p={4}>
             <Grid item xs={4}>
                 <Box display="flex" alignItems="top" gap={2} justifyContent="center">

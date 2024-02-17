@@ -1,18 +1,23 @@
 import React from 'react';
-import Sidebar from '../components/Sidebar/Sidebar';
-import TableOverview from '../components/TableOverview';
-import TableList from '../components/TableList';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import TableOverview from '../../components/TableOverview';
+import TableList from '../../components/TableList';
 import { 
   Box, 
   Button, 
+  Chip, 
   FormControl, 
   Grid, 
   InputLabel, 
   MenuItem, 
   Select, 
-  TextField
+  TextField,
+  Typography
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { BoxStyled } from './styled';
+import { daysOfWeek } from '../../utils/constants';
+import { secondary } from '../../../theme/colors';
 
 export default function EditTableTimeSlot() {
   return (
@@ -26,17 +31,12 @@ export default function EditTableTimeSlot() {
         mx={4}
       >
         <TableOverview />
-        <Box 
+        <BoxStyled 
           display="flex" 
           flexDirection="column" 
-          gap={2} 
-          p={2}
+          gap={2}
+          p={2} 
           width="100%"
-          sx={{
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
-            }}
         >
           <Grid container columnSpacing={4}>
             <Grid item xs={8}>
@@ -70,8 +70,48 @@ export default function EditTableTimeSlot() {
             </Grid>
           </Grid>
           <TableList />
-        </Box>
+        </BoxStyled>
+        <BoxStyled 
+          display="flex" 
+          flexDirection="column" 
+          gap={2} 
+          width="100%" 
+          p={2} 
+          mt={2}
+        >
+          <Typography variant="h6">Time Slots</Typography>
+          <FormControl id="time-slot-label">
+            <Select
+              labelId="time-slot-label"
+              color="secondary"
+            >
+              
+            </Select>
 
+          </FormControl>
+          <Box display="flex" flexDirection="column" gap={1}>
+            <Typography variant="subtitle1">Select days of the week you want to add time slot</Typography>
+            <Box display="flex" gap={2} width="100%">
+              {
+                daysOfWeek && daysOfWeek.map((day, index) => {
+                  return <Chip
+                    color="secondary"
+                    key={index} 
+                    label={day} 
+                    variant="outlined"
+                    sx={{
+                      width: '100%',
+                      '&:hover': {
+                        backgroundColor: secondary,
+                        color: 'white'
+                      }
+                    }} 
+                  />
+                })
+              }
+            </Box>
+          </Box>
+        </BoxStyled>
       </Box>
     </Sidebar>
   )
