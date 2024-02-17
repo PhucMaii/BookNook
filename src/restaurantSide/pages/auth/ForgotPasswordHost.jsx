@@ -37,7 +37,7 @@ const ForgotPasswordHost = () => {
     }
 
     try {
-      await sendPasswordResetEmail(auth, email); // Use the Firebase Authentication function to send a password reset email
+      await sendPasswordResetEmail(auth, email); 
       setNotification({
         open: true,
         severity: 'success',
