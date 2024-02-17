@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TableOverview from '../../components/TableOverview';
 import TableList from '../../components/TableList';
@@ -6,6 +6,7 @@ import {
   Box, 
   Button, 
   Chip, 
+  Divider, 
   FormControl, 
   Grid, 
   InputLabel, 
@@ -18,8 +19,12 @@ import AddIcon from '@mui/icons-material/Add';
 import { BoxStyled } from './styled';
 import { daysOfWeek } from '../../utils/constants';
 import { secondary } from '../../../theme/colors';
+import { generateTimeSlots } from '../../utils/time';
+import DayTimeSlot from '../../components/DayTimeSlot';
 
 export default function EditTableTimeSlot() {
+  const [timeSlotList, _setTimeSlotList] = useState(generateTimeSlots());
+  const [timeSlot, setTimeSlot] = useState('9:00 AM');
   return (
     <Sidebar>
       <Box 
@@ -84,10 +89,21 @@ export default function EditTableTimeSlot() {
             <Select
               labelId="time-slot-label"
               color="secondary"
+              value={timeSlot}
+              onChange={(e) => setTimeSlot(e.target.value)}
             >
-              
+              {
+                timeSlotList && timeSlotList.map((timeSlot, index) => {
+                  return <MenuItem 
+                    color="secondary" 
+                    key={index} 
+                    value={timeSlot}
+                  >
+                    {timeSlot}
+                  </MenuItem>
+                })
+              }
             </Select>
-
           </FormControl>
           <Box display="flex" flexDirection="column" gap={1}>
             <Typography variant="subtitle1">Select days of the week you want to add time slot</Typography>
@@ -110,6 +126,19 @@ export default function EditTableTimeSlot() {
                 })
               }
             </Box>
+          </Box>
+          <Button color="secondary" fullWidth variant="contained">Add</Button>
+          <Box display="flex" gap={2} width="100%">
+            {
+              daysOfWeek && daysOfWeek.map(() => {
+                return (
+                  <>
+                    <DayTimeSlot />
+                    <Divider component='div' orientation='vertical' />
+                  </>
+                )
+              })
+            }
           </Box>
         </BoxStyled>
       </Box>

@@ -94,7 +94,4 @@ export const tableContent = [
   },
 ];
 
-export const timeSlots = [
-  '9:00 AM',
-  '9:30 AM'
-]
+export const timeSlots = ['9:00 AM', '9:30 AM'];
