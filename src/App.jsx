@@ -13,7 +13,8 @@ import AuthProvider from './restaurantSide/context/AuthContext';
 import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
 import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot/EditTable&TimeSlot';
 import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
-import CustomerSignup from './customerSide/pages/auth/CustomerSignup'
+import CustomerSignup from './customerSide/pages/auth/CustomerSignup';
+import CustomerHomepage from './customerSide/pages/CustomerHomepage';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/restaurant/edit-tables&timeslots" element={<EditTableTimeSlot />} />
             <Route path='/customer/login' element={<CustomerLogin/>} />
             <Route path='/customer/signup' element={<CustomerSignup/>} />
+            <Route path='/customer/homepage' element={<CustomerHomepage/>}  />
           </Routes>
             
         </BrowserRouter>
