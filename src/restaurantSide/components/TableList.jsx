@@ -18,7 +18,7 @@ export default function TableList({
 }) {
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   return (
-    <Table>
+    <Table sx={{width: '100%'}}>
       <TableHead>
         <TableRow>
           <TableCell sx={{ fontWeight: 'bold' }}>TABLE</TableCell>

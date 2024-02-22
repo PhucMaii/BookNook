@@ -13,13 +13,13 @@ import {
   MenuItem, 
   Select, 
   TextField,
-  Typography
+  Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { BoxStyled } from './styled';
 import { daysOfWeek } from '../../utils/constants';
 import { secondary } from '../../../theme/colors';
-import { generateTimeSlots } from '../../utils/time';
+import { convertHourToMinutes, generateTimeSlots } from '../../utils/time';
 import DayTimeSlot from '../../components/DayTimeSlot';
 import { addDoc, collection, deleteDoc, updateDoc, where } from 'firebase/firestore';
 import { AuthContext } from '../../context/AuthContext';
@@ -29,6 +29,7 @@ import AddTableModal from '../../components/Modals/AddTableModal';
 import { db } from '../../../../firebaseConfig';
 import Notification from '../../components/Notification';
 import { LoadingButton } from '@mui/lab';
+import ProtectedRoute from '../../context/ProtectedRoute';
 
 export default function EditTableTimeSlot() {
   const [availableTables, setAvailableTables] = useState([]);
@@ -68,7 +69,7 @@ export default function EditTableTimeSlot() {
         setTempTableList(unavailableTables);
       }
 
-      if (filterOption === 'table' || filterOption === 'type') {
+      if (filterOption === 'type') {
         sortTableList();
       }
     }
@@ -106,10 +107,12 @@ export default function EditTableTimeSlot() {
         where('restaurantId', '==', restaurantIds.docId)
       );
 
-      setTableList(data);
-      setTempTableList(data);
-      filterTablesByStatus(data, true);
-      filterTablesByStatus(data, false);
+      const sortedData = data.sort((tableA, tableB) => tableA.tableNumber - tableB.tableNumber);
+
+      setTableList(sortedData);
+      setTempTableList(sortedData);
+      filterTablesByStatus(sortedData, true);
+      filterTablesByStatus(sortedData, false);
     } catch (error) {
       console.log(error, 'Fail to fetch tables');
       setIsLoading(false);
@@ -123,12 +126,17 @@ export default function EditTableTimeSlot() {
         where('restaurantId', '==', restaurantIds.docId)
       );
 
+      const sortedData = data.sort(
+        (a, b) =>
+          convertHourToMinutes(a.startTime) - convertHourToMinutes(b.startTime)
+      );
+
       const formattedData = {};
       for (let day of daysOfWeek) {
         formattedData[day] = [];
       }
 
-      for (let timeSlot of data) {
+      for (let timeSlot of sortedData) {
         // Get the first 3 char in day, ex: Mon, Tue, etc
         formattedData[timeSlot.day.slice(0, 3)] = [
           ...formattedData[timeSlot.day.slice(0, 3)],
@@ -244,12 +252,6 @@ export default function EditTableTimeSlot() {
   };
 
   const sortTableList = () => {
-    if (filterOption === 'table') {
-      const newTableList = tableList.sort((tableA, tableB) => Number(tableA.tableNumber) - Number(tableB.tableNumber));
-      setTempTableList(newTableList);
-      return;
-    }
-
     if (filterOption === 'type') {
       const newTableList = tableList.sort((tableA, tableB) => {
         if (tableA.type < tableB.type) {
@@ -276,165 +278,167 @@ export default function EditTableTimeSlot() {
   }
 
   return (
-    <Sidebar>
-      <Box
-        display="flex"
-        alignItems="center"
-        flexDirection="column"
-        justifyContent="center"
-        width="100%"
-        mx={4}
-      >
-        <Notification
-          notification={notification}
-          onClose={() => setNotification({ ...notification, on: false })}
-        />
-        <AddTableModal
-          fetchTables={fetchTables}
-          handleAddTable={handleAddTable}
-          open={isOpenAddTable}
-          onClose={() => setIsOpenAddTable(false)}
-        />
-        <TableOverview
-          numberOfAvailable={availableTables.length}
-          numberOfUnavailable={unavailableTables.length}
-          numberOfTotal={tableList.length}
-        />
-        <BoxStyled
+    <ProtectedRoute>
+      <Sidebar>
+        <Box
           display="flex"
+          alignItems="center"
           flexDirection="column"
-          gap={2}
-          p={2}
+          justifyContent="center"
           width="100%"
+          mx={4}
         >
-          <Grid container columnSpacing={2}>
-            <Grid item xs={8}>
-              <TextField
-                color="secondary"
-                placeholder="Search by table number or type"
-                fullWidth
-                value={searchKeywords}
-                onChange={(e) => setSearchKeywords(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <FormControl color="secondary" fullWidth>
-                <InputLabel id="filter">Filter</InputLabel>
-                <Select
-                  labelId="filter"
-                  color="secondary"
-                  variant="outlined"
-                  fullWidth
-                  label="Filter"
-                  value={filterOption}
-                  onChange={(e) => setFilterOption(e.target.value)}
-                >
-                  <MenuItem value="all">All</MenuItem>
-                  <MenuItem value="available">Status: Available</MenuItem>
-                  <MenuItem value="unavailable">Status: Unavailable</MenuItem>
-                  <MenuItem value="table">Table</MenuItem>
-                  <MenuItem value="type">Type</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={1}>
-              <Button
-                color="secondary"
-                fullWidth
-                onClick={() => setIsOpenAddTable(true)}
-                variant="contained"
-                sx={{ height: '100%' }}
-              >
-                <AddIcon />
-              </Button>
-            </Grid>
-          </Grid>
-          <TableList
-            handleUpdateTable={handleUpdateTable}
-            setNotification={setNotification}
-            tableList={tempTableList}
-            handleUpdateUI={handleUpdateTableUI}
+          <Notification
+            notification={notification}
+            onClose={() => setNotification({ ...notification, on: false })}
           />
-        </BoxStyled>
-        <BoxStyled
-          display="flex"
-          flexDirection="column"
-          gap={2}
-          width="100%"
-          p={2}
-          mt={2}
-        >
-          <Typography variant="h6">Time Slots</Typography>
-          <FormControl id="time-slot-label">
-            <Select
-              labelId="time-slot-label"
+          <AddTableModal
+            fetchTables={fetchTables}
+            handleAddTable={handleAddTable}
+            open={isOpenAddTable}
+            onClose={() => setIsOpenAddTable(false)}
+          />
+          <TableOverview
+            numberOfAvailable={availableTables.length}
+            numberOfUnavailable={unavailableTables.length}
+            numberOfTotal={tableList.length}
+          />
+          <BoxStyled
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            p={2}
+            width="100%"
+          >
+            <Grid container columnSpacing={2}>
+              <Grid item xs={8}>
+                <TextField
+                  color="secondary"
+                  placeholder="Search by table number or type"
+                  fullWidth
+                  value={searchKeywords}
+                  onChange={(e) => setSearchKeywords(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <FormControl color="secondary" fullWidth>
+                  <InputLabel id="filter">Filter</InputLabel>
+                  <Select
+                    labelId="filter"
+                    color="secondary"
+                    variant="outlined"
+                    fullWidth
+                    label="Filter"
+                    value={filterOption}
+                    onChange={(e) => setFilterOption(e.target.value)}
+                  >
+                    <MenuItem value="all">All</MenuItem>
+                    <MenuItem value="available">Status: Available</MenuItem>
+                    <MenuItem value="unavailable">Status: Unavailable</MenuItem>
+                    <MenuItem value="type">Type</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={1}>
+                <Button
+                  color="secondary"
+                  fullWidth
+                  onClick={() => setIsOpenAddTable(true)}
+                  variant="contained"
+                  sx={{ height: '100%' }}
+                >
+                  <AddIcon />
+                </Button>
+              </Grid>
+            </Grid>
+            <TableList
+              handleUpdateTable={handleUpdateTable}
+              setNotification={setNotification}
+              tableList={tempTableList}
+              handleUpdateUI={handleUpdateTableUI}
+            />
+          </BoxStyled>
+          <BoxStyled
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            width="100%"
+            p={2}
+            mt={2}
+          >
+            <Typography variant="h6">Time Slots</Typography>
+            <FormControl id="time-slot-label">
+              <Select
+                labelId="time-slot-label"
+                color="secondary"
+                value={timeSlot}
+                onChange={(e) => setTimeSlot(e.target.value)}
+              >
+                {timeSlotList &&
+                  timeSlotList.map((timeSlot, index) => {
+                    return (
+                      <MenuItem color="secondary" key={index} value={timeSlot}>
+                        {timeSlot}
+                      </MenuItem>
+                    );
+                  })}
+              </Select>
+            </FormControl>
+            <Box display="flex" flexDirection="column" gap={1}>
+              <Typography variant="subtitle1">
+                Select days of the week you want to add time slot
+              </Typography>
+              <Box display="flex" gap={2} width="100%">
+                {daysOfWeek &&
+                  daysOfWeek.map((day, index) => {
+                    return (
+                      <Chip
+                        color="secondary"
+                        onClick={() => handleAddSelectedDays(day)}
+                        key={index}
+                        label={day}
+                        variant="outlined"
+                        sx={{
+                          width: '100%',
+                          backgroundColor: selectedDays.includes(day)
+                            ? secondary
+                            : '',
+                          color: selectedDays.includes(day) ? 'white' : '',
+                        }}
+                      />
+                    );
+                  })}
+              </Box>
+            </Box>
+            <LoadingButton
+              loading={isAddTimeSlotLoading}
+              loadingIndicator="Adding..."
               color="secondary"
-              value={timeSlot}
-              onChange={(e) => setTimeSlot(e.target.value)}
+              fullWidth
+              onClick={handleAddTimeSlot}
+              variant="contained"
             >
-              {timeSlotList &&
-                timeSlotList.map((timeSlot, index) => {
-                  return (
-                    <MenuItem color="secondary" key={index} value={timeSlot}>
-                      {timeSlot}
-                    </MenuItem>
-                  );
-                })}
-            </Select>
-          </FormControl>
-          <Box display="flex" flexDirection="column" gap={1}>
-            <Typography variant="subtitle1">
-              Select days of the week you want to add time slot
-            </Typography>
-            <Box display="flex" gap={2} width="100%">
+              Add
+            </LoadingButton>
+            <Box display="flex" width="100%">
               {daysOfWeek &&
                 daysOfWeek.map((day, index) => {
                   return (
-                    <Chip
-                      color="secondary"
-                      onClick={() => handleAddSelectedDays(day)}
-                      key={index}
-                      label={day}
-                      variant="outlined"
-                      sx={{
-                        width: '100%',
-                        backgroundColor: selectedDays.includes(day)
-                          ? secondary
-                          : '',
-                        color: selectedDays.includes(day) ? 'white' : '',
-                      }}
-                    />
+                    <Fragment key={index}>
+                      <DayTimeSlot
+                        day={day}
+                        timeSlots={restaurantTimeSlots[day]}
+                        onDelete={handleDeleteTimeSlot}
+                      />
+                      <Divider component="div" orientation="vertical" />
+                    </Fragment>
                   );
                 })}
             </Box>
-          </Box>
-          <LoadingButton
-            loading={isAddTimeSlotLoading}
-            loadingIndicator="Adding..."
-            color="secondary"
-            fullWidth
-            onClick={handleAddTimeSlot}
-            variant="contained"
-          >
-            Add
-          </LoadingButton>
-          <Box display="flex" gap={2} width="100%">
-            {daysOfWeek &&
-              daysOfWeek.map((day, index) => {
-                return (
-                  <Fragment key={index}>
-                    <DayTimeSlot
-                      day={day}
-                      timeSlots={restaurantTimeSlots[day]}
-                      onDelete={handleDeleteTimeSlot}
-                    />
-                    <Divider component="div" orientation="vertical" />
-                  </Fragment>
-                );
-              })}
-          </Box>
-        </BoxStyled>
-      </Box>
-    </Sidebar>
+          </BoxStyled>
+        </Box>
+      </Sidebar>
+
+    </ProtectedRoute>
   );
 }
