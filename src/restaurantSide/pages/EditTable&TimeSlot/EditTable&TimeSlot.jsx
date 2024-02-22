@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TableOverview from '../../components/TableOverview';
 import TableList from '../../components/TableList';
@@ -21,34 +21,210 @@ import { daysOfWeek } from '../../utils/constants';
 import { secondary } from '../../../theme/colors';
 import { generateTimeSlots } from '../../utils/time';
 import DayTimeSlot from '../../components/DayTimeSlot';
+import { addDoc, collection, updateDoc, where } from 'firebase/firestore';
+import { AuthContext } from '../../context/AuthContext';
+import { SplashScreen } from '../../../lib/utils';
+import { fetchData, fetchDoc } from '../../utils/firebase';
+import AddTableModal from '../../components/Modals/AddTableModal';
+import { db } from '../../../../firebaseConfig';
+import Notification from '../../components/Notification';
 
 export default function EditTableTimeSlot() {
+  const [availableTables, setAvailableTables] = useState([]);
+  const [filterOption, setFilterOption] = useState('All');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOpenAddTable, setIsOpenAddTable] = useState(false);
+  const [notification, setNotification] = useState({});
+  const [tableList, setTableList] = useState([]);
+  const [tempTableList, setTempTableList] = useState([]);
   const [timeSlotList, _setTimeSlotList] = useState(generateTimeSlots());
   const [timeSlot, setTimeSlot] = useState('9:00 AM');
+  const [searchKeywords, setSearchKeywords] = useState('');
+  const [unavailableTables, setUnavailableTables] = useState([]);
+  const { restaurantIds } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (restaurantIds) {
+      fetchTables();
+    }
+  }, [restaurantIds]);
+
+  useEffect(() => {
+    if (filterOption) {
+      if (filterOption === 'all') {
+        setTempTableList(tableList);
+      }
+
+      if (filterOption === 'available') {
+        setTempTableList(availableTables);
+      }
+
+      if (filterOption === 'unavailable') {
+        setTempTableList(unavailableTables);
+      }
+
+      if (filterOption === 'table' || filterOption === 'type') {
+        sortTableList();
+      }
+    }
+  }, [filterOption]);
+
+  useEffect(() => {
+    const newTableList = tableList.filter((table) => {
+      return Object.values(table).some((value) =>
+        typeof value === 'string' && value.toLowerCase().includes(searchKeywords.toLowerCase())) 
+      || Object.values(table).some((value) => {
+          return typeof value === 'number' && value === parseInt(searchKeywords);
+        })
+      })
+
+    setTempTableList(newTableList);
+  }, [searchKeywords])
+
+  const filterTablesByStatus = (tables, isAvailable) => {
+    const newTableList = tables.filter((table) => {
+      return isAvailable ? table.isAvailable : !table.isAvailable; 
+    });
+
+    if (isAvailable) {
+      setAvailableTables(newTableList);
+    } else {
+      setUnavailableTables(newTableList);
+    }
+  }
+
+  const fetchTables = async () => {
+    try {
+      const data = await fetchData(
+        'diningTables',
+        where('restaurantId', '==', restaurantIds.docId)
+      );
+
+      setTableList(data);
+      setTempTableList(data);
+      filterTablesByStatus(data, true);
+      filterTablesByStatus(data, false);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error, 'Fail to fetch tables');
+    }
+  };
+
+  const handleAddTable = async (data) => {
+    try {
+      const tableCollection = collection(db, 'diningTables');
+      await addDoc(tableCollection, {...data, restaurantId: restaurantIds.docId});
+
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Add Table Successfully'
+      })
+    } catch (error) {
+      console.log('Fail to add table: ', error);
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: 'Fail to add table: ' + error
+      })
+    }
+  }
+
+  const handleUpdateTable = async (docId, data) => {
+    try {
+      const { docRef } = await fetchDoc(docId);
+      await updateDoc(docRef, data);
+    } catch (error) {
+      console.log('Fail to update table: ', error)
+    }
+  }
+
+  const handleUpdateTableUI = (targetTable) => {
+    const newTableList = tableList.map((table) => {
+      if (targetTable.id === table.id) {
+        return targetTable;
+      }
+      return table;
+    })
+
+    setTableList(newTableList);
+    setTempTableList(newTableList);
+    filterTablesByStatus(newTableList, true);
+    filterTablesByStatus(newTableList, false);
+  }
+
+  const sortTableList = () => {
+    if (filterOption === 'table') {
+      const newTableList = tableList.sort((tableA, tableB) => Number(tableA.tableNumber) - Number(tableB.tableNumber));
+      setTempTableList(newTableList);
+      return;
+    }
+
+    if (filterOption === 'type') {
+      const newTableList = tableList.sort((tableA, tableB) => {
+        if (tableA.type < tableB.type) {
+          return -1;
+        }
+
+        if (tableA.type > tableB.type) {
+          return 1;
+        }
+
+        return 0;
+      });
+      setTempTableList(newTableList);
+      return;
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Sidebar>
+        <SplashScreen />
+      </Sidebar>
+    )
+  }
+
   return (
     <Sidebar>
-      <Box 
+      <Box
         display="flex"
         alignItems="center"
         flexDirection="column"
         justifyContent="center"
-        width="100%" 
+        width="100%"
         mx={4}
       >
-        <TableOverview />
-        <BoxStyled 
-          display="flex" 
-          flexDirection="column" 
+        <Notification
+          notification={notification}
+          onClose={() => setNotification({ ...notification, on: false })}
+        />
+        <AddTableModal
+          fetchTables={fetchTables}
+          handleAddTable={handleAddTable}
+          open={isOpenAddTable}
+          onClose={() => setIsOpenAddTable(false)}
+        />
+        <TableOverview
+          numberOfAvailable={availableTables.length}
+          numberOfUnavailable={unavailableTables.length}
+          numberOfTotal={tableList.length}
+        />
+        <BoxStyled
+          display="flex"
+          flexDirection="column"
           gap={2}
-          p={2} 
+          p={2}
           width="100%"
         >
-          <Grid container columnSpacing={4}>
+          <Grid container columnSpacing={2}>
             <Grid item xs={8}>
-              <TextField 
+              <TextField
                 color="secondary"
-                placeholder="Search by table number"
+                placeholder="Search by table number or type"
                 fullWidth
+                value={searchKeywords}
+                onChange={(e) => setSearchKeywords(e.target.value)}
               />
             </Grid>
             <Grid item xs={3}>
@@ -56,32 +232,46 @@ export default function EditTableTimeSlot() {
                 <InputLabel id="filter">Filter</InputLabel>
                 <Select
                   labelId="filter"
-                  color='secondary'
-                  variant='outlined'
+                  color="secondary"
+                  variant="outlined"
                   fullWidth
                   label="Filter"
+                  value={filterOption}
+                  onChange={(e) => setFilterOption(e.target.value)}
                 >
-                  <MenuItem value='available'>Status: Available</MenuItem>
-                  <MenuItem value='unavailable'>Status: Unavailable</MenuItem>
-                  <MenuItem value='table'>Table</MenuItem>
-                  <MenuItem value='type'>Type</MenuItem>
+                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value="available">Status: Available</MenuItem>
+                  <MenuItem value="unavailable">Status: Unavailable</MenuItem>
+                  <MenuItem value="table">Table</MenuItem>
+                  <MenuItem value="type">Type</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={1}>
-              <Button color="secondary" variant="contained" sx={{height: '100%'}}>
+              <Button
+                color="secondary"
+                fullWidth
+                onClick={() => setIsOpenAddTable(true)}
+                variant="contained"
+                sx={{ height: '100%' }}
+              >
                 <AddIcon />
               </Button>
             </Grid>
           </Grid>
-          <TableList />
+          <TableList
+            handleUpdateTable={handleUpdateTable} 
+            setNotification={setNotification}
+            tableList={tempTableList}
+            handleUpdateUI={handleUpdateTableUI}
+          />
         </BoxStyled>
-        <BoxStyled 
-          display="flex" 
-          flexDirection="column" 
-          gap={2} 
-          width="100%" 
-          p={2} 
+        <BoxStyled
+          display="flex"
+          flexDirection="column"
+          gap={2}
+          width="100%"
+          p={2}
           mt={2}
         >
           <Typography variant="h6">Time Slots</Typography>
@@ -92,56 +282,57 @@ export default function EditTableTimeSlot() {
               value={timeSlot}
               onChange={(e) => setTimeSlot(e.target.value)}
             >
-              {
-                timeSlotList && timeSlotList.map((timeSlot, index) => {
-                  return <MenuItem 
-                    color="secondary" 
-                    key={index} 
-                    value={timeSlot}
-                  >
-                    {timeSlot}
-                  </MenuItem>
-                })
-              }
+              {timeSlotList &&
+                timeSlotList.map((timeSlot, index) => {
+                  return (
+                    <MenuItem color="secondary" key={index} value={timeSlot}>
+                      {timeSlot}
+                    </MenuItem>
+                  );
+                })}
             </Select>
           </FormControl>
           <Box display="flex" flexDirection="column" gap={1}>
-            <Typography variant="subtitle1">Select days of the week you want to add time slot</Typography>
+            <Typography variant="subtitle1">
+              Select days of the week you want to add time slot
+            </Typography>
             <Box display="flex" gap={2} width="100%">
-              {
-                daysOfWeek && daysOfWeek.map((day, index) => {
-                  return <Chip
-                    color="secondary"
-                    key={index} 
-                    label={day} 
-                    variant="outlined"
-                    sx={{
-                      width: '100%',
-                      '&:hover': {
-                        backgroundColor: secondary,
-                        color: 'white'
-                      }
-                    }} 
-                  />
-                })
-              }
+              {daysOfWeek &&
+                daysOfWeek.map((day, index) => {
+                  return (
+                    <Chip
+                      color="secondary"
+                      key={index}
+                      label={day}
+                      variant="outlined"
+                      sx={{
+                        width: '100%',
+                        '&:hover': {
+                          backgroundColor: secondary,
+                          color: 'white',
+                        },
+                      }}
+                    />
+                  );
+                })}
             </Box>
           </Box>
-          <Button color="secondary" fullWidth variant="contained">Add</Button>
+          <Button color="secondary" fullWidth variant="contained">
+            Add
+          </Button>
           <Box display="flex" gap={2} width="100%">
-            {
-              daysOfWeek && daysOfWeek.map(() => {
+            {daysOfWeek &&
+              daysOfWeek.map((day, index) => {
                 return (
-                  <>
+                  <Fragment key={index}>
                     <DayTimeSlot />
-                    <Divider component='div' orientation='vertical' />
-                  </>
-                )
-              })
-            }
+                    <Divider component="div" orientation="vertical" />
+                  </Fragment>
+                );
+              })}
           </Box>
         </BoxStyled>
       </Box>
     </Sidebar>
-  )
+  );
 }

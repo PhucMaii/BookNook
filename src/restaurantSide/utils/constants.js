@@ -55,6 +55,17 @@ export const averagePrices = [
   'Greater than $200',
 ];
 
+export const tableTypes = [
+  'Rooftop',
+  'Counter',
+  'Standard',
+  'Indoor',
+  'Outdoor',
+  'Bar',
+  'Window Seat',
+  'Other',
+];
+
 export const cardContent = [
   {
     img: '/Reservation.png',

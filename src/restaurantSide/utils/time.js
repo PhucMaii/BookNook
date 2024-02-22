@@ -32,6 +32,6 @@ export const generateTimeSlots = () => {
     timeSlots.push(`${timeSlot}:30 ${session}`);
     timeSlots.push(`${timeSlot}:45 ${session}`);
   }
-  console.log(timeSlots, 'timeSlots');
+
   return timeSlots;
 };
