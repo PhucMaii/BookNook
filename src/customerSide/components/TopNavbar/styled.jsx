@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const HeaderLogo = styled.img`
-    width: 130px;
-    height: 50px;
-    margin-top: 19px;
+    width: 180px;
+    height: 70px;
+    margin-top: 15px;
 `;

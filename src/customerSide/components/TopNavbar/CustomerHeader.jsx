@@ -10,8 +10,7 @@ import {
 } from '@mui/material';
 import { HeaderLogo } from './styled'
 import { Link } from 'react-router-dom';
-import PersonPin from '@mui/icons-material/PersonPinCircleOutlined';
-
+import PersonPin from '@mui/icons-material/PersonPin';
 
 const headerPages = ['Merchant Login'];
 const settings = ['Profile', 'Logout'];
@@ -26,35 +25,35 @@ function CustomerHeader() {
         >
             <AppBar
                 position='static'
-                mt={2}
+                color='background'
             >
                 <Toolbar>
-                    <Box>
+                    <Box
+                        display='flex'
+                        flexDirection='row'
+                    >
                         <HeaderLogo
                             src='/customerLogo.png'
                             alt='Customer Logo'
+                            style={{ mr: '200', mt: '20px' }}
                         />
-
-                        <PersonPin />
                     </Box>
+                    <PersonPin color='primary' sx={{ fontSize: 40, ml: '25px', mt: '10px' }} />
                     <Box
                         display='flex'
                         alignItems='center'
+                        ml='auto'
+                        justifyContent='center'
+                        mt={2}
                     >
-                        <Link component='button' to='/'>
+                        <Link component='button' to='/' >
                             Merchant Login
                         </Link>
 
-                        <IconButton color='inherit'>
+                        <IconButton color='inherit' sx={{ ml: '20px', }}>
                             <Avatar alt='User Settings' src='/path/to/user-avatar.png' />
                         </IconButton>
                     </Box>
-                    {/* Title */}
-                    {/* <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-                        Your Company Name
-                    </Typography> */}
-
-
                 </Toolbar>
             </AppBar>
         </Box>
