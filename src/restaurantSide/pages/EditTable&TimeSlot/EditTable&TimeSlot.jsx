@@ -21,17 +21,19 @@ import { daysOfWeek } from '../../utils/constants';
 import { secondary } from '../../../theme/colors';
 import { generateTimeSlots } from '../../utils/time';
 import DayTimeSlot from '../../components/DayTimeSlot';
-import { addDoc, collection, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, updateDoc, where } from 'firebase/firestore';
 import { AuthContext } from '../../context/AuthContext';
 import { SplashScreen } from '../../../lib/utils';
 import { fetchData, fetchDoc } from '../../utils/firebase';
 import AddTableModal from '../../components/Modals/AddTableModal';
 import { db } from '../../../../firebaseConfig';
 import Notification from '../../components/Notification';
+import { LoadingButton } from '@mui/lab';
 
 export default function EditTableTimeSlot() {
   const [availableTables, setAvailableTables] = useState([]);
   const [filterOption, setFilterOption] = useState('All');
+  const [isAddTimeSlotLoading, setIsAddTimeSlotLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpenAddTable, setIsOpenAddTable] = useState(false);
   const [notification, setNotification] = useState({});
@@ -39,13 +41,16 @@ export default function EditTableTimeSlot() {
   const [tempTableList, setTempTableList] = useState([]);
   const [timeSlotList, _setTimeSlotList] = useState(generateTimeSlots());
   const [timeSlot, setTimeSlot] = useState('9:00 AM');
+  const [restaurantTimeSlots, setRestaurantTimeSlots] = useState([]);
   const [searchKeywords, setSearchKeywords] = useState('');
+  const [selectedDays, setSelectedDays] = useState([]);
   const [unavailableTables, setUnavailableTables] = useState([]);
   const { restaurantIds } = useContext(AuthContext);
 
   useEffect(() => {
     if (restaurantIds) {
       fetchTables();
+      fetchTimeSlots();
     }
   }, [restaurantIds]);
 
@@ -70,6 +75,7 @@ export default function EditTableTimeSlot() {
   }, [filterOption]);
 
   useEffect(() => {
+    // Search on all values
     const newTableList = tableList.filter((table) => {
       return Object.values(table).some((value) =>
         typeof value === 'string' && value.toLowerCase().includes(searchKeywords.toLowerCase())) 
@@ -104,11 +110,39 @@ export default function EditTableTimeSlot() {
       setTempTableList(data);
       filterTablesByStatus(data, true);
       filterTablesByStatus(data, false);
-      setIsLoading(false);
     } catch (error) {
       console.log(error, 'Fail to fetch tables');
+      setIsLoading(false);
     }
   };
+
+  const fetchTimeSlots = async () => {
+    try {
+      const data = await fetchData(
+        'timeSlots',
+        where('restaurantId', '==', restaurantIds.docId)
+      );
+
+      const formattedData = {};
+      for (let day of daysOfWeek) {
+        formattedData[day] = [];
+      }
+
+      for (let timeSlot of data) {
+        // Get the first 3 char in day, ex: Mon, Tue, etc
+        formattedData[timeSlot.day.slice(0, 3)] = [
+          ...formattedData[timeSlot.day.slice(0, 3)],
+          timeSlot,
+        ];
+      }
+
+      setRestaurantTimeSlots(formattedData);
+      setIsLoading(false);
+    } catch (error) {
+      console.log('Fail to fetch time slots: ', error);
+      setIsLoading(false);
+    }
+  }
 
   const handleAddTable = async (data) => {
     try {
@@ -130,9 +164,55 @@ export default function EditTableTimeSlot() {
     }
   }
 
+  const handleAddTimeSlot = async () => {
+    setIsAddTimeSlotLoading(true);
+    try {
+      const timeSlotCollection = collection(db, 'timeSlots');
+
+      for (const day of selectedDays) {
+        const submittedData = {
+          startTime: timeSlot,
+          day,
+          isAvailable: true,
+          restaurantId: restaurantIds.docId,
+        };
+        await addDoc(timeSlotCollection, submittedData);
+      }
+
+      await fetchTimeSlots();
+
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Add Time Slot Successfully'
+      });
+      setIsAddTimeSlotLoading(false);
+
+    } catch (error) {
+      console.log('Fail to add time slot: ', error);
+      setIsAddTimeSlotLoading(false);
+    }
+  }
+
+  const handleDeleteTimeSlot = async (timeSlotId) => {
+    try {
+      const { docRef } = await fetchDoc('timeSlots', timeSlotId);
+      await deleteDoc(docRef);
+      await fetchTimeSlots();
+
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Delete Time Slot Successfully'
+      });
+    } catch (error) {
+      console.log('Fail to delete time slot: ', error);
+    }
+  }
+
   const handleUpdateTable = async (docId, data) => {
     try {
-      const { docRef } = await fetchDoc(docId);
+      const { docRef } = await fetchDoc('diningTables', docId);
       await updateDoc(docRef, data);
     } catch (error) {
       console.log('Fail to update table: ', error)
@@ -152,6 +232,16 @@ export default function EditTableTimeSlot() {
     filterTablesByStatus(newTableList, true);
     filterTablesByStatus(newTableList, false);
   }
+
+  const handleAddSelectedDays = (targetDay) => {
+    setSelectedDays(prevSelectedDays => {
+      if (!prevSelectedDays.includes(targetDay)) {
+        return [...prevSelectedDays, targetDay];
+      } else {
+        return prevSelectedDays.filter(day => day !== targetDay);
+      }
+    });
+  };
 
   const sortTableList = () => {
     if (filterOption === 'table') {
@@ -260,7 +350,7 @@ export default function EditTableTimeSlot() {
             </Grid>
           </Grid>
           <TableList
-            handleUpdateTable={handleUpdateTable} 
+            handleUpdateTable={handleUpdateTable}
             setNotification={setNotification}
             tableList={tempTableList}
             handleUpdateUI={handleUpdateTableUI}
@@ -302,30 +392,42 @@ export default function EditTableTimeSlot() {
                   return (
                     <Chip
                       color="secondary"
+                      onClick={() => handleAddSelectedDays(day)}
                       key={index}
                       label={day}
                       variant="outlined"
                       sx={{
                         width: '100%',
-                        '&:hover': {
-                          backgroundColor: secondary,
-                          color: 'white',
-                        },
+                        backgroundColor: selectedDays.includes(day)
+                          ? secondary
+                          : '',
+                        color: selectedDays.includes(day) ? 'white' : '',
                       }}
                     />
                   );
                 })}
             </Box>
           </Box>
-          <Button color="secondary" fullWidth variant="contained">
+          <LoadingButton
+            loading={isAddTimeSlotLoading}
+            loadingIndicator="Adding..."
+            color="secondary"
+            fullWidth
+            onClick={handleAddTimeSlot}
+            variant="contained"
+          >
             Add
-          </Button>
+          </LoadingButton>
           <Box display="flex" gap={2} width="100%">
             {daysOfWeek &&
               daysOfWeek.map((day, index) => {
                 return (
                   <Fragment key={index}>
-                    <DayTimeSlot />
+                    <DayTimeSlot
+                      day={day}
+                      timeSlots={restaurantTimeSlots[day]}
+                      onDelete={handleDeleteTimeSlot}
+                    />
                     <Divider component="div" orientation="vertical" />
                   </Fragment>
                 );

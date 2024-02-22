@@ -19,9 +19,9 @@ export const fetchData = async (collectionName, condition) => {
   }
 };
 
-export const fetchDoc = async (docId) => {
+export const fetchDoc = async (collectionName, docId) => {
   try {
-    const docRef = doc(db, 'diningTables', docId);
+    const docRef = doc(db, collectionName, docId);
     const docSnapshot = await getDoc(docRef);
     const docData = docSnapshot.data();
 
