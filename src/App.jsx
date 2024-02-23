@@ -13,6 +13,8 @@ import AuthProvider from './restaurantSide/context/AuthContext';
 import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
 import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
 import CustomerSignup from './customerSide/pages/auth/CustomerSignup'
+import CustomerHistory from './customerSide/pages/CustomerHistory';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
             <Route path="/restaurant/signup" element={<SignUp />} />
             <Route path='/customer/login' element={<CustomerLogin/>} />
             <Route path='/customer/signup' element={<CustomerSignup/>} />
+            <Route path='/customer/history' element={<CustomerHistory/>} />
           </Routes>
             
         </BrowserRouter>
