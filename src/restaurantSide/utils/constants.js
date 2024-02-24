@@ -55,7 +55,6 @@ export const averagePrices = [
   'Greater than $200',
 ];
 
-<<<<<<< HEAD
 export const timeSelect = [
   '9:00 AM',
   '10:00 AM',
@@ -70,7 +69,8 @@ export const timeSelect = [
   '7:00 PM',
   '8:00 PM',
   '9:00 PM',
-=======
+];
+
 export const tableTypes = [
   'Rooftop',
   'Counter',
@@ -98,7 +98,6 @@ export const cardContent = [
     title: 'Avg Review Stars',
     data: 4.2,
   },
->>>>>>> feat/edit-table-time-slots-logic
 ];
 
 export const guestSelect = [1, 2, 3, 4, 5, 6, 7, 8, 9];
