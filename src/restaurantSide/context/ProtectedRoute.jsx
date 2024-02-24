@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!restaurantIds.uid) {
-    navigate('/restaurant/login');
+    navigate('/');
   }
   
   return children;
