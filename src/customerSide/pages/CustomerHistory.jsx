@@ -5,7 +5,6 @@ import {
   Typography,
   AppBar,
   Toolbar,
-  IconButton,
   Card,
   CardContent,
 } from '@mui/material';
@@ -14,14 +13,12 @@ import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutl
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
-
 export default function CustomerHistory() {
   
   const customerHistory = [
     { id: 1},
     { id: 2},
     { id: 3},
-   
   ];
 
   return (
@@ -29,41 +26,35 @@ export default function CustomerHistory() {
       {}
       <AppBar position="static" color="default" style={{ backgroundColor: 'white', color: 'black' }}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
           
-          </IconButton>
           <img
             src="/customerLogo.png"
             alt="Company Logo"
             style={{ maxHeight: '60px', marginRight: '16px' }}
           />
           <PersonPinCircleOutlinedIcon style={{ color: 'FF6347' }}/>
-        
 
           <div style={{ marginLeft: 'auto' }}>
             <Avatar alt="User Avatar" src="/userAvatar.png"  
             />
           </div>
-          
         </Toolbar>
       </AppBar>
-
-      {/* Title */}
-      <Typography variant="h5" align="center" mt={1} fontWeight="bold">
+      
+      <Typography variant="h3" align="center" mt={1} fontWeight="bold">
         Booking History
       </Typography>
 
-      {/* Data Cards */}
-      <Grid container spacing={5} justifyContent="flex-start" mt={1} style={{ }}>
+      {}
+      <Grid container spacing={5} justifyContent="flex-start" mt={1} style={{ }} >
         {renderDataCard('Total Reservations', customerHistory.length, '/Reservation.png')}
-        {renderDataCard('Total Arrivals', calculateTotalArrivals(), '/public/arrive.png')}
+        {renderDataCard('Total Arrivals', calculateTotalArrivals(), '/arrive.png')}
         {renderDataCard('Reservations Cancelled', calculateReservationsCancelled(), '/cancel.png')}
       </Grid>
 
-
-      {/* History Rows */}
+      {}
         {customerHistory.map((reservation) => (
-            <Card key={reservation.id} style={{ margin: '20px' }}>
+            <Card key={reservation.id} style={{ margin: '20px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
             <CardContent>
             <Grid container spacing={1} alignItems="center" justifyContent="space-between">
             <Grid item xs={1} style={{ marginLeft: '15px' }}>
@@ -88,10 +79,9 @@ export default function CustomerHistory() {
             <KeyboardArrowDownIcon />
                 </Grid>
             </Grid>
-
-
             </CardContent>
-            </Card>
+            </Card> 
+            
         ))}
         </Box>
     );
@@ -102,7 +92,7 @@ export default function CustomerHistory() {
         <Grid item xs={12} sm={6} md={4} key={title}>
             <Card>
             <CardContent>
-                <Box display="flex" alignItems="flex-start" justifyContent="center">
+                <Box display="flex" alignItems="flex-start" justifyContent="center" >
                 <div style={{ width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden', backgroundColor: 'pink', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <img src={imagePath} alt={title} style={{ width: '70%', height: '70%', objectFit: 'cover' }} />
                 </div>
@@ -121,7 +111,6 @@ export default function CustomerHistory() {
     );
   }
   
-  
 function calculateTotalArrivals() {
   return 10; 
 }
@@ -129,3 +118,6 @@ function calculateTotalArrivals() {
 function calculateReservationsCancelled() {
   return 5; 
 }
+
+
+       
