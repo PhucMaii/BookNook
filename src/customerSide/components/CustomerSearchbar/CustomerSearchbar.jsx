@@ -15,28 +15,44 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 function CustomerSearchbar() {
 
     return (
-        <Box
-            display='flex'
-            flexDirection='column'
-            justifyContent='center'
-            alignItems='center'
+        <Grid
+            columns={12}
+            spacing={2}
+            direction='column'
         >
-            <Typography
-                variant='h3'
-                fontWeight='bold'
-                textAlign='center'
+            <Box
+                display='flex'
+                flexDirection='column'
+                justifyContent='center'
+                alignItems='center'
+                mt={8}
+                color='primary'
+                backgroundcolor='white'
+                width='100%'
+
             >
-                Find your perfect spots for every moment
-            </Typography>
-            <Grid item xs={12}>
-                <Box
-                    display='flex'
-                    flexDirection='row'
-                    gap={2}
+                <Typography
+                    variant='h3'
+                    fontWeight='bold'
+                    textAlign='center'
                 >
-                    <Grid>
-                        <Box display='flex' flexDirection='row' >
-                            <FormControl variant='standard'>
+                    Find your perfect spots for every moment
+                </Typography>
+                <Grid
+                    item xs={12}
+                    rowSpacing={2}
+                    sx={{ width: '100%', px: '40px' }}
+                >
+                    <Box
+                        display='flex'
+                        flexDirection='row'
+                        gap={2}
+                        alignItems='center'
+                        justifyContent='center'
+                        width='100%'
+                    >
+                        <Grid item xs={2}>
+                            <FormControl variant='standard'  >
                                 <InputLabel id='customer-searchbar-date'>Date</InputLabel>
                                 <Select
                                     labelId='date'
@@ -44,11 +60,14 @@ function CustomerSearchbar() {
                                     value=''
                                     placeholder='Select Date'
                                 >
-
                                 </Select>
                             </FormControl >
-                            <Divider orientation="vertical" variant="fullWidth" />
-                            <FormControl variant='standard'>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Divider orientation='vertical' variant='middle' />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <FormControl variant='standard' >
                                 <InputLabel id='customer-searchbar-time'>Time</InputLabel>
                                 <Select
                                     labelId='time'
@@ -56,11 +75,14 @@ function CustomerSearchbar() {
                                     value=''
                                     placeholder='Select Time'
                                 >
-
                                 </Select>
                             </FormControl>
-                            <Divider orientation="vertical" variant="fullWidth" />
-                            <FormControl variant='standard'>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Divider orientation='vertical' variant='middle' />
+                        </Grid>
+                        <Grid item xs={2}>
+                            <FormControl variant='standard' >
                                 <InputLabel id='customer-searchbar-time'>Number of Guests</InputLabel>
                                 <Select
                                     labelId='time'
@@ -68,22 +90,36 @@ function CustomerSearchbar() {
                                     value=''
                                     placeholder='Select Time'
                                 >
-
                                 </Select>
                             </FormControl>
-                            <Divider orientation="vertical" variant="fullWidth" />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <Divider orientation='vertical' variant='middle' sx={{ color: 'black' }} />
+                        </Grid>
+                        <Grid
+                            display='flex'
+                            flexDirection='row'
+                            alignItems='center'
+                        >
                             <SearchOutlinedIcon />
                             <TextField
                                 color='primary'
                                 id='location'
                                 label='Location'
+                                variant='standard'
                             />
-                            <Button variant='contained' style={{ color: 'white' }}>Search</Button>
-                        </Box>
-                    </Grid>
-                </Box>
-            </Grid>
-        </Box>
+                            <Button
+                                variant='contained'
+                                style={{ color: 'white', height: '55px' }}
+                            >
+                                Search
+                            </Button>
+
+                        </Grid>
+                    </Box>
+                </Grid>
+            </Box>
+        </Grid>
     )
 }
 
