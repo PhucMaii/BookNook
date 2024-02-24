@@ -4,6 +4,8 @@ import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 
 export const drawerWidth = 300;
 
+export const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 export const upperTabs = [
   {
     name: 'Overview',

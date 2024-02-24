@@ -11,3 +11,6 @@ export const errorBackground = red[100];
 
 export const warning = yellow[700];
 export const warningBackground = yellow[100];
+
+export const primary = '#FF6347';
+export const secondary = '#3498DB';
