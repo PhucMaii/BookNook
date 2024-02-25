@@ -27,10 +27,10 @@ import { AuthContext } from '../../context/AuthContext';
 import { useEffect } from 'react';
 import { fetchDoc } from '../../utils/firebase';
 import Notification from '../../components/Notification';
+import EditImageModal from '../../components/Modals/EditImageModal';
 
 export default function SettingsPage() {
     const [_address, setAddress] = useState({description: ''});
-    const [hostAddress, setHostAddress] = useState('')
     const [imgURL, setImgURL] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('')
     const [email,setEmail] = useState('');
@@ -44,12 +44,17 @@ export default function SettingsPage() {
     const [showSettingsNewPassword, setSettingsNewPassword] = useState(false);
     const [showSettingsConfirmPassword, setSettingsConfirmPassword] = useState(false);
     const [notification,setNotification] = useState({})
+    const [modalClosed, setModalClosed] = useState(false);
     const [updateData, setUpdateData] = useState({
       name: null,
       phoneNumber: null,
       email: null,
       address: null
     });
+
+    const handleModalClose = () => {
+      setModalClosed(true);
+    };
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -63,8 +68,9 @@ export default function SettingsPage() {
     useEffect(() => {
       if (restaurantIds.docId) {
         fetchHostData()
+        setModalClosed(false);
       }
-    },[restaurantIds])
+    },[restaurantIds, modalClosed])
     
     const fetchHostData = async () => {
       setIsLoading(true);
@@ -77,6 +83,7 @@ export default function SettingsPage() {
         setImgURL(hostData.imgURL)
         setName(hostData.name)
         setPhoneNumber(hostData.phoneNumber)
+        setImgURL(hostData.imgURL)
 
         setIsLoading(false)
       } catch (error) {
@@ -86,6 +93,7 @@ export default function SettingsPage() {
     
     const uploadData = async() => {
       try {
+        updateData.address = _address.description
         const hostRef = doc(db,'restaurants',restaurantIds.docId)
         const submitData = {};
         Object.keys(updateData).map((key) => {
@@ -134,14 +142,17 @@ export default function SettingsPage() {
                 flexDirection="column"
                 height={300}
                 style={{
-                  backgroundImage: `url(${DummyImage})`,
+                  backgroundImage: `url(${imgURL})`,
                   backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat'
                 }}
               >
                 <Box display="flex" justifyContent="center" mt={15}>
-                  <Button variant="contained" color="secondary">
-                    Change Picture
-                  </Button>
+                  <EditImageModal
+                  imgURL={imgURL} 
+                  onClose={() => {
+                    handleModalClose();
+                  }}/>
                 </Box>
               </Box>
             </Grid>
@@ -275,7 +286,7 @@ export default function SettingsPage() {
                                   showSettingsOldPassword ? 'text' : 'password'
                                 }
                                 color="secondary"
-                                value={(e) => onChange}
+                                value={oldPassword}
                                 endAdornment={
                                   <InputAdornment position="end">
                                     <IconButton
