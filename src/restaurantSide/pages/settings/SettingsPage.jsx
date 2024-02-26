@@ -22,12 +22,13 @@ import EditProfileProps from './EditProfileProps'
 import ProtectedRoute from '../../context/ProtectedRoute';
 import { collection, doc, query, updateDoc} from 'firebase/firestore';
 import { SplashScreen } from '../../../lib/utils';
-import { db } from '../../../../firebaseConfig';
+import { auth, db } from '../../../../firebaseConfig';
 import { AuthContext } from '../../context/AuthContext';
 import { useEffect } from 'react';
 import { fetchDoc } from '../../utils/firebase';
 import Notification from '../../components/Notification';
 import EditImageModal from '../../components/Modals/EditImageModal';
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 
 export default function SettingsPage() {
     const [_address, setAddress] = useState({description: ''});
@@ -36,6 +37,7 @@ export default function SettingsPage() {
     const [email,setEmail] = useState('');
     const [name, setName] = useState('');
     const [value, setValue] = useState(0);
+    const [currentPassword, setCurrentPassword] = useState('')
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -119,6 +121,46 @@ export default function SettingsPage() {
         })
       }
     }
+
+    const updateHostPassword = async () => {
+      try {
+        const user = auth.currentUser;
+        // Reauthenticate the user before updating the password
+        const credential = EmailAuthProvider.credential(
+          user.email,
+          oldPassword
+        );
+        await reauthenticateWithCredential(user, credential);
+        if (newPassword != confirmPassword) {
+          setNotification({
+            on: true,
+            severity: 'error',
+            message: 'Failed to update password. Confirm password and new password are not same.',
+          });
+        }else{
+          await updatePassword(user, newPassword);
+        }
+    
+        // Clear the password fields after successful update
+        setOldPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+    
+        setNotification({
+          on: true,
+          severity: 'success',
+          message: 'Password updated successfully.',
+        });
+      } catch (error) {
+        console.error('Password update error:', error.message);
+    
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Failed to update password. Please check your current password.',
+        });
+      }
+    };
 
     if (isLoading) {
       return (
@@ -285,6 +327,7 @@ export default function SettingsPage() {
                                 type={
                                   showSettingsOldPassword ? 'text' : 'password'
                                 }
+                                onChange={(e) => {setOldPassword(e.target.value)}}
                                 color="secondary"
                                 value={oldPassword}
                                 endAdornment={
@@ -307,11 +350,12 @@ export default function SettingsPage() {
                                 }
                               ></OutlinedInput>
                               <OutlinedInput
-                                value={123123}
-                                id="old-password"
+                                value={newPassword}
+                                id="new-password"
                                 type={
                                   showSettingsNewPassword ? 'text' : 'password'
                                 }
+                                onChange={(e) => {setNewPassword(e.target.value)}}
                                 color="secondary"
                                 endAdornment={
                                   <InputAdornment position="end">
@@ -333,12 +377,14 @@ export default function SettingsPage() {
                                 }
                               ></OutlinedInput>
                               <OutlinedInput
-                                id="old-password"
+                              value={confirmPassword}
+                                id="confirm-password"
                                 type={
                                   showSettingsConfirmPassword
                                     ? 'text'
                                     : 'password'
                                 }
+                                onChange={(e) => {setConfirmPassword(e.target.value)}}
                                 color="secondary"
                                 endAdornment={
                                   <InputAdornment position="end">
@@ -369,6 +415,7 @@ export default function SettingsPage() {
                             variant="contained"
                             color="secondary"
                             sx={{ width: '10%', height: '105%' }}
+                            onClick={updateHostPassword}
                           >
                             Update
                           </Button>
