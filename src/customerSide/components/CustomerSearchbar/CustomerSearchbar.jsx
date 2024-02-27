@@ -6,121 +6,140 @@ import {
     InputLabel,
     FormControl,
     Divider,
-    TextField,
     Button,
-    Grid
+    Grid,
+    InputAdornment,
+    OutlinedInput,
+    MenuItem
 } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { guestsQuantity } from '../../utils/constants';
 
-function CustomerSearchbar() {
+const CustomerSearchbar = () => {
+    const [date, setDate] = React.useState(dayjs('2022-02-26'));
+    const [time, setTime] = React.useState(dayjs('2022-02-26T15:30'));
+    const [persons, setPersons] = React.useState('');
+
+    const handleGuestsChange = (event) => {
+        setPersons(event.target.value);
+    }
 
     return (
-        <Grid
-            columns={12}
-            spacing={2}
-            direction='column'
-        >
-            <Box
-                display='flex'
-                flexDirection='column'
+        <>
+            <Grid
+                container
+                spacing={2}
                 justifyContent='center'
-                alignItems='center'
-                mt={8}
-                color='primary'
-                backgroundcolor='white'
-                width='100%'
-
             >
-                <Typography
-                    variant='h3'
-                    fontWeight='bold'
-                    textAlign='center'
-                >
-                    Find your perfect spots for every moment
-                </Typography>
-                <Grid
-                    item xs={12}
-                    rowSpacing={2}
-                    sx={{ width: '100%', px: '40px' }}
-                >
+                <Grid item xs={12}>
                     <Box
-                        display='flex'
-                        flexDirection='row'
-                        gap={2}
-                        alignItems='center'
-                        justifyContent='center'
-                        width='100%'
+                        mt={4}
+                        p={2}
                     >
-                        <Grid item xs={2}>
-                            <FormControl variant='standard'  >
-                                <InputLabel id='customer-searchbar-date'>Date</InputLabel>
-                                <Select
-                                    labelId='date'
-                                    id='searchbar-date'
-                                    value=''
-                                    placeholder='Select Date'
-                                >
-                                </Select>
-                            </FormControl >
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Divider orientation='vertical' variant='middle' />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <FormControl variant='standard' >
-                                <InputLabel id='customer-searchbar-time'>Time</InputLabel>
-                                <Select
-                                    labelId='time'
-                                    id='searchbar-time'
-                                    value=''
-                                    placeholder='Select Time'
-                                >
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Divider orientation='vertical' variant='middle' />
-                        </Grid>
-                        <Grid item xs={2}>
-                            <FormControl variant='standard' >
-                                <InputLabel id='customer-searchbar-time'>Number of Guests</InputLabel>
-                                <Select
-                                    labelId='time'
-                                    id='searchbar-time'
-                                    value=''
-                                    placeholder='Select Time'
-                                >
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Divider orientation='vertical' variant='middle' sx={{ color: 'black' }} />
-                        </Grid>
-                        <Grid
-                            display='flex'
-                            flexDirection='row'
-                            alignItems='center'
+                        <Typography
+                            variant='h2'
+                            fontWeight='bold'
+                            textAlign='center'
                         >
-                            <SearchOutlinedIcon />
-                            <TextField
-                                color='primary'
-                                id='location'
-                                label='Location'
-                                variant='standard'
-                            />
+                            Find your perfect spots for every moment
+                        </Typography>
+                    </Box>
+                </Grid>
+            </Grid>
+            <Grid
+                container
+                spacing={2}
+                justifyContent='center'
+            >
+                <Grid item xs={12}>
+                    <Box p={2} color='background'>
+                        <Box
+                            mt={2}
+                            display='flex'
+                            alignItems='center'
+                            justifyContent='space-around'
+                            px={6}
+                            py={4}
+                            style={{ backgroundColor: 'background' }}
+                        >
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['DatePicker']}>
+                                    <DatePicker
+                                        label="Date"
+                                        value={date}
+                                        onChange={(newValue) => setDate(newValue)}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
+                            <Divider orientation='vertical' flexItem />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['TimePicker']}>
+                                    <TimePicker
+                                        label="Time"
+                                        value={time}
+                                        onChange={(newValue) => setTime(newValue)}
+                                    />
+                                </DemoContainer>
+                            </LocalizationProvider>
+                            <Divider orientation='vertical' flexItem />
+                            <Box display='flex' width='10%' px={2}>
+                                <FormControl fullWidth>
+                                    <InputLabel id='customer-searchbar-time' color='secondary'>Number of Guests</InputLabel>
+                                    <Select
+                                        labelId='guests'
+                                        id='outlined-required'
+                                        value={persons}
+                                        placeholder='Number of Guests'
+                                        label='Guests'
+                                        onChange={handleGuestsChange}
+                                        color='secondary'
+                                    >
+                                        {guestsQuantity.map((quantity) =>
+                                            <MenuItem key={quantity} value={quantity}>
+                                                {quantity}
+                                            </MenuItem>
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <Divider orientation='vertical' flexItem />
+                            <Box
+                                display='flex'
+                                width='20%'
+                            >
+                                <FormControl fullWidth>
+                                    <InputLabel color='secondary'>Location</InputLabel>
+                                    <OutlinedInput
+                                        id='location'
+                                        label='Location'
+                                        variant='outlined'
+                                        color='secondary'
+                                        startAdornment={
+                                            <InputAdornment position='start'>
+                                                <SearchOutlinedIcon />
+                                            </InputAdornment>
+                                        }
+                                    />
+                                </FormControl>
+                            </Box>
                             <Button
                                 variant='contained'
-                                style={{ color: 'white', height: '55px' }}
+                                style={{ color: 'white', height: '45px', width: '7%' }}
                             >
                                 Search
                             </Button>
-
-                        </Grid>
+                        </Box>
                     </Box>
                 </Grid>
-            </Box>
-        </Grid>
-    )
+            </Grid>
+        </>
+    );
 }
 
 export default CustomerSearchbar;
