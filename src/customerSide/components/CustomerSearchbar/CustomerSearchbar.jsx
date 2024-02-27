@@ -69,7 +69,7 @@ const CustomerSearchbar = () => {
                             style={{ backgroundColor: 'background' }}
                         >
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
+                                <DemoContainer components={['DatePicker']} >
                                     <DatePicker
                                         label="Date"
                                         value={date}
