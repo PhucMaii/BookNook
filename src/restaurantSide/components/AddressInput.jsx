@@ -159,6 +159,7 @@ function GoogleMaps(props) {
 
 GoogleMaps.propTypes = {
   onDataReceived: PropTypes.func,
+  initialValue: PropTypes.string
 }
 
 export default memo(GoogleMaps);
