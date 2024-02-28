@@ -58,7 +58,7 @@ const CustomerSearchbar = () => {
                 justifyContent='center'
             >
                 <Grid item xs={12}>
-                    <Box p={2} color='background'>
+                    <Box py={2} px={30} color='background'>
                         <Box
                             mt={2}
                             display='flex'
@@ -67,6 +67,7 @@ const CustomerSearchbar = () => {
                             px={6}
                             py={4}
                             style={{ backgroundColor: 'background' }}
+                            borderRadius={2}
                         >
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DemoContainer components={['DatePicker']} >

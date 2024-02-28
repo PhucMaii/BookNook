@@ -16,7 +16,7 @@ import StarIcon from '@mui/icons-material/Star';
 
 export default function CustomerHomepageCard() {
     return (
-        <Card sx={{ width: 275, pb: 2 }}>
+        <Card sx={{ width: 275, pb: 2, maxHeight: 400 }}>
             <CardContent>
                 <Box
                     display='flex'
