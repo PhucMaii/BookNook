@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Box,
   Table,
   TableBody,
   TableCell,
@@ -9,14 +10,17 @@ import {
 } from '@mui/material';
 import StatusText from './StatusText/StatusText';
 import EditTableModal from './Modals/EditTableModal';
+import DeleteTableModal from './Modals/DeleteTableModal';
 
 export default function TableList({
+  handleDeleteTable,
   setNotification,
   tableList,
   handleUpdateTable,
   handleUpdateUI
 }) {
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   return (
     <Table sx={{width: '100%'}}>
       <TableHead>
@@ -42,15 +46,22 @@ export default function TableList({
                 </TableCell>
                 <TableCell>{table.type}</TableCell>
                 <TableCell>
-                  <EditTableModal
-                    onClose={() => setIsOpenEditModal(false)}
-                    open={isOpenEditModal}
-                    tableList={tableList}
-                    targetTable={table}
-                    handleUpdateTable={handleUpdateTable}
-                    setNotification={setNotification}
-                    handleUpdateUI={handleUpdateUI}
-                  />
+                  <Box display="flex" gap={2}>
+                    <EditTableModal
+                      onClose={() => setIsOpenEditModal(false)}
+                      open={isOpenEditModal}
+                      tableList={tableList}
+                      targetTable={table}
+                      handleUpdateTable={handleUpdateTable}
+                      setNotification={setNotification}
+                      handleUpdateUI={handleUpdateUI}
+                    />
+                    <DeleteTableModal 
+                      open={isOpenDeleteModal}
+                      onClose={() => setIsOpenDeleteModal(false)}
+                      handleDeleteTable={() => handleDeleteTable(table.id)}
+                    />
+                  </Box>
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -61,6 +72,7 @@ export default function TableList({
 }
 
 TableList.propTypes = {
+  handleDeleteTable: PropTypes.func,
   handleUpdateTable: PropTypes.func,
   handleUpdateUI: PropTypes.func,
   setNotification: PropTypes.func,

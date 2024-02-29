@@ -172,6 +172,20 @@ export default function EditTableTimeSlot() {
     }
   }
 
+  const handleDeleteTable = async (tableId) => {
+    try {
+      const { docRef } = await fetchDoc('diningTables', tableId);
+      await deleteDoc(docRef);
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Remove table successfully'
+      })
+    } catch (error) {
+      console.log('Fail to delete table: ', error);
+    }
+  }
+
   const handleAddTimeSlot = async () => {
     setIsAddTimeSlotLoading(true);
     try {
@@ -352,6 +366,7 @@ export default function EditTableTimeSlot() {
               </Grid>
             </Grid>
             <TableList
+              handleDeleteTable={handleDeleteTable}
               handleUpdateTable={handleUpdateTable}
               setNotification={setNotification}
               tableList={tempTableList}
