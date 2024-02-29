@@ -42,7 +42,7 @@ const Sidebar = ({ children }) => {
   const handleSignout = async () => {
     try {
       await signOut(auth);
-      navigate('/');
+      navigate('/restaurant/login');
     } catch (error) { 
       console.log('Fail to sign out: ', error);
     }
