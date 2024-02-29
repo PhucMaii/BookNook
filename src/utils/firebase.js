@@ -1,5 +1,5 @@
 import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
-import { db } from '../../../firebaseConfig';
+import { db } from '../../firebaseConfig';
 
 export const fetchData = async (collectionName, condition) => {
   const result = [];

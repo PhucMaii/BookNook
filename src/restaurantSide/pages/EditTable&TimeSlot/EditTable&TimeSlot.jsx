@@ -17,14 +17,14 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { BoxStyled } from './styled';
-import { daysOfWeek } from '../../utils/constants';
+import { daysOfWeek } from '../../../utils/constants';
 import { secondary } from '../../../theme/colors';
-import { convertHourToMinutes, generateTimeSlots } from '../../utils/time';
+import { convertHourToMinutes, generateTimeSlots } from '../../../utils/time';
 import DayTimeSlot from '../../components/DayTimeSlot';
 import { addDoc, collection, deleteDoc, updateDoc, where } from 'firebase/firestore';
 import { AuthContext } from '../../context/AuthContext';
 import { SplashScreen } from '../../../lib/utils';
-import { fetchData, fetchDoc } from '../../utils/firebase';
+import { fetchData, fetchDoc } from '../../../utils/firebase';
 import AddTableModal from '../../components/Modals/AddTableModal';
 import { db } from '../../../../firebaseConfig';
 import Notification from '../../components/Notification';

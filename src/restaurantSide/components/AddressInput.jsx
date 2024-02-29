@@ -100,7 +100,7 @@ function GoogleMaps(props) {
       getOptionLabel={(option) =>
         typeof option === 'string' ? option : option.description
       }
-      color="secondary"
+      color={props.color}
       filterOptions={(x) => x}
       options={options}
       autoComplete
@@ -116,7 +116,7 @@ function GoogleMaps(props) {
         setInputValue(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField color="secondary" {...params} label="Address" fullWidth />
+        <TextField color={props.color} {...params} label="Address" fullWidth />
       )}
       renderOption={(props, option) => {
         const matches =
@@ -156,6 +156,7 @@ function GoogleMaps(props) {
 
 GoogleMaps.propTypes = {
   onDataReceived: PropTypes.func,
+  color: PropTypes.string,
 }
 
 export default memo(GoogleMaps);

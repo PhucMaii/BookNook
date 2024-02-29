@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import SettingsCellIcon from '@mui/icons-material/SettingsCell';
-import { restaurantTypes, averagePrices, daysOfWeek } from '../../utils/constants';
+import { restaurantTypes, averagePrices, daysOfWeek } from '../../../utils/constants';
 import { LogoImg, SideImg } from './styled';
 import { addDoc, collection, getDocs, query, where, updateDoc, } from '@firebase/firestore';
 import { db } from '../../../../firebaseConfig';
@@ -23,7 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import AddressInput from '../../components/AddressInput';
-import { generateInitialTimeSlots } from '../../utils/time';
+import { generateInitialTimeSlots } from '../../../utils/time';
 
 const RestaurantInformation = () => {
   const [address, setAddress] = useState(null);
@@ -181,7 +181,7 @@ const RestaurantInformation = () => {
               }}
               onChange={(e) => setRestaurantName(e.target.value)}
             />
-            <AddressInput onDataReceived={(data) => setAddress(data)}/>
+            <AddressInput color="secondary" onDataReceived={(data) => setAddress(data)}/>
             <TextField
               type='number'
               id='outlined-required'

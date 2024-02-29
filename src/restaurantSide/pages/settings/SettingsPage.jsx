@@ -121,6 +121,7 @@ export default function SettingsPage() {
                                 color="secondary"
                               />
                               <AddressInput
+                                color="secondary"
                                 onDataReceived={(data) => setAddress(data)}
                               />
                             </Box>

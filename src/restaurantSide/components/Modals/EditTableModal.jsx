@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 import { BoxStyled } from './styled';
 import { LoadingButton } from '@mui/lab';
-import { generateCapacity } from '../../utils/generateConstants';
-import { tableTypes } from '../../utils/constants';
+import { generateCapacity } from '../../../utils/generateConstants';
+import { tableTypes } from '../../../utils/constants';
 import { blueGrey } from '@mui/material/colors';
 
 export default function EditTableModal({
