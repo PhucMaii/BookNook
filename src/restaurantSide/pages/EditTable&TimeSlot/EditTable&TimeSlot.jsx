@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TableOverview from '../../components/TableOverview';
 import TableList from '../../components/TableList';
@@ -347,7 +347,7 @@ export default function EditTableTimeSlot() {
             width="100%"
           >
             <Grid container columnSpacing={2}>
-              <Grid item xs={8}>
+              <Grid item md={8} xs={6}>
                 <TextField
                   color="secondary"
                   placeholder="Search by table number or type"
@@ -424,7 +424,7 @@ export default function EditTableTimeSlot() {
               <Typography variant="subtitle1">
                 Select days of the week you want to add time slot
               </Typography>
-              <Box display="flex" gap={2} width="100%">
+              <Box display="flex" gap={2} width="100%" justifyContent="space-between" flexWrap="wrap">
                 {daysOfWeek &&
                   daysOfWeek.map((day, index) => {
                     return (
@@ -435,7 +435,7 @@ export default function EditTableTimeSlot() {
                         label={day}
                         variant="outlined"
                         sx={{
-                          width: '100%',
+                          width: 'calc(14.28% - 20px)',
                           backgroundColor: selectedDays.includes(day)
                             ? secondary
                             : '',
@@ -456,21 +456,23 @@ export default function EditTableTimeSlot() {
             >
               Add
             </LoadingButton>
-            <Box display="flex" width="100%">
+            <Grid container>
               {daysOfWeek &&
                 daysOfWeek.map((day, index) => {
                   return (
-                    <Fragment key={index}>
-                      <DayTimeSlot
-                        day={day}
-                        timeSlots={restaurantTimeSlots[day]}
-                        onDelete={handleDeleteTimeSlot}
-                      />
-                      <Divider component="div" orientation="vertical" />
-                    </Fragment>
+                    <Grid item md={1.7} sm={3} xs={4} key={index} sx={{width: '100%'}}>
+                      <Box display="flex">
+                        <DayTimeSlot
+                          day={day}
+                          timeSlots={restaurantTimeSlots[day]}
+                          onDelete={handleDeleteTimeSlot}
+                        />
+                        <Divider flexItem component="div" orientation='vertical' />
+                      </Box>
+                    </Grid>
                   );
                 })}
-            </Box>
+            </Grid>
           </BoxStyled>
         </Box>
       </Sidebar>
