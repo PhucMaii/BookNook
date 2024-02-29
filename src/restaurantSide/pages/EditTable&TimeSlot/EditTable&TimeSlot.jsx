@@ -41,7 +41,7 @@ export default function EditTableTimeSlot() {
   const [tableList, setTableList] = useState([]);
   const [tempTableList, setTempTableList] = useState([]);
   const [timeSlotList, _setTimeSlotList] = useState(generateTimeSlots());
-  const [timeSlot, setTimeSlot] = useState('9:00 AM');
+  const [timeSlotSelected, setTimeSlotSelected] = useState('9:00 AM');
   const [restaurantTimeSlots, setRestaurantTimeSlots] = useState([]);
   const [searchKeywords, setSearchKeywords] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
@@ -153,9 +153,24 @@ export default function EditTableTimeSlot() {
   }
 
   const handleAddTable = async (data) => {
+    // check is table valid to be added
+    const isTableNumberExisted = tableList.find((table) => table.tableNumber === data.tableNumber);
+    if (isTableNumberExisted) {
+      setNotification({
+        on: true,
+        severity: 'error',
+        message: 'Table Number Existed Already'
+      })
+      return;
+    }
+
     try {
+      const submittedData = {...data, restaurantId: restaurantIds.docId};
       const tableCollection = collection(db, 'diningTables');
-      await addDoc(tableCollection, {...data, restaurantId: restaurantIds.docId});
+      await addDoc(tableCollection, submittedData);
+
+      const newTableList = [...tableList, submittedData];
+      handleUpdateTableUI(newTableList);
 
       setNotification({
         on: true,
@@ -172,20 +187,6 @@ export default function EditTableTimeSlot() {
     }
   }
 
-  const handleDeleteTable = async (tableId) => {
-    try {
-      const { docRef } = await fetchDoc('diningTables', tableId);
-      await deleteDoc(docRef);
-      setNotification({
-        on: true,
-        severity: 'success',
-        message: 'Remove table successfully'
-      })
-    } catch (error) {
-      console.log('Fail to delete table: ', error);
-    }
-  }
-
   const handleAddTimeSlot = async () => {
     setIsAddTimeSlotLoading(true);
     try {
@@ -193,7 +194,7 @@ export default function EditTableTimeSlot() {
 
       for (const day of selectedDays) {
         const submittedData = {
-          startTime: timeSlot,
+          startTime: timeSlotSelected,
           day,
           isAvailable: true,
           restaurantId: restaurantIds.docId,
@@ -213,6 +214,36 @@ export default function EditTableTimeSlot() {
     } catch (error) {
       console.log('Fail to add time slot: ', error);
       setIsAddTimeSlotLoading(false);
+    }
+  }
+
+  const handleAddSelectedDays = (targetDay) => {
+    setSelectedDays(prevSelectedDays => {
+      if (!prevSelectedDays.includes(targetDay)) {
+        return [...prevSelectedDays, targetDay];
+      } else {
+        return prevSelectedDays.filter(day => day !== targetDay);
+      }
+    });
+  };
+
+  const handleDeleteTable = async (tableId) => {
+    try {
+      const { docRef } = await fetchDoc('diningTables', tableId);
+      await deleteDoc(docRef);
+
+      const newTableList = tableList.filter((table) => {
+        return table.id !== tableId
+      })
+
+      handleUpdateTableUI(newTableList);
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Remove table successfully'
+      })
+    } catch (error) {
+      console.log('Fail to delete table: ', error);
     }
   }
 
@@ -236,34 +267,26 @@ export default function EditTableTimeSlot() {
     try {
       const { docRef } = await fetchDoc('diningTables', docId);
       await updateDoc(docRef, data);
+
+      const newTableList = tableList.map((table) => {
+        if (table.id === docId) {
+          return data;
+        }
+        return table;
+      })
+  
+      handleUpdateTableUI(newTableList);
     } catch (error) {
       console.log('Fail to update table: ', error)
     }
   }
 
-  const handleUpdateTableUI = (targetTable) => {
-    const newTableList = tableList.map((table) => {
-      if (targetTable.id === table.id) {
-        return targetTable;
-      }
-      return table;
-    })
-
+  const handleUpdateTableUI = (newTableList) => {
     setTableList(newTableList);
     setTempTableList(newTableList);
     filterTablesByStatus(newTableList, true);
     filterTablesByStatus(newTableList, false);
   }
-
-  const handleAddSelectedDays = (targetDay) => {
-    setSelectedDays(prevSelectedDays => {
-      if (!prevSelectedDays.includes(targetDay)) {
-        return [...prevSelectedDays, targetDay];
-      } else {
-        return prevSelectedDays.filter(day => day !== targetDay);
-      }
-    });
-  };
 
   const sortTableList = () => {
     if (filterOption === 'type') {
@@ -307,7 +330,6 @@ export default function EditTableTimeSlot() {
             onClose={() => setNotification({ ...notification, on: false })}
           />
           <AddTableModal
-            fetchTables={fetchTables}
             handleAddTable={handleAddTable}
             open={isOpenAddTable}
             onClose={() => setIsOpenAddTable(false)}
@@ -370,7 +392,6 @@ export default function EditTableTimeSlot() {
               handleUpdateTable={handleUpdateTable}
               setNotification={setNotification}
               tableList={tempTableList}
-              handleUpdateUI={handleUpdateTableUI}
             />
           </BoxStyled>
           <BoxStyled
@@ -386,8 +407,8 @@ export default function EditTableTimeSlot() {
               <Select
                 labelId="time-slot-label"
                 color="secondary"
-                value={timeSlot}
-                onChange={(e) => setTimeSlot(e.target.value)}
+                value={timeSlotSelected}
+                onChange={(e) => setTimeSlotSelected(e.target.value)}
               >
                 {timeSlotList &&
                   timeSlotList.map((timeSlot, index) => {

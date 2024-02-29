@@ -20,7 +20,6 @@ import { blueGrey } from '@mui/material/colors';
 
 export default function EditTableModal({
   handleUpdateTable,
-  handleUpdateUI,
   tableList,
   targetTable,
   setNotification,
@@ -39,7 +38,6 @@ export default function EditTableModal({
   const updateTable = async () => {
     setIsLoading(true);
     await handleUpdateTable(targetTable.id, tableData);
-    handleUpdateUI(tableData);
     setNotification({
         on: true,
         severity: 'success',
@@ -199,7 +197,6 @@ export default function EditTableModal({
 
 EditTableModal.propTypes = {
   handleUpdateTable: PropTypes.func,
-  handleUpdateUI: PropTypes.func,
   tableList: PropTypes.array,
   targetTable: PropTypes.object,
   setNotification: PropTypes.func,

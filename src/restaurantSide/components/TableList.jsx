@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -17,10 +17,7 @@ export default function TableList({
   setNotification,
   tableList,
   handleUpdateTable,
-  handleUpdateUI
 }) {
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   return (
     <Table sx={{width: '100%'}}>
       <TableHead>
@@ -48,17 +45,12 @@ export default function TableList({
                 <TableCell>
                   <Box display="flex" gap={2}>
                     <EditTableModal
-                      onClose={() => setIsOpenEditModal(false)}
-                      open={isOpenEditModal}
                       tableList={tableList}
                       targetTable={table}
                       handleUpdateTable={handleUpdateTable}
                       setNotification={setNotification}
-                      handleUpdateUI={handleUpdateUI}
                     />
                     <DeleteTableModal 
-                      open={isOpenDeleteModal}
-                      onClose={() => setIsOpenDeleteModal(false)}
                       handleDeleteTable={() => handleDeleteTable(table.id)}
                     />
                   </Box>

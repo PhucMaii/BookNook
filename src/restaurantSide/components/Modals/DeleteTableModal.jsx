@@ -4,25 +4,24 @@ import { Box, Button, Modal, Typography } from '@mui/material';
 import { BoxStyled } from './styled';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { red } from '@mui/material/colors';
+import { LoadingButton } from '@mui/lab';
 
 export default function DeleteTableModal({
-    open,
-    onClose,
     handleDeleteTable
 }) {
-    const [isOpen, setIsOpen] = useState(open || false);
+    const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const handleDeleteTableChange = async () => {
         setIsLoading(true);
         await handleDeleteTable();
         setIsLoading(false);
-        onClose();
+        setIsOpen(false);
     }
   return (
     <>
       <Button color="error" onClick={() => setIsOpen(true)}>Remove</Button>
-      <Modal open={isOpen} onClose={onClose}>
+      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
         <BoxStyled
             display="flex"
             flexDirection="column"
@@ -36,24 +35,26 @@ export default function DeleteTableModal({
                 <ErrorOutlineIcon sx={{ fontSize: 80, color: red[800] }} />
             </Box>
             <Typography variant="h4">
-                Are you sure to delete this table ?
+                Are you sure to remove this table ?
             </Typography>
             <Box display="flex" gap={4}>
                 <Button
-                    onClick={onClose} 
+                    onClick={() => setIsOpen(false)} 
                     variant="outlined"
                     sx={{px: 4, py:1}}
                 >
                     Cancel
                 </Button>
-                <Button 
+                <LoadingButton
+                    loading={isLoading}
+                    loadingIndicator="Removing" 
                     sx={{px: 4, py:1}} 
                     color="error" 
                     variant="contained"
                     onClick={handleDeleteTableChange}
                 >
                     Remove
-                </Button>
+                </LoadingButton>
             </Box>
         </BoxStyled>
       </Modal>
@@ -63,6 +64,4 @@ export default function DeleteTableModal({
 
 DeleteTableModal.propTypes = {
     handleDeleteTable: PropTypes.func,
-    open: PropTypes.bool,
-    onClose: PropTypes.func
 }
