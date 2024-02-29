@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { background, error, success } from '../../../theme/colors';
 import { green, red } from '@mui/material/colors';
 import PropTypes from 'prop-types';
-import { convertTimestampToDate } from '../../utils/time';
+import { convertTimestampToDate } from '../../../utils/time';
 
 export default function HistoryAccordion({ data }) {
   return (

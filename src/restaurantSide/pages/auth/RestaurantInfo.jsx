@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import SettingsCellIcon from '@mui/icons-material/SettingsCell';
-import { restaurantTypes, averagePrices } from '../../utils/constants';
+import { restaurantTypes, averagePrices, daysOfWeek } from '../../../utils/constants';
 import { LogoImg, SideImg } from './styled';
-import { collection, getDocs, query, where, updateDoc, } from '@firebase/firestore';
+import { addDoc, collection, getDocs, query, where, updateDoc, } from '@firebase/firestore';
 import { db } from '../../../../firebaseConfig';
 import { Alert, Snackbar } from '@mui/material';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -23,6 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import AddressInput from '../../components/AddressInput';
+import { generateInitialTimeSlots } from '../../../utils/time';
 
 const RestaurantInformation = () => {
   const [address, setAddress] = useState(null);
@@ -60,6 +61,11 @@ const RestaurantInformation = () => {
 
     try {
       setIsLoading(true);
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Registering...',
+      });
       const submittedData = {
         name: restaurantName,
         address: address.description,
@@ -76,16 +82,25 @@ const RestaurantInformation = () => {
         const docRef = doc.ref;
         await updateDoc(docRef, submittedData);
       })
+
       setNotification({
         on: true,
         severity: 'success',
-        message: 'Registered account successfully.',
+        message: 'Setting up...',
+      });
+
+      await setupTablesAndTimeSlots();
+
+      setNotification({
+        on: true,
+        severity: 'success',
+        message: 'Registered Account Successfully',
       });
 
       setTimeout(() => {
         setIsLoading(false);
         navigate('/restaurant/overview');
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.log('Fail to update info: ', error);
       setNotification({
@@ -95,6 +110,41 @@ const RestaurantInformation = () => {
       });
     }
   };
+
+  const setupTablesAndTimeSlots = async () => {
+    try {
+      const tableCollection = collection(db, 'diningTables');
+      const timeSlotsCollection = collection(db, 'timeSlots');
+
+      for (let i = 1; i <= 20; i++) {
+        const data = {
+          restaurantId: restaurantIds.docId,
+          tableNumber: i,
+          capacity: 2,
+          isAvailable: true,
+          type: 'Standard'
+        }
+        await addDoc(tableCollection, data)
+      }
+
+      const initialTimeSlots = generateInitialTimeSlots();
+
+      for (const day of daysOfWeek) {
+        for (const timeSlot of initialTimeSlots) {
+          const data = {
+            restaurantId: restaurantIds.docId,
+            day,
+            isAvailable: true,
+            startTime: timeSlot
+          }
+          await addDoc(timeSlotsCollection, data);
+        }
+      }
+
+    } catch (error) {
+      console.log('Fail to add tables and time slots: ', error);
+    }
+  }
 
   return (
     <Grid container columnSpacing={2} justifyContent='center' height='100vh'>
@@ -131,7 +181,7 @@ const RestaurantInformation = () => {
               }}
               onChange={(e) => setRestaurantName(e.target.value)}
             />
-            <AddressInput onDataReceived={(data) => setAddress(data)}/>
+            <AddressInput color="secondary" onDataReceived={(data) => setAddress(data)}/>
             <TextField
               type='number'
               id='outlined-required'

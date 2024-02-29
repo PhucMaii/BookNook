@@ -26,7 +26,7 @@ export default function CustomerHomepage() {
                     display='flex'
                     flexDirection='column'
                     justifyContent='center'
-                    ml={10}
+                    ml={20}
                 >
                     <Box >
                         <Typography

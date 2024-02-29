@@ -55,6 +55,17 @@ export const averagePrices = [
   'Greater than $200',
 ];
 
+export const tableTypes = [
+  'Rooftop',
+  'Counter',
+  'Standard',
+  'Indoor',
+  'Outdoor',
+  'Bar',
+  'Window Seat',
+  'Other',
+];
+
 export const cardContent = [
   {
     img: '/Reservation.png',
@@ -73,25 +84,4 @@ export const cardContent = [
   },
 ];
 
-export const tableContent = [
-  {
-    customerName: 'Jane Cooper',
-    tableName: 'Table 2',
-    time: '9:00AM',
-    status: 'seated',
-  },
-  {
-    customerName: 'Wade Warren',
-    tableName: 'Table 3',
-    time: '10:00AM',
-    status: 'Confirmed',
-  },
-  {
-    customerName: 'Esther Howard',
-    tableName: 'Table 1',
-    time: '11:00AM',
-    status: 'Unconfirmed',
-  },
-];
-
-export const timeSlots = ['9:00 AM', '9:30 AM'];
+export const guestSelect = [1, 2, 3, 4, 5, 6, 7, 8, 9];

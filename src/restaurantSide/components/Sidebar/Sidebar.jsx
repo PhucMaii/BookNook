@@ -15,7 +15,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { blueGrey } from '../../../theme/colors';
 import { ListItemButtonStyled } from './styled';
-import { drawerWidth, lowerTabs, upperTabs } from '../../utils/constants';
+import { drawerWidth, lowerTabs, upperTabs } from '../../../utils/constants';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';
 
@@ -42,6 +42,7 @@ const Sidebar = ({ children }) => {
   const handleSignout = async () => {
     try {
       await signOut(auth);
+      navigate('/restaurant/login');
     } catch (error) { 
       console.log('Fail to sign out: ', error);
     }

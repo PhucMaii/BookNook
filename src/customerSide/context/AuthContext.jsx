@@ -6,8 +6,8 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 
 export const AuthContext = createContext(null);
 
-export default function AuthProvider({ children }) {
-  const [restaurantIds, setRestaurantIds] = useState({
+export default function CustomerAuthProvider({ children }) {
+  const [customerIds, setCustomerIds] = useState({
     uid: null,
     docId: null,
   });
@@ -16,31 +16,31 @@ export default function AuthProvider({ children }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in
-        const restaurantCollection = collection(db, 'restaurants');
-        const restaurantQuery = query(
-          restaurantCollection,
+        const usersCollection = collection(db, 'users');
+        const usersQuery = query(
+          usersCollection,
           where('uid', '==', user.uid)
         );
-        const querySnapshot = await getDocs(restaurantQuery);
+        const querySnapshot = await getDocs(usersQuery);
         querySnapshot.docs.forEach((doc) => {
           const id = doc.id;
-          setRestaurantIds({ docId: id, uid: user.uid });
+          setCustomerIds({ docId: id, uid: user.uid });
         });
       } else {
         // User is signed out
-        setRestaurantIds({});
+        setCustomerIds({});
       }
     });
     return () => unsubscribe();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ restaurantIds, setRestaurantIds }}>
+    <AuthContext.Provider value={{ customerIds, setCustomerIds }}>
       {children}
     </AuthContext.Provider>
   );
-} 
+}
 
-AuthProvider.propTypes = {
+CustomerAuthProvider.propTypes = {
     children: PropTypes.node
 }

@@ -58,7 +58,7 @@ const CustomerSearchbar = () => {
                 justifyContent='center'
             >
                 <Grid item xs={12}>
-                    <Box py={2} px={30} color='background'>
+                    <Box py={2} px={10} color='background'>
                         <Box
                             mt={2}
                             display='flex'

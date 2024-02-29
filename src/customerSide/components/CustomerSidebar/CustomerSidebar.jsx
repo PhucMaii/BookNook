@@ -30,7 +30,7 @@ const CustomerSidebar = () => {
                         backgroundColor: 'background',
                     }}
                     width={150}
-                    ml={30}
+                    ml={10}
                     borderRadius={2}
                     pl={2}
                 >
