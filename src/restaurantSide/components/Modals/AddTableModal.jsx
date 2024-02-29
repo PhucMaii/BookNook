@@ -14,8 +14,8 @@ import {
   Typography,
 } from '@mui/material';
 import { BoxStyled } from './styled';
-import { generateCapacity } from '../../utils/generateConstants';
-import { tableTypes } from '../../utils/constants';
+import { generateCapacity } from '../../../utils/generateConstants';
+import { tableTypes } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
 
 export default function AddTableModal({

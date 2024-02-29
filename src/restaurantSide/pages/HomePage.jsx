@@ -33,7 +33,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
-import { generateToday, sortTimeAscend } from '../utils/time';
+import { generateToday, sortTimeAscend } from '../../utils/time';
 import { HomepageEditModal } from '../components/HomepageEditModal/HomepageEditModal';
 
 export default function HomePage() {

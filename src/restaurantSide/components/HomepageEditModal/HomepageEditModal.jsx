@@ -10,10 +10,11 @@ import { Divider, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/m
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs';
-import { guestSelect, timeSelect } from '../../utils/constants';
+import { guestSelect } from '../../../utils/constants';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
 import PropTypes from 'prop-types';
+import { generateTimeSlots } from '../../../utils/time';
 
 const style = {
   position: 'absolute',
@@ -181,7 +182,7 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
                       setUpdatedData({...updatedData, time: e.target.value})
                     }}
                   >
-                    {timeSelect.map((item, index) =>
+                    {generateTimeSlots().map((item, index) =>
                       <MenuItem key={index} value={item}>{item}</MenuItem>
                     )}
                   </Select>

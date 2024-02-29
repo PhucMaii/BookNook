@@ -23,7 +23,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
-import { generateToday } from '../utils/time';
+import { generateToday } from '../../utils/time';
 import ProtectedRoute from '../context/ProtectedRoute';
 
 export default function HistoryPage() {
