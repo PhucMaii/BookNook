@@ -5,15 +5,15 @@ import { SplashScreen } from '../../lib/utils';
 import PropTypes from 'prop-types';
 
 export default function ProtectedRoute({ children }) {
-  const { restaurantIds } = useContext(AuthContext);
+  const { customerIds } = useContext(AuthContext);
   const navigate = useNavigate();
   
-  if (restaurantIds.uid === null) {
+  if (customerIds.uid === null) {
     return <SplashScreen/>
   }
 
-  if (!restaurantIds.uid) {
-    navigate('/restaurant/login');
+  if (!customerIds.uid) {
+    navigate('/customer/login');
   }
   
   return children;
