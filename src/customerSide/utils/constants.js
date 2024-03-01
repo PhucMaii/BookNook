@@ -21,3 +21,11 @@ export const guestsQuantity = [
     '20 People',
     'Larger Party'
 ];
+
+export const ratings = [
+    '1 Star',
+    '2 Stars',
+    '3 Stars',
+    '4 Stars',
+    '5 Stars'
+];

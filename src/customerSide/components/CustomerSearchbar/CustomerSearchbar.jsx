@@ -31,115 +31,96 @@ const CustomerSearchbar = () => {
     }
 
     return (
-        <>
-            <Grid
-                container
-                spacing={2}
-                justifyContent='center'
+        <Grid
+            container
+            spacing={2}
+            justifyContent='center'
+        >
+            <Box
+                mt={4}
+                p={2}
             >
-                <Grid item xs={12}>
-                    <Box
-                        mt={4}
-                        p={2}
+                <Typography
+                    variant='h2'
+                    fontWeight='bold'
+                    textAlign='center'
+                >
+                    Find your perfect spots for every moment
+                </Typography>
+            </Box>
+            <Grid item xs={12}>
+                <Box
+                    mt={2}
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-around'
+                    px={6}
+                    py={4}
+                    style={{ backgroundColor: 'background' }}
+                    borderRadius={2}
+                >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DatePicker']} >
+                            <DatePicker
+                                label="Date"
+                                value={date}
+                                onChange={(newValue) => setDate(newValue)}
+                            />
+                        </DemoContainer>
+                    </LocalizationProvider>
+                    <Divider orientation='vertical' flexItem />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['TimePicker']}>
+                            <TimePicker
+                                label="Time"
+                                value={time}
+                                onChange={(newValue) => setTime(newValue)}
+                            />
+                        </DemoContainer>
+                    </LocalizationProvider>
+                    <Divider orientation='vertical' flexItem />
+                    <FormControl fullWidth>
+                        <InputLabel id='customer-searchbar-time' color='secondary'>Number of Guests</InputLabel>
+                        <Select
+                            labelId='guests'
+                            id='outlined-required'
+                            value={persons}
+                            placeholder='Number of Guests'
+                            label='Guests'
+                            onChange={handleGuestsChange}
+                            color='secondary'
+                        >
+                            {guestsQuantity.map((quantity) =>
+                                <MenuItem key={quantity} value={quantity}>
+                                    {quantity}
+                                </MenuItem>
+                            )}
+                        </Select>
+                    </FormControl>
+                    <Divider orientation='vertical' flexItem />
+                    <FormControl fullWidth>
+                        <InputLabel color='secondary'>Location</InputLabel>
+                        <OutlinedInput
+                            id='location'
+                            label='Location'
+                            variant='outlined'
+                            color='secondary'
+                            startAdornment={
+                                <InputAdornment position='start'>
+                                    <SearchOutlinedIcon />
+                                </InputAdornment>
+                            }
+                        />
+                    </FormControl>
+                    <Button
+                        variant='contained'
+                        style={{ color: 'white', height: '45px', width: '7%' }}
                     >
-                        <Typography
-                            variant='h2'
-                            fontWeight='bold'
-                            textAlign='center'
-                        >
-                            Find your perfect spots for every moment
-                        </Typography>
-                    </Box>
-                </Grid>
+                        Search
+                    </Button>
+                </Box>
             </Grid>
-            <Grid
-                container
-                spacing={2}
-                justifyContent='center'
-            >
-                <Grid item xs={12}>
-                    <Box py={2} px={10} color='background'>
-                        <Box
-                            mt={2}
-                            display='flex'
-                            alignItems='center'
-                            justifyContent='space-around'
-                            px={6}
-                            py={4}
-                            style={{ backgroundColor: 'background' }}
-                            borderRadius={2}
-                        >
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']} >
-                                    <DatePicker
-                                        label="Date"
-                                        value={date}
-                                        onChange={(newValue) => setDate(newValue)}
-                                    />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                            <Divider orientation='vertical' flexItem />
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['TimePicker']}>
-                                    <TimePicker
-                                        label="Time"
-                                        value={time}
-                                        onChange={(newValue) => setTime(newValue)}
-                                    />
-                                </DemoContainer>
-                            </LocalizationProvider>
-                            <Divider orientation='vertical' flexItem />
-                            <Box display='flex' width='10%' px={2}>
-                                <FormControl fullWidth>
-                                    <InputLabel id='customer-searchbar-time' color='secondary'>Number of Guests</InputLabel>
-                                    <Select
-                                        labelId='guests'
-                                        id='outlined-required'
-                                        value={persons}
-                                        placeholder='Number of Guests'
-                                        label='Guests'
-                                        onChange={handleGuestsChange}
-                                        color='secondary'
-                                    >
-                                        {guestsQuantity.map((quantity) =>
-                                            <MenuItem key={quantity} value={quantity}>
-                                                {quantity}
-                                            </MenuItem>
-                                        )}
-                                    </Select>
-                                </FormControl>
-                            </Box>
-                            <Divider orientation='vertical' flexItem />
-                            <Box
-                                display='flex'
-                                width='20%'
-                            >
-                                <FormControl fullWidth>
-                                    <InputLabel color='secondary'>Location</InputLabel>
-                                    <OutlinedInput
-                                        id='location'
-                                        label='Location'
-                                        variant='outlined'
-                                        color='secondary'
-                                        startAdornment={
-                                            <InputAdornment position='start'>
-                                                <SearchOutlinedIcon />
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
-                            </Box>
-                            <Button
-                                variant='contained'
-                                style={{ color: 'white', height: '45px', width: '7%' }}
-                            >
-                                Search
-                            </Button>
-                        </Box>
-                    </Box>
-                </Grid>
-            </Grid>
-        </>
+        </Grid>
     );
 }
 

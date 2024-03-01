@@ -1,43 +1,34 @@
 import * as React from 'react';
 import {
-    Box,
     Card,
+    Box,
     CardActions,
     CardContent,
     Button,
     Typography,
     Divider
-
 } from '@mui/material';
 import { CardImage } from './styled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import StarIcon from '@mui/icons-material/Star';
+import { ratings } from '../../utils/constants';
 
 export default function CustomerHomepageCard() {
     return (
         <Card sx={{ width: 275, pb: 2, maxHeight: 400 }}>
             <CardContent>
-                <Box
-                    display='flex'
-                    justifyContent='center'
-                >
-                    <CardImage
-                        src='/settingsDummyImg.png'
-                        alt='Card Image'
-                    />
-                </Box>
-                <Box
-                    display='flex'
+                <CardImage
+                    src='/settingsDummyImg.png'
+                    alt='Card Image'
+                />
+                <Typography
+                    variant='h5'
+                    fontWeight='bold'
                     mt={1}
                 >
-                    <Typography
-                        variant='h5'
-                        fontWeight='bold'
-                    >
-                        Miku Restaurant
-                    </Typography>
-                </Box>
+                    Miku Restaurant
+                </Typography>
                 <Box
                     display='flex'
                     flexDirection='row'
@@ -68,63 +59,40 @@ export default function CustomerHomepageCard() {
                     justifyContent='flex-start'
                     alignItems='center'
                 >
-                    <Box
-                        display='flex'
-                    >
-                        <StarIcon />
-                        <StarIcon />
-                        <StarIcon />
-                        <StarIcon />
-                        <StarIcon />
-                    </Box>
-                    <Box
-                        display='flex'
-                        mx={1}
-                    >
-                        <Typography
-                            variant='h6'
-                            fontWeight='bold'
-                        >
-                            •
-                        </Typography>
-                    </Box>
+                    {ratings.map((rating, index) => (
+                        <StarIcon key={index} />
+                    ))}
                     <Typography
                         variant='h6'
                         fontWeight='bold'
+                        ml={1}
                     >
-                        300 Reviews
+                        • 300 Reviews
                     </Typography>
                 </Box>
             </CardContent>
             <CardActions>
-                <Box
-                    display='flex'
-                    flexDirection='row'
-                    gap={1}
+                <Button
+                    variant='contained'
+                    style={{ color: 'white' }}
+                    onClick='/customer/bookings'
                 >
-                    <Button
-                        variant='contained'
-                        style={{ color: 'white' }}
-                        onClick='/customer/homepage' // will be adjusted to customer booking page 
-                    >
-                        1:45pm
-                    </Button>
-                    <Button
-                        variant='contained'
-                        style={{ color: 'white' }}
-                        onClick='/customer/homepage' // will be adjusted to customer booking page 
-                    >
-                        1:45pm
-                    </Button>
-                    <Button
-                        variant='contained'
-                        style={{ color: 'white' }}
-                        onClick='/customer/homepage' // will be adjusted to customer booking page 
-                    >
-                        1:45pm
-                    </Button>
-                    
-                </Box>
+                    1:45pm
+                </Button>
+                <Button
+                    variant='contained'
+                    style={{ color: 'white' }}
+                    onClick='/customer/bookings'
+                >
+                    1:45pm
+                </Button>
+                <Button
+                    variant='contained'
+                    style={{ color: 'white' }}
+                    onClick='/customer/bookings'
+                >
+                    1:45pm
+                </Button>
             </CardActions>
         </Card>
     );
