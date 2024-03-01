@@ -5,7 +5,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { green, red } from '@mui/material/colors';
 import { PingStyled } from './styled';
 import { background, error, success } from '../../../theme/colors';
-import { convertTimestampToDate } from '../../utils/time';
 
 export default function CustomerHistoryAccordion({ data }) {
   return (
@@ -29,17 +28,16 @@ export default function CustomerHistoryAccordion({ data }) {
               <PingStyled $isCompleted={data['Status'] === 'Completed'} />
               <Avatar />
               <Box display="flex" flexDirection="column" alignItems="left">
-                <Typography fontWeight="light" variant="subtitle1">{data['Booking Id']}</Typography>
+                <Typography fontWeight="light" variant="subtitle1">{data['Restaurant Id']}</Typography>
                 <Typography fontWeight="bold" variant="h6">
-                  {data['Customer Name']}
+                  {data['Restaurant Name']}
                 </Typography>
               </Box>
             </Box>
           </Grid>
           <Grid item xs={12} md={6} textAlign="center">
             <Box display="flex" flexDirection="column" alignItems="left">
-              <Typography>Number of guests: {data['Number of guests']}</Typography>
-              <Typography>Booked Time: {convertTimestampToDate(data['Booked Time'])}</Typography>
+              <Typography>Number of guests: {data['Number of guests']}</Typography> 
             </Box>
           </Grid>
         </Grid>
@@ -55,9 +53,6 @@ export default function CustomerHistoryAccordion({ data }) {
                 <Grid key={index} item xs={12} sm={6} md={4} textAlign="left" mt={2}>
                   <Box display="flex" flexDirection="column">
                     <Typography variant="subtitle1">{key}</Typography>
-                    <Typography fontWeight="bold" variant="h6">
-                      {key === 'Booked Time' ? convertTimestampToDate(data[key]) : data[key]}
-                    </Typography>
                   </Box>
                 </Grid>
               );
@@ -85,7 +80,6 @@ export default function CustomerHistoryAccordion({ data }) {
     </Accordion>
   );
 }
-
 CustomerHistoryAccordion.propTypes = {
   data: PropTypes.object,
 };

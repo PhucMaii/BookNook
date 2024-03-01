@@ -11,113 +11,105 @@ import {
 import Avatar from '@mui/material/Avatar';
 import PersonPinCircleOutlinedIcon from '@mui/icons-material/PersonPinCircleOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CustomerHistoryCard from '../components/CustomerHistoryCard/CustomerHistoryCard';
 
 
 export default function CustomerHistory() {
-  
   const customerHistory = [
-    { id: 1},
-    { id: 2},
-    { id: 3},
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+ 
   ];
 
   return (
-    <Box display="flex" flexDirection="column" gap={4} width="100%">
-      {}
-      <AppBar position="static" color="default" style={{ backgroundColor: 'white', color: 'black' }}>
+    <Box display="justify" flexDirection="column" gap={4} width="100%" p={0} m={0}>
+      <AppBar
+        position="static"
+        color="default"
+        style={{ backgroundColor: 'white', color: 'black', width: '100%' }}
+      >
         <Toolbar>
-          
           <img
             src="/customerLogo.png"
             alt="Company Logo"
             style={{ maxHeight: '60px', marginRight: '16px' }}
           />
-          <PersonPinCircleOutlinedIcon style={{ color: 'FF6347' }}/>
-
+          <PersonPinCircleOutlinedIcon style={{ color: 'FF6347' }} />
           <div style={{ marginLeft: 'auto' }}>
-            <Avatar alt="User Avatar" src="/userAvatar.png"  
-            />
+            <Avatar alt="User Avatar" src="/userAvatar.png" />
           </div>
         </Toolbar>
       </AppBar>
-      
-      <Typography variant="h3" align="center" mt={1} fontWeight="bold">
+
+      <Typography variant="h3" align="center" mt={5} fontWeight="bold">
         Booking History
       </Typography>
 
-      {}
-      <Grid container spacing={5} justifyContent="flex-start" mt={1} style={{ }} >
-        {renderDataCard('Total Reservations', customerHistory.length, '/Reservation.png')}
-        {renderDataCard('Total Arrivals', calculateTotalArrivals(), '/arrive.png')}
-        {renderDataCard('Reservations Cancelled', calculateReservationsCancelled(), '/cancel.png')}
+      <Grid container spacing={4} justifyContent="auto" alignItems="auto" mt={5} style={{  marginLeft: '0px'  }}>
+        <CustomerHistoryCard
+          title="Total Reservations"
+          data={customerHistory.length}
+          icon="/Reservation.png"
+          marginLeft="auto"
+          marginRight="auto"
+        />
+        <CustomerHistoryCard
+          title="Total Arrived"
+          data={calculateTotalArrivals()}
+          icon="/public/arrive.png"
+        />
+        <CustomerHistoryCard
+          title="Reservations Cancelled"
+          data={calculateReservationsCancelled()}
+          icon="/cancel.png"
+          marginLeft="auto"
+          marginRight="auto"
+        />
+       
       </Grid>
 
-      {}
-        {customerHistory.map((reservation) => (
-            <Card key={reservation.id} style={{ margin: '20px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-            <CardContent>
-            <Grid container spacing={1} alignItems="center" justifyContent="space-between">
-            <Grid item xs={1} style={{ marginLeft: '15px' }}>
-                <Typography variant="body1" style={{ color: 'green', marginLeft: '50px' }}>
-                &nbsp;  •
+      {customerHistory.map((reservation) => (
+        <Card
+          key={reservation.id}
+          style={{ margin: '20px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}
+        >
+          <CardContent style={{ marginLeft: '50px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
+            <Grid container spacing={1} alignItems="center" justifyContent="flex-start" mt={1} >
+              <Grid item xs={2}>
+                <Typography variant="body1" style={{ color: 'green', fontSize: '2em', marginLeft: '80px'  }}>
+                  &nbsp; •
                 </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="body1">{`Restaurant ID: ${reservation.restaurantId || 'N/A'}`}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="body1" style={{ fontWeight: 'bold' }}>{`Restaurant Name: ${reservation.restaurantName || 'N/A'}`}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="body1">{`Number of Guests: ${reservation.numGuests || 'N/A'}`}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant="body1" style={{ fontWeight: 'bold' }}>{`Booked Time: ${reservation.bookedTime || 'N/A'}`}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <KeyboardArrowDownIcon />
+              </Grid>
             </Grid>
-                <Grid item xs={2}>
-                    <Typography variant="body1">{`Restaurant ID: ${reservation.restaurantId || 'N/A'}`}</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <Typography variant="body1">{`Restaurant Name: ${reservation.restaurantName || 'N/A'}`}</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <Typography variant="body1">{`Number of Guests: ${reservation.numGuests || 'N/A'}`}</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <Typography variant="body1">{`Booked Time: ${reservation.bookedTime || 'N/A'}`}</Typography>
-                </Grid>
-            <Grid item xs={2}>
-        
-            <KeyboardArrowDownIcon />
-                </Grid>
-            </Grid>
-            </CardContent>
-            </Card> 
-            
-        ))}
-        </Box>
-    );
-    }
-
-    function renderDataCard(title, data, imagePath) {
-        return (
-        <Grid item xs={12} sm={6} md={4} key={title}>
-            <Card>
-            <CardContent>
-                <Box display="flex" alignItems="flex-start" justifyContent="center" >
-                <div style={{ width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden', backgroundColor: 'pink', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img src={imagePath} alt={title} style={{ width: '70%', height: '70%', objectFit: 'cover' }} />
-                </div>
-              <Box ml={2}>
-                <Typography variant="h3" mt={2} fontWeight="bold" color="textSecondary">
-                  {data}
-                </Typography>
-                <Typography variant="h8" color="textSecondary">
-                  {title}
-                </Typography>
-              </Box>
-            </Box>
           </CardContent>
         </Card>
-      </Grid>
-    );
-  }
-  
+      ))}
+    </Box>
+  );
+}
+
+
+
 function calculateTotalArrivals() {
-  return 10; 
+  return 10;
 }
 
 function calculateReservationsCancelled() {
-  return 5; 
+  return 5;
 }
-
-
-       
