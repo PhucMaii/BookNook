@@ -14,8 +14,8 @@ export default function DayTimeSlot({ day, onDelete, timeSlots }) {
       width="100%"
     >
       <Typography variant="h6">{day}</Typography>
-      <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-        {timeSlots.length === 0 && (
+      <Box width="100%" display="flex" flexDirection="column" alignItems="center" gap={1}>
+        {!timeSlots || timeSlots.length === 0 && (
           <Box
             display="flex"
             flexDirection="column"

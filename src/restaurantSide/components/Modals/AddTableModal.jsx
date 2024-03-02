@@ -14,19 +14,23 @@ import {
   Typography,
 } from '@mui/material';
 import { BoxStyled } from './styled';
-import { generateCapacity } from '../../utils/generateConstants';
-import { tableTypes } from '../../utils/constants';
+import { generateCapacity } from '../../../utils/generateConstants';
+import { tableTypes } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
 
 export default function AddTableModal({
-  fetchTables,
   handleAddTable,
   open,
   onClose,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState({});
-  const [submittedData, setSubmittedData] = useState({});
+  const [submittedData, setSubmittedData] = useState({
+    tableNumber: 1,
+    capacity: 2,
+    type: 'Standard',
+    isAvailable: true
+  });
 
   const addTable = async () => {
     setIsLoading(true);
@@ -46,8 +50,6 @@ export default function AddTableModal({
       }
 
       await handleAddTable(submittedData);
-      await fetchTables();
-
       setIsLoading(false);
       onClose();
     } catch (error) {
@@ -114,6 +116,7 @@ export default function AddTableModal({
                 </InputLabel>
                 <Select
                   color="secondary"
+                  label="Capacity"
                   labelId="capacity-label"
                   value={submittedData.capacity}
                   onChange={(e) =>
@@ -146,6 +149,7 @@ export default function AddTableModal({
                 </InputLabel>
                 <Select
                   color="secondary"
+                  label="Type"
                   labelId="type-label"
                   value={submittedData.type}
                   onChange={(e) =>
@@ -175,8 +179,9 @@ export default function AddTableModal({
                 </InputLabel>
                 <Select
                   color="secondary"
+                  label="Status"
                   labelId="status-label"
-                  value={submittedData.isAvailable}
+                  value={submittedData.isAvailable ? 'available' : 'unavailable'}
                   onChange={(e) =>
                     setSubmittedData({
                       ...submittedData,
@@ -198,7 +203,6 @@ export default function AddTableModal({
 }
 
 AddTableModal.propTypes = {
-  fetchTables: PropTypes.func,
   handleAddTable: PropTypes.func,
   open: PropTypes.bool,
   onClose: PropTypes.func,

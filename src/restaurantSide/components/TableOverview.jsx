@@ -18,8 +18,8 @@ export default function TableOverview({
         boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
         p: 2
     }}>
-        <Grid container p={4}>
-            <Grid item xs={4}>
+        <Grid container rowGap={2} p={4} alignItems="center" justifyContent="center">
+            <Grid item xs={12} md={4} textAlign="center">
                 <Box display="flex" alignItems="top" gap={2} justifyContent="center">
                     <CheckCircleIcon sx={{fontSize: 50, color: success}} />
                     <Box>
@@ -28,7 +28,7 @@ export default function TableOverview({
                     </Box>
                 </Box>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} md={4} textAlign="center">
                 <Box display="flex" alignItems="top" gap={2} justifyContent="center">
                     <CancelIcon sx={{fontSize: 50, color: error}} />
                     <Box>
@@ -37,7 +37,7 @@ export default function TableOverview({
                     </Box>
                 </Box>
                 </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} md={4} textAlign="center">
                 <Box display="flex" alignItems="top" gap={2} justifyContent="center">
                     <TableBarIcon sx={{fontSize: 50, color: warning}} />
                     <Box>

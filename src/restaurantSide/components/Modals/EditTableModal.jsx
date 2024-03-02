@@ -14,13 +14,12 @@ import {
 } from '@mui/material';
 import { BoxStyled } from './styled';
 import { LoadingButton } from '@mui/lab';
-import { generateCapacity } from '../../utils/generateConstants';
-import { tableTypes } from '../../utils/constants';
+import { generateCapacity } from '../../../utils/generateConstants';
+import { tableTypes } from '../../../utils/constants';
 import { blueGrey } from '@mui/material/colors';
 
 export default function EditTableModal({
   handleUpdateTable,
-  handleUpdateUI,
   tableList,
   targetTable,
   setNotification,
@@ -39,7 +38,6 @@ export default function EditTableModal({
   const updateTable = async () => {
     setIsLoading(true);
     await handleUpdateTable(targetTable.id, tableData);
-    handleUpdateUI(tableData);
     setNotification({
         on: true,
         severity: 'success',
@@ -91,6 +89,7 @@ export default function EditTableModal({
                 <Select
                   color="secondary"
                   labelId="table-number-label"
+                  label="Table Number"
                   input={<OutlinedInput label="Table Number" />}
                   value={tableNumber}
                   onChange={(e) => setTableNumber(+e.target.value)}
@@ -117,6 +116,7 @@ export default function EditTableModal({
                 <Select
                   color="secondary"
                   labelId="capacity-label"
+                  label="Capacity"
                   value={tableData.capacity}
                   onChange={(e) =>
                     setTableData({ ...tableData, capacity: +e.target.value })
@@ -146,6 +146,7 @@ export default function EditTableModal({
                 <Select
                   color="secondary"
                   labelId="type-label"
+                  label="Type"
                   value={tableData.type}
                   onChange={(e) =>
                     setTableData({ ...tableData, type: e.target.value })
@@ -173,6 +174,7 @@ export default function EditTableModal({
                 <Select
                   color="secondary"
                   labelId="status-label"
+                  label="Status"
                   value={tableData.isAvailable}
                   onChange={(e) =>
                     setTableData({
@@ -195,7 +197,6 @@ export default function EditTableModal({
 
 EditTableModal.propTypes = {
   handleUpdateTable: PropTypes.func,
-  handleUpdateUI: PropTypes.func,
   tableList: PropTypes.array,
   targetTable: PropTypes.object,
   setNotification: PropTypes.func,

@@ -63,7 +63,7 @@ export const sortTimeAscend = (data) => {
   });
 
   return sortedByTime;
-}
+};
 
 export const generateTimeSlots = () => {
   const timeSlots = [];

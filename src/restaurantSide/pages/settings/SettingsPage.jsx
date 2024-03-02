@@ -224,6 +224,7 @@ export default function SettingsPage() {
                                 }}
                               />
                               <AddressInput
+                                color="secondary"
                                 onDataReceived={(data) => setAddress(data)}
                                 initialValue= {_address}
                               />

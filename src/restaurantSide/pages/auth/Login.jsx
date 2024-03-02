@@ -28,7 +28,7 @@ import {
 } from 'firebase/auth';
 import { auth, db, googleProvider } from '../../../../firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { handleErrorMsg } from '../../utils/error';
+import { handleErrorMsg } from '../../../utils/error';
 import { AuthContext } from '../../context/AuthContext';
 import UnprotectedRoute from '../../context/UnprotectedRoute';
 
