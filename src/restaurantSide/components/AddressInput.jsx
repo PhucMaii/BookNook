@@ -28,7 +28,7 @@ function loadScript(src, position, id) {
 const autocompleteService = { current: null };
 
 function GoogleMaps(props) {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(props.initialValue || null);
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
   const loaded = useRef(false);
@@ -119,6 +119,9 @@ function GoogleMaps(props) {
         <TextField color={props.color} {...params} label="Address" fullWidth />
       )}
       renderOption={(props, option) => {
+        if (!value && !inputValue) {
+          return;
+        }
         const matches =
           option.structured_formatting.main_text_matched_substrings || [];
 
@@ -156,6 +159,7 @@ function GoogleMaps(props) {
 
 GoogleMaps.propTypes = {
   onDataReceived: PropTypes.func,
+  initialValue: PropTypes.string,
   color: PropTypes.string,
 }
 
