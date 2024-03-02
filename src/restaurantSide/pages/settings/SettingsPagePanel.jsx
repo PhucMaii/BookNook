@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, Box} from '@mui/material'
+import {Box} from '@mui/material'
 import PropTypes from 'prop-types'
 
 export default function SettingsPagePanel(props) {
