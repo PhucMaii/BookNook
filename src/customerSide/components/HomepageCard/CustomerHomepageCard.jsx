@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
     Card,
     Box,
@@ -14,9 +15,9 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import StarIcon from '@mui/icons-material/Star';
 import { ratings } from '../../utils/constants';
 
-export default function CustomerHomepageCard() {
+const CustomerHomepageCard = ({ name, location, type, reviewStars }) => {
     return (
-        <Card sx={{ width: 275, pb: 2, maxHeight: 400 }}>
+        <Card sx={{ width: 350, pb: 2, maxHeight: 400 }}>
             <CardContent>
                 <CardImage
                     src='/settingsDummyImg.png'
@@ -27,7 +28,7 @@ export default function CustomerHomepageCard() {
                     fontWeight='bold'
                     mt={1}
                 >
-                    Miku Restaurant
+                    {name}
                 </Typography>
                 <Box
                     display='flex'
@@ -39,17 +40,15 @@ export default function CustomerHomepageCard() {
                     <LocationOnIcon />
                     <Typography
                         variant='body1'
-                        fontWeight='bold'
                     >
-                        Vancouver
+                        {location}
                     </Typography>
                     <Divider orientation='vertical' flexItem />
                     <RestaurantIcon />
                     <Typography
                         variant='body1'
-                        fontWeight='bold'
                     >
-                        Asian
+                        {type}
                     </Typography>
                 </Box>
                 <Box
@@ -60,40 +59,45 @@ export default function CustomerHomepageCard() {
                     alignItems='center'
                 >
                     {ratings.map((rating, index) => (
-                        <StarIcon key={index} />
+                        <StarIcon key={index} sx={{color: 'red'}} />
                     ))}
                     <Typography
                         variant='h6'
-                        fontWeight='bold'
                         ml={1}
                     >
-                        • 300 Reviews
+                        • {reviewStars} {reviewStars === 1 ? 'Review' : 'Reviews'}
                     </Typography>
                 </Box>
             </CardContent>
             <CardActions>
-                <Button
-                    variant='contained'
-                    style={{ color: 'white' }}
-                    onClick='/customer/bookings'
+                <Box
+                    display='grid'
+                    gridTemplateColumns='repeat(3, 1fr)'
+                    gap={2}
+                    ml={2}
                 >
-                    1:45pm
-                </Button>
-                <Button
-                    variant='contained'
-                    style={{ color: 'white' }}
-                    onClick='/customer/bookings'
-                >
-                    1:45pm
-                </Button>
-                <Button
-                    variant='contained'
-                    style={{ color: 'white' }}
-                    onClick='/customer/bookings'
-                >
-                    1:45pm
-                </Button>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((time, index) => (
+                        <Button
+                            key={index}
+                            variant='contained'
+                            style={{ color: 'white' }}
+                            onClick='/customer/bookings'
+                        >
+                            {time}:00pm
+                        </Button>
+                    ))}
+                </Box>
             </CardActions>
         </Card>
     );
 }
+
+CustomerHomepageCard.propTypes = {
+    name: PropTypes.string,
+    location: PropTypes.string,
+    type: PropTypes.string,
+    reviewStars: PropTypes.number,
+    numberOfReviews: PropTypes.number
+}
+
+export default CustomerHomepageCard;

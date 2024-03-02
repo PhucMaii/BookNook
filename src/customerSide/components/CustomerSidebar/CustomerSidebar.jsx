@@ -40,95 +40,86 @@ const CustomerSidebar = () => {
             style={{
                 backgroundColor: 'background',
             }}
-            width={150}
+            width={200}
             ml={10}
             borderRadius={2}
             pl={2}
+            mt={6}
         >
-            <Box mb={2} pt={2}>
-                <Typography
-                    variant='h5'
-                    fontWeight='bold'
-                >
-                    Filters
-                </Typography>
-            </Box>
-            <Box>
-                <Typography
-                    variant='body1'
-                    fontWeight='bold'
-                >
-                    Cuisine
-                </Typography>
-                <Box>
-                    <FormGroup>
-                        {selectedTypes.map((type, index) => (
-                            <FormControlLabel
-                                key={index}
-                                control={<Checkbox />}
-                                label={type}
-                                onChange={() => handleTypeChange(type)}
-                            />
-                        ))}
-                        {showMore && (
-                            restaurantTypes.slice(2).map((type, index) => (
-                                <FormControlLabel
-                                    key={index + initialOptions.length}
-                                    control={<Checkbox />}
-                                    label={type}
-                                    onChange={() => handleTypeChange(type)}
-                                />
-                            ))
-                        )}
-                    </FormGroup>
-                </Box>
-                {restaurantTypes.length > 2 && (
-                    <Button onClick={handleShowMore} color='primary'>
-                        {showMore ? 'Show Less' : 'Show More'}
-                    </Button>
+            <Typography
+                variant='h5'
+                fontWeight='bold'
+                mb={2}
+                pt={2}
+            >
+                Filters
+            </Typography>
+            <Typography
+                variant='body1'
+                fontWeight='bold'
+            >
+                Cuisine
+            </Typography>
+            <FormGroup>
+                {selectedTypes.map((type, index) => (
+                    <FormControlLabel
+                        key={index}
+                        control={<Checkbox />}
+                        label={type}
+                        onChange={() => handleTypeChange(type)}
+                    />
+                ))}
+                {showMore && (
+                    restaurantTypes.slice(2).map((type, index) => (
+                        <FormControlLabel
+                            key={index + initialOptions.length}
+                            control={<Checkbox />}
+                            label={type}
+                            onChange={() => handleTypeChange(type)}
+                        />
+                    ))
                 )}
+            </FormGroup>
+            {restaurantTypes.length > 2 && (
+                <Button onClick={handleShowMore} color='primary'>
+                    {showMore ? 'Show Less' : 'Show More'}
+                </Button>
+            )}
+            <Typography
+                variant='body1'
+                fontWeight='bold'
+            >
+                Seating Options
+            </Typography>
+            <Box
+                display='flex'
+                flexDirection='column'
+            >
+                {tableTypes.map((option, index) => (
+                    <FormControlLabel
+                        key={index}
+                        control={<Checkbox />}
+                        label={option}
+                    />
+                ))}
             </Box>
-            <Box>
-                <Typography
-                    variant='body1'
-                    fontWeight='bold'
-                >
-                    Seating Options
-                </Typography>
-                <Box
-                    display='flex'
-                    flexDirection='column'
-                >
-                    {tableTypes.map((option, index) => (
-                        <FormControlLabel
-                            key={index}
-                            control={<Checkbox />}
-                            label={option}
-                        />
-                    ))}
-                </Box>
-            </Box>
-            <Box>
-                <Typography
-                    variant='body1'
-                    fontWeight='bold'
-                >
-                    Price
-                </Typography>
-                <Box
-                    display='flex'
-                    flexDirection='column'
-                >
-                    {averagePrices.map((range, index) => (
-                        <FormControlLabel
-                            key={index}
-                            control={<Checkbox />}
-                            label={range}
-                        />
-                    ))}
-                </Box>
-            </Box>
-            <Box>
+            <Typography
+                variant='body1'
+                fontWeight='bold'
+            >
+                Price
+            </Typography>
+            <Box
+                display='flex'
+                flexDirection='column'
+            >
+                {averagePrices.map((range, index) => (
+                    <FormControlLabel
+                        key={index}
+                        control={<Checkbox />}
+                        label={range}
+                    />
+                ))}
                 <Typography
                     variant='body1'
                     fontWeight='bold'
