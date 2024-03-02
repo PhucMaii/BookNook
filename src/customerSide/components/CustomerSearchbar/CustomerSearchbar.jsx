@@ -67,7 +67,7 @@ const CustomerSearchbar = () => {
                 px={6}
                 py={4}
                 mx={10}
-                style={{ backgroundColor: 'background', width: '100%' }}
+                style={{ backgroundColor: 'background', width: '100%',  }}
                 borderRadius={2}
             >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>

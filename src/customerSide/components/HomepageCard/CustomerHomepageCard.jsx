@@ -17,7 +17,7 @@ import { ratings } from '../../utils/constants';
 
 const CustomerHomepageCard = ({ name, location, type, reviewStars }) => {
     return (
-        <Card sx={{ width: 350, pb: 2, maxHeight: 400 }}>
+        <Card sx={{ width: 350, pb: 2, maxHeight: 400, borderRadius: '20px', boxShadow: 0 }}>
             <CardContent>
                 <CardImage
                     src='/settingsDummyImg.png'
