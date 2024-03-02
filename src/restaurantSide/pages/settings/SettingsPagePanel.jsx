@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, Box} from '@mui/material'
+import {Box} from '@mui/material'
 import PropTypes from 'prop-types'
 
 export default function SettingsPagePanel(props) {
@@ -14,7 +14,7 @@ export default function SettingsPagePanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
