@@ -25,7 +25,7 @@ const Sidebar = ({ children }) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
+  const lgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
 
   useEffect(() => {
     setCurrentTab(location.pathname);
@@ -115,7 +115,7 @@ const Sidebar = ({ children }) => {
     </>
   );
 
-  if (mdDown) {
+  if (lgDown) {
     return (
       <>
         <IconButton onClick={() => setIsNavOpen(true)}>
