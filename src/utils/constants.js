@@ -101,5 +101,6 @@ export const cardContent = [
 ];
 
 export const dummyImg = 'https://plus.unsplash.com/premium_photo-1674004585426-c6ad2adbe4c0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmVzdGF1cmFudHxlbnwwfHwwfHx8MA%3D%3D'
+export const dummyAvatar = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww'
 
 export const guestSelect = [1, 2, 3, 4, 5, 6, 7, 8, 9];
