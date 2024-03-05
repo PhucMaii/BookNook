@@ -42,7 +42,7 @@ function App() {
           <Routes>
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/signup" element={<CustomerSignup />} />
-            <Route path='/customer/homepage' element={<CustomerHomepage/>} />
+            <Route path="/" element={<CustomerHomepage/>} />
           </Routes>
         </CustomerAuthProvider>
       </BrowserRouter>
