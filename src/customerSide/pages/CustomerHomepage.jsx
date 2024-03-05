@@ -1,14 +1,61 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import TopNavbar from '../components/TopNavbar/CustomerHeader';
 import Searchbar from '../components/CustomerSearchbar/CustomerSearchbar';
 import CustomerHomepageCard from '../components/HomepageCard/CustomerHomepageCard';
 import CustomerSidebar from '../components/CustomerSidebar/CustomerSidebar';
 import {
     Box,
-    Typography
+    Typography,
+    IconButton
 } from '@mui/material';
+import { ScrollContainer } from './styled';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
 
 export default function CustomerHomepage() {
+    const popularScrollRef = useRef(null);
+    const lateDinnerScrollRef = useRef(null);
+    const [popularStartIndex, setPopularStartIndex] = useState(0);
+    const [lateDinnerStartIndex, setLateDinnerStartIndex] = useState(0);
+    const [popularPrevDisabled, setPopularPrevDisabled] = useState(true);
+    const [popularNextDisabled, setPopularNextDisabled] = useState(false);
+    const [lateDinnerPrevDisabled, setLateDinnerPrevDisabled] = useState(true);
+    const [lateDinnerNextDisabled, setLateDinnerNextDisabled] = useState(false);
+
+    const displayNextPopularCards = () => {
+        const nextIndex = popularStartIndex + 4;
+        setPopularStartIndex(nextIndex);
+        setPopularPrevDisabled(false);
+        if (nextIndex + 4 >= popularRestaurants.length) {
+            setPopularNextDisabled(true);
+        }
+    };
+
+    const displayPreviousPopularCards = () => {
+        const nextIndex = Math.max(0, popularStartIndex - 4);
+        setPopularStartIndex(nextIndex);
+        setPopularNextDisabled(false);
+        if (nextIndex === 0) {
+            setPopularPrevDisabled(true);
+        }
+    };
+
+    const displayNextLateDinnerCards = () => {
+        const nextIndex = lateDinnerStartIndex + 4;
+        setLateDinnerStartIndex(nextIndex);
+        setLateDinnerPrevDisabled(false);
+        if (nextIndex + 4 >= lateDinnerRestaurants.length) {
+            setLateDinnerNextDisabled(true);
+        }
+    };
+
+    const displayPreviousLateDinnerCards = () => {
+        const nextIndex = Math.max(0, lateDinnerStartIndex - 4);
+        setLateDinnerStartIndex(nextIndex);
+        setLateDinnerNextDisabled(false);
+        if (nextIndex === 0) {
+            setLateDinnerPrevDisabled(true);
+        }
+    };
 
     const popularRestaurants = [
         {
@@ -37,12 +84,55 @@ export default function CustomerHomepage() {
             type: 'Chinese',
             reviewStars: 3,
             numberOfReviews: 100
+        },
+        {
+            id: 4,
+            img: '/settingsDummyImg.png',
+            name: 'Mucho Burrito',
+            location: 'Surrey',
+            type: 'Chinese',
+            reviewStars: 3,
+            numberOfReviews: 100
+        },
+        {
+            id: 5,
+            img: '/settingsDummyImg.png',
+            name: 'Mucho Burrito',
+            location: 'Surrey',
+            type: 'Chinese',
+            reviewStars: 3,
+            numberOfReviews: 100
+        },
+        {
+            id: 6,
+            img: '/settingsDummyImg.png',
+            name: 'Mucho Burrito',
+            location: 'Surrey',
+            type: 'Chinese',
+            reviewStars: 3,
+            numberOfReviews: 100
+        }, {
+            id: 7,
+            img: '/settingsDummyImg.png',
+            name: 'Mucho Burrito',
+            location: 'Surrey',
+            type: 'Chinese',
+            reviewStars: 3,
+            numberOfReviews: 100
+        }, {
+            id: 8,
+            img: '/settingsDummyImg.png',
+            name: 'Mucho Burrito',
+            location: 'Surrey',
+            type: 'Chinese',
+            reviewStars: 3,
+            numberOfReviews: 100
         }
     ];
 
     const lateDinnerRestaurants = [
         {
-            id: 4,
+            id: 9,
             img: '/settingsDummyImg.png',
             name: 'Indian Favelli',
             location: 'Surrey',
@@ -51,7 +141,7 @@ export default function CustomerHomepage() {
             numberOfReviews: 400
         },
         {
-            id: 5,
+            id: 10,
             img: '/settingsDummyImg.png',
             name: 'Kumare Express',
             location: 'Joyce Collingwood',
@@ -60,7 +150,47 @@ export default function CustomerHomepage() {
             numberOfReviews: 600
         },
         {
-            id: 6,
+            id: 11,
+            img: '/settingsDummyImg.png',
+            name: 'Boom',
+            location: 'Pender',
+            type: 'Chinese',
+            reviewStars: 1,
+            numberOfReviews: 550
+        }, {
+            id: 12,
+            img: '/settingsDummyImg.png',
+            name: 'Boom',
+            location: 'Pender',
+            type: 'Chinese',
+            reviewStars: 1,
+            numberOfReviews: 550
+        }, {
+            id: 13,
+            img: '/settingsDummyImg.png',
+            name: 'Boom',
+            location: 'Pender',
+            type: 'Chinese',
+            reviewStars: 1,
+            numberOfReviews: 550
+        }, {
+            id: 14,
+            img: '/settingsDummyImg.png',
+            name: 'Boom',
+            location: 'Pender',
+            type: 'Chinese',
+            reviewStars: 1,
+            numberOfReviews: 550
+        }, {
+            id: 15,
+            img: '/settingsDummyImg.png',
+            name: 'Boom',
+            location: 'Pender',
+            type: 'Chinese',
+            reviewStars: 1,
+            numberOfReviews: 550
+        }, {
+            id: 16,
             img: '/settingsDummyImg.png',
             name: 'Boom',
             location: 'Pender',
@@ -76,16 +206,11 @@ export default function CustomerHomepage() {
             <Searchbar />
             <Box
                 display='flex'
-                gap={2}
                 alignItems='flex-start'
+                gap={2}
             >
                 <CustomerSidebar />
-                <Box
-                    display='flex'
-                    flexDirection='column'
-                    justifyContent='center'
-                    ml={15}
-                >
+                <Box>
                     <Typography
                         variant='h3'
                         fontWeight={500}
@@ -94,52 +219,93 @@ export default function CustomerHomepage() {
                     >
                         Most Popular
                     </Typography>
-                    <Box
-                        display='flex'
-                        flexDirection='row'
-                        gap={3}
-                        mb={5}
+                    <Box 
+                        display="flex" 
+                        justifyContent="space-between" 
+                        alignItems="center" 
+                        mb={2}
                     >
-                        {popularRestaurants.slice(0, 4).map((restaurant, index) => (
-                            <CustomerHomepageCard
-                                key={index}
-                                img={restaurant.img}
-                                name={restaurant.name}
-                                location={restaurant.location}
-                                type={restaurant.type}
-                                reviewStars={restaurant.reviewStars}
-                                numberOfReviews={restaurant.numberOfReviews}
-                            />
-                        ))}
+                        <IconButton
+                            onClick={displayPreviousPopularCards}
+                            disabled={popularPrevDisabled}
+                        >
+                            <ArrowBack />
+                        </IconButton>
+                        <ScrollContainer
+                            ref={popularScrollRef}
+                            display='flex'
+                        >
+                            {popularRestaurants.slice(popularStartIndex, popularStartIndex
+                                + 4).map((restaurant, index) => (
+                                    <CustomerHomepageCard
+                                        key={index}
+                                        img={restaurant.img}
+                                        name={restaurant.name}
+                                        location={restaurant.location}
+                                        type={restaurant.type}
+                                        reviewStars={restaurant.reviewStars}
+                                        numberOfReviews={restaurant.numberOfReviews}
+                                    />
+                                ))}
+                        </ScrollContainer>
+                        <IconButton
+                            onClick={displayNextPopularCards}
+                            disabled={popularNextDisabled}
+                        >
+                            <ArrowForward />
+                        </IconButton>
                     </Box>
-                    <Typography
-                        variant='h2'
-                        fontWeight={500}
-                        mt={2}
-                        mb={3}
-                    >
-                        Available for late dinner
-                    </Typography>
                     <Box
                         display='flex'
-                        flexDirection='row'
-                        gap={3}
-                        pb={2}
+                        flexDirection='column'
+                        justifyContent='center'
                     >
-                        {lateDinnerRestaurants.map((restaurant, index) => (
-                            <CustomerHomepageCard
-                                key={index}
-                                img={restaurant.img}
-                                name={restaurant.name}
-                                location={restaurant.location}
-                                type={restaurant.type}
-                                reviewStars={restaurant.reviewStars}
-                                numberOfReviews={restaurant.numberOfReviews}
-                            />
-                        ))}
+                        <Typography
+                            variant='h3'
+                            fontWeight={500}
+                            mt={5}
+                            mb={3}
+                        >
+                            Available for Late Dinner
+                        </Typography>
+                        <Box
+                            display="flex" 
+                            justifyContent="space-between" 
+                            alignItems="center" 
+                            mb={2}
+                        >
+                            <IconButton
+                                onClick={displayPreviousLateDinnerCards}
+                                disabled={lateDinnerPrevDisabled}
+                            >
+                                <ArrowBack />
+                            </IconButton>
+                            <ScrollContainer
+                                ref={lateDinnerScrollRef}
+                            >
+                                {lateDinnerRestaurants.slice(lateDinnerStartIndex, lateDinnerStartIndex
+                                    + 4).map((restaurant, index) => (
+                                        <CustomerHomepageCard
+                                            key={index}
+                                            img={restaurant.img}
+                                            name={restaurant.name}
+                                            location={restaurant.location}
+                                            type={restaurant.type}
+                                            reviewStars={restaurant.reviewStars}
+                                            numberOfReviews={restaurant.numberOfReviews}
+                                        />
+                                    ))}
+                            </ScrollContainer>
+                            <IconButton
+                                onClick={displayNextLateDinnerCards}
+                                disabled={lateDinnerNextDisabled}
+                            >
+                                <ArrowForward />
+                            </IconButton>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
-        </div>
+        </div >
     );
 }

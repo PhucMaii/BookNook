@@ -72,9 +72,8 @@ const CustomerHomepageCard = ({ name, location, type, reviewStars }) => {
             <CardActions>
                 <Box
                     display='grid'
-                    gridTemplateColumns='repeat(3, 1fr)'
+                    gridTemplateColumns='repeat(4, 1fr)'
                     gap={2}
-                    ml={2}
                 >
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((time, index) => (
                         <Button
