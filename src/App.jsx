@@ -15,6 +15,7 @@ import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot/EditTab
 import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
 import CustomerSignup from './customerSide/pages/auth/CustomerSignup';
 import CustomerAuthProvider from './customerSide/context/AuthContext';
+import CustomerConfirmationBooking from './customerSide/pages/ConfirmationBooking/CustomerConfirmationBooking';
 
 function App() {
   return (
@@ -41,6 +42,9 @@ function App() {
           <Routes>
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/signup" element={<CustomerSignup />} />
+            <Route path='/customer/booking-confirmation'
+              element={<CustomerConfirmationBooking />}
+            />
           </Routes>
         </CustomerAuthProvider>
       </BrowserRouter>
