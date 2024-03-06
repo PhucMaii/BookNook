@@ -41,6 +41,24 @@ const RestaurantInformation = () => {
   const { restaurantIds } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const fetchLatLong = async () => {
+    const encodedAddress = encodeURIComponent(address.description);
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${import.meta.env.VITE_MAPS_KEY}`;
+    
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.status === 'OK' & data.results.length > 0) {
+        const location = data.results[0].geometry.location;
+        return location;
+      }
+      throw new Error('No results found for the address');
+    } catch (error) {
+      console.log('Error fetching latitudes and longtitudes: ', error);
+    }
+  
+  }
+
   const handleRestaurantTypeChange = (event) => {
     setRestaurantType(event.target.value);
   };
@@ -66,9 +84,14 @@ const RestaurantInformation = () => {
         severity: 'success',
         message: 'Registering...',
       });
+
+      let location = {};
+      if (address) {
+        location = await fetchLatLong();
+      }
       const submittedData = {
         name: restaurantName,
-        address: address.description,
+        address: { description: address.description, ...location },
         type: restaurantType,
         avgPrice: price,
         phoneNumber: contactNumber,
@@ -86,7 +109,7 @@ const RestaurantInformation = () => {
       setNotification({
         on: true,
         severity: 'success',
-        message: 'Setting up...',
+        message: 'Setting up...',                
       });
 
       await setupTablesAndTimeSlots();

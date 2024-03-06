@@ -5,7 +5,14 @@ export const fetchData = async (collectionName, condition) => {
   const result = [];
   try {
     const collectionRef = collection(db, collectionName);
-    const queryRef = query(collectionRef, condition);
+
+    let queryRef;
+    if (condition) {
+      queryRef = query(collectionRef, condition);
+    } else {
+      queryRef = query(collectionRef);
+    }
+    
     const querySnapshot = await getDocs(queryRef);
     querySnapshot.docs.map((doc) => {
       const id = doc.id;
