@@ -116,7 +116,7 @@ function GoogleMaps(props) {
         setInputValue(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField color={props.color} {...params} label="Address" fullWidth />
+        <TextField color={props.color} {...params} label={props.label ? props.label : 'Address'} fullWidth />
       )}
       renderOption={(props, option) => {
         if (!value && !inputValue) {
@@ -159,6 +159,7 @@ function GoogleMaps(props) {
 
 GoogleMaps.propTypes = {
   onDataReceived: PropTypes.func,
+  label: PropTypes.string,
   initialValue: PropTypes.string,
   color: PropTypes.string,
 }

@@ -3,3 +3,19 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.rec .rec-arrow{
+    color: #FF6347 !important;
+    background-color: #ffe5e0 !important;
+    box-shadow: 0 0 1px 3px #ffd1c8 !important;
+    min-width: 30px !important;
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 1em !important;
+    line-height: 30px !important;
+}
+
+.rec .rec-pagination .rec-dot_active {
+    box-shadow: 0 0 1px 3px #FF6347 !important;
+    background-color: #FF6347 !important;
+}

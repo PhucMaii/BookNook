@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Box,
     Select,
     InputLabel,
     FormControl,
     Divider,
     Button,
-    InputAdornment,
-    OutlinedInput,
-    MenuItem
+    MenuItem,
+    Grid
 } from '@mui/material';
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,6 +15,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { guestsQuantity } from '../../utils/constants';
+import AddressInput from '../../../restaurantSide/components/AddressInput';
 
 const CustomerSearchbar = () => {
     const [date, setDate] = useState(dayjs());
@@ -44,85 +42,88 @@ const CustomerSearchbar = () => {
     }
 
     return (
-      <Box
-        mt={2}
-        display="flex"
+      <Grid
         alignItems="center"
-        justifyContent="space-evenly"
+        container
+        mt={2}
         py={4}
+        px={2}
         style={{ backgroundColor: 'background', width: '100%' }}
         borderRadius={2}
+        columnSpacing={1}
+        rowGap={2}
       >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
-            <DatePicker
-              label="Date"
-              value={date}
-              onChange={(newValue) => setDate(newValue)}
-              style={{ minWidth: 250 }}
-              sx={{
-                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#3498DB',
-                },
-              }}
-            />
-          </DemoContainer>
-        </LocalizationProvider>
-        <Divider orientation="vertical" flexItem />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['TimePicker']}>
-            <TimePicker
-              label="Time"
-              value={time}
-              onChange={(newValue) => setTime(newValue)}
-              style={{ minWidth: 250 }}
-              sx={{
-                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#3498DB',
-                },
-              }}
-            />
-          </DemoContainer>
-        </LocalizationProvider>
-        <Divider orientation="vertical" flexItem />
-        <FormControl fullWidth style={{ maxWidth: 250 }}>
-          <InputLabel id="customer-searchbar-time">Number of Guests</InputLabel>
-          <Select
-            labelId="guests"
-            id="outlined-required"
-            value={persons}
-            placeholder="Number of Guests"
-            label="Number of Guests"
-            onChange={handleGuestsChange}
-          >
-            {guestsQuantity.map((quantity) => (
-              <MenuItem key={quantity} value={quantity}>
-                {quantity}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Divider orientation="vertical" flexItem />
-        <FormControl fullWidth style={{ width: 350 }}>
-          <InputLabel>Location</InputLabel>
-          <OutlinedInput
-            id="location"
-            label="Location"
-            variant="outlined"
-            startAdornment={
-              <InputAdornment position="start">
-                <SearchOutlinedIcon />
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <Button
-          variant="contained"
-          style={{ color: 'white', height: '70%', width: '6%' }}
-        >
-          Search
-        </Button>
-      </Box>
+        <Grid item xs={5.9} lg={2.5}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DatePicker']}>
+              <DatePicker
+                label="Date"
+                value={date}
+                onChange={(newValue) => setDate(newValue)}
+                sx={{
+                  '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#3498DB',
+                  },
+                }}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={0.1}>
+          <Divider component="span" orientation="vertical" flexItem />
+        </Grid>
+        <Grid item xs={5.9} lg={2.5}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['TimePicker']}>
+              <TimePicker
+                label="Time"
+                value={time}
+                onChange={(newValue) => setTime(newValue)}
+                sx={{
+                  '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#3498DB',
+                  },
+                }}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={0.1}>
+          <Divider component="span" orientation="vertical" flexItem />
+        </Grid>
+        <Grid item xs={4.9} lg={2.5}>
+          <FormControl fullWidth>
+            <InputLabel id="customer-searchbar-time">
+              Number of Guests
+            </InputLabel>
+            <Select
+              labelId="guests"
+              id="outlined-required"
+              value={persons}
+              placeholder="Number of Guests"
+              label="Number of Guests"
+              onChange={handleGuestsChange}
+            >
+              {guestsQuantity.map((quantity) => (
+                <MenuItem key={quantity} value={quantity}>
+                  {quantity}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={0.1}>
+          <Divider component="span" orientation="vertical" flexItem />
+        </Grid>
+        <Grid item xs={4.9} lg={3}>
+          <AddressInput label="Location" onDataReceived={() => {}} />
+        </Grid>
+        <Grid item xs={1}>
+          <Button variant="contained" style={{ color: 'white' }} fullWidth>
+            Search
+          </Button>
+        </Grid>
+      </Grid>
     );
 }
 

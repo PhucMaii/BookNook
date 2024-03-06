@@ -6,7 +6,6 @@ import { theme } from './theme/theme.config';
 import HomePage from './restaurantSide/pages/HomePage';
 import HistoryPage from './restaurantSide/pages/HistoryPage';
 import SettingsPage from './restaurantSide/pages/settings/SettingsPage';
-import './App.css';
 import SignUp from './restaurantSide/pages/auth/SignUp';
 import Login from './restaurantSide/pages/auth/Login';
 import AuthProvider from './restaurantSide/context/AuthContext';
@@ -15,7 +14,8 @@ import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot/EditTab
 import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
 import CustomerSignup from './customerSide/pages/auth/CustomerSignup';
 import CustomerAuthProvider from './customerSide/context/AuthContext';
-import CustomerHomepage from './customerSide/pages/CustomerHomepage';
+import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
+import './App.css';
 
 function App() {
   return (
