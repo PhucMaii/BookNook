@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Typography,
     Box,
     Select,
     InputLabel,
     FormControl,
     Divider,
     Button,
-    Grid,
     InputAdornment,
     OutlinedInput,
     MenuItem
@@ -46,104 +44,85 @@ const CustomerSearchbar = () => {
     }
 
     return (
-        <Grid
-            container
-            spacing={2}
-            justifyContent='space-evenly'
+      <Box
+        mt={2}
+        display="flex"
+        alignItems="center"
+        justifyContent="space-evenly"
+        py={4}
+        style={{ backgroundColor: 'background', width: '100%' }}
+        borderRadius={2}
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker']}>
+            <DatePicker
+              label="Date"
+              value={date}
+              onChange={(newValue) => setDate(newValue)}
+              style={{ minWidth: 250 }}
+              sx={{
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#3498DB',
+                },
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+        <Divider orientation="vertical" flexItem />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['TimePicker']}>
+            <TimePicker
+              label="Time"
+              value={time}
+              onChange={(newValue) => setTime(newValue)}
+              style={{ minWidth: 250 }}
+              sx={{
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#3498DB',
+                },
+              }}
+            />
+          </DemoContainer>
+        </LocalizationProvider>
+        <Divider orientation="vertical" flexItem />
+        <FormControl fullWidth style={{ maxWidth: 250 }}>
+          <InputLabel id="customer-searchbar-time">Number of Guests</InputLabel>
+          <Select
+            labelId="guests"
+            id="outlined-required"
+            value={persons}
+            placeholder="Number of Guests"
+            label="Number of Guests"
+            onChange={handleGuestsChange}
+          >
+            {guestsQuantity.map((quantity) => (
+              <MenuItem key={quantity} value={quantity}>
+                {quantity}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Divider orientation="vertical" flexItem />
+        <FormControl fullWidth style={{ width: 350 }}>
+          <InputLabel>Location</InputLabel>
+          <OutlinedInput
+            id="location"
+            label="Location"
+            variant="outlined"
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchOutlinedIcon />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <Button
+          variant="contained"
+          style={{ color: 'white', height: '70%', width: '6%' }}
         >
-            <Typography
-                variant='h2'
-                fontWeight='bold'
-                textAlign='center'
-                mt={4}
-            >
-                Find your perfect spots for every moment
-            </Typography>
-            <Box
-                mt={2}
-                display='flex'
-                alignItems='center'
-                justifyContent='space-evenly'
-                px={6}
-                py={4}
-                mx={10}
-                style={{ backgroundColor: 'background', width: '100%',  }}
-                borderRadius={2}
-            >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']} >
-                        <DatePicker
-                            label='Date'
-                            value={date}
-                            onChange={(newValue) => setDate(newValue)}
-                            style={{ minWidth: 250 }}
-                            sx={{
-                                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: '#3498DB',
-                                    
-                                },
-                            }}
-                        />
-                    </DemoContainer>
-                </LocalizationProvider>
-                <Divider orientation='vertical' flexItem />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['TimePicker']}>
-                        <TimePicker
-                            label="Time"
-                            value={time}
-                            onChange={(newValue) => setTime(newValue)}
-                            style={{ minWidth: 250 }}
-                            sx={{
-                                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: '#3498DB',
-                                },
-                            }}
-                        />
-                    </DemoContainer>
-                </LocalizationProvider>
-                <Divider orientation='vertical' flexItem />
-                <FormControl fullWidth style={{ maxWidth: 250 }}>
-                    <InputLabel id='customer-searchbar-time'>Number of Guests</InputLabel>
-                    <Select
-                        labelId='guests'
-                        id='outlined-required'
-                        value={persons}
-                        placeholder='Number of Guests'
-                        label='Number of Guests'
-                        onChange={handleGuestsChange}
-                    
-                    >
-                        {guestsQuantity.map((quantity) =>
-                            <MenuItem key={quantity} value={quantity}>
-                                {quantity}
-                            </MenuItem>
-                        )}
-                    </Select>
-                </FormControl>
-                <Divider orientation='vertical' flexItem />
-                <FormControl fullWidth style={{ width: 350 }}>
-                    <InputLabel>Location</InputLabel>
-                    <OutlinedInput
-                        id='location'
-                        label='Location'
-                        variant='outlined'
-                    
-                        startAdornment={
-                            <InputAdornment position='start'>
-                                <SearchOutlinedIcon />
-                            </InputAdornment>
-                        }
-                    />
-                </FormControl>
-                <Button
-                    variant='contained'
-                    style={{ color: 'white', height: '70%', width: '6%' }}
-                >
-                    Search
-                </Button>
-            </Box>
-        </Grid>
+          Search
+        </Button>
+      </Box>
     );
 }
 

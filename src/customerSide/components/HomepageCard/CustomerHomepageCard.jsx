@@ -75,12 +75,11 @@ const CustomerHomepageCard = ({ name, location, type, reviewStars }) => {
                     gridTemplateColumns='repeat(4, 1fr)'
                     gap={2}
                 >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((time, index) => (
+                    {[1, 2, 3, 4].map((time, index) => (
                         <Button
                             key={index}
                             variant='contained'
                             style={{ color: 'white' }}
-                            onClick='/customer/bookings'
                         >
                             {time}:00pm
                         </Button>

@@ -10,26 +10,25 @@ import {
     RadioGroup,
     FormControl
 } from '@mui/material';
-import { restaurantTypes, averagePrices, tableTypes } from '../../../utils/constants';
-import { ratings } from '../../utils/constants'
+import { restaurantTypes, averagePrices, tableTypes } from '../../utils/constants';
+import { ratings } from '../utils/constants'
 
-const CustomerSidebar = () => {
+const FilterSidebar = () => {
     const [showMore, setShowMore] = useState(false);
-    const initialOptions = restaurantTypes.slice(0, 2);
-    const [selectedTypes, setSelectedTypes] = useState(initialOptions);
+    const [selectedTypes, setSelectedTypes] = useState([]);
 
     const handleShowMore = () => {
         setShowMore(!showMore);
     }
 
-    const handleTypeChange = (type) => {
-        const index = selectedTypes.indexOf(type);
+    const handleTypeChange = (targetType) => {
+        const index = selectedTypes.indexOf(targetType);
         if (index === -1) {
-            if (selectedTypes.length < 2) {
-                setSelectedTypes([...selectedTypes, type]);
-            }
+            setSelectedTypes([...selectedTypes, targetType]);
         } else {
-            setSelectedTypes(selectedTypes.filter((item) => item !== type));
+            setSelectedTypes((prevTypes) => {
+                return prevTypes.filter((type) => type !== targetType);
+            })
         }
     };
 
@@ -37,20 +36,17 @@ const CustomerSidebar = () => {
         <Box
             display='flex'
             flexDirection='column'
+            maxWidth={200}
             style={{
                 backgroundColor: 'background',
             }}
-            width={200}
-            ml={10}
             borderRadius={2}
-            pl={2}
-            mt={6}
+            p={2}
         >
             <Typography
                 variant='h5'
                 fontWeight='bold'
                 mb={2}
-                pt={2}
             >
                 Filters
             </Typography>
@@ -61,7 +57,7 @@ const CustomerSidebar = () => {
                 Cuisine
             </Typography>
             <FormGroup>
-                {selectedTypes.map((type, index) => (
+                {restaurantTypes.slice(0, 2).map((type, index) => (
                     <FormControlLabel
                         key={index}
                         control={<Checkbox />}
@@ -72,7 +68,7 @@ const CustomerSidebar = () => {
                 {showMore && (
                     restaurantTypes.slice(2).map((type, index) => (
                         <FormControlLabel
-                            key={index + initialOptions.length}
+                            key={index + 2}
                             control={<Checkbox />}
                             label={type}
                             onChange={() => handleTypeChange(type)}
@@ -149,4 +145,4 @@ const CustomerSidebar = () => {
     )
 }
 
-export default CustomerSidebar;
+export default FilterSidebar;
