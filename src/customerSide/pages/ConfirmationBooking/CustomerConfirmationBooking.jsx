@@ -4,7 +4,6 @@ import {
     Typography,
     TextField,
     Divider,
-    Box,
     Button,
 } from '@mui/material'
 import dayjs from 'dayjs';
@@ -52,11 +51,11 @@ const CustomerConfirmationBooking = () => {
                 container
                 spacing={2}
             >
-
-                <Grid item xs={6} sx={{ paddingRight: 1 }}>
+                {/* xs sm md lg xl */}
+                <Grid item xs={12} md={6} sx={{ paddingRight: 1 }}>
                     <Typography
                         variant='h3'
-                        fontWeight={700}
+                        fontWeight="bold"
                         ml={10}
                         mb={13}
                         mt={5}
@@ -69,7 +68,7 @@ const CustomerConfirmationBooking = () => {
                     />
                     <Typography
                         variant='h4'
-                        fontWeight={600}
+                        fontWeight="bold"
                         ml={10}
                         mt={5}
                     >
@@ -77,33 +76,37 @@ const CustomerConfirmationBooking = () => {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={6}>
-                    <Typography
-                        variant='h4'
-                        fontWeight={600}
-                        mt={24}
-                        mb={2}
-                    >
-                        Diner Details
-                    </Typography>
-                    <Box
+                <Grid container item xs={12} md={6} sx={{pr: 4,}}>
+                    <Grid item xs={12}>
+                        <Typography
+                            variant='h4'
+                            fontWeight={600}
+                            mt={24}
+                            mb={2}
+                        >
+                            Diner Details
+                        </Typography>
+                    </Grid>
+                    {/* <Box
                         display='flex'
                         flexDirection='column'
                         justifyContent='flex-start'
                         mr={10}
                         gap={2}
-                    >
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
-                                Name
-                            </Typography>
-                            <TextField
-                                variant='outlined'
-                                label='Name'
-                                fullWidth
-                                defaultValue={userInfo.name}
-                            />
-                        </div>
+                    > */}
+                    <Grid item xs={6}>
+                        <Typography variant='h5' fontWeight={500} padding={3}>
+                            Name
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                            variant='outlined'
+                            label='Name'
+                            fullWidth
+                            defaultValue={userInfo.name}
+                        />
+                    </Grid>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Email Address
@@ -126,7 +129,9 @@ const CustomerConfirmationBooking = () => {
                                 defaultValue={userInfo.mobileNum}
                             />
                         </div>
-                        <Divider variant='middle' />
+                        <Grid item xs={12}>
+                            <Divider variant='middle' sx={{my: 2}} />
+                        </Grid>
                         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                             <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Date
@@ -166,7 +171,7 @@ const CustomerConfirmationBooking = () => {
                                 defaultValue={userInfo.seatingCap}
                             />
                         </div>
-                    </Box>
+                    {/* </Box> */}
                     <Button
                         variant='contained'
                         sx={{
