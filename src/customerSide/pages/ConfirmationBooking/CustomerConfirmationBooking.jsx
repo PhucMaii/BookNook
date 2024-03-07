@@ -6,7 +6,8 @@ import {
     Divider,
     Button,
     Select,
-    FormControl
+    FormControl,
+    MenuItem
 } from '@mui/material'
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -15,11 +16,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { BookingImg } from './styled'
 import TopNavbar from '../../components/TopNavbar/CustomerHeader';
-import { generateCapacity } from '../../../utils/generateConstants';
 
 const CustomerConfirmationBooking = () => {
     const [date, setDate] = useState(dayjs());
     const [time, setTime] = useState(dayjs());
+    const [selectedCapacity, setSelectedCapacity] = useState('');
 
     useEffect(() => {
         const dateIntervalId = setInterval(() => {
@@ -46,6 +47,11 @@ const CustomerConfirmationBooking = () => {
         userTime: time,
         seatingCap: 2,
     };
+
+    const seatingCapacityOptions = Array.from({ length: 20 }, (_, index) => ({
+        value: index + 1,
+        label: `${index + 1} person${index !== 0 ? 's' : ''}`
+    }));
 
     return (
         <div>
@@ -82,7 +88,7 @@ const CustomerConfirmationBooking = () => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container item xs={12} md={6} sx={{pr: 4}}>
+                <Grid container item xs={12} md={6} sx={{ pr: 4 }}>
                     <Grid item xs={12}>
                         <Typography
                             variant='h4'
@@ -104,40 +110,40 @@ const CustomerConfirmationBooking = () => {
                             label='Name'
                             fullWidth
                             defaultValue={userInfo.name}
-                            sx={{ my: 2}}
+                            sx={{ my: 2 }}
                         />
                     </Grid>
                     <Grid item xs={6}>
                         <Typography variant='h5'>
-                                    Email Address
-                                </Typography>
-                        </Grid>
+                            Email Address
+                        </Typography>
+                    </Grid>
                     <Grid item xs={6}>
                         <TextField
-                                    variant='outlined'
-                                    label='Email Address'
-                                    fullWidth
-                                    defaultValue={userInfo.emailAdd}
-                                    sx={{ my: 2}}
-                                />
-                        </Grid>
+                            variant='outlined'
+                            label='Email Address'
+                            fullWidth
+                            defaultValue={userInfo.emailAdd}
+                            sx={{ my: 2 }}
+                        />
+                    </Grid>
                     <Grid item xs={6}>
                         <Typography variant='h5' >
                             Mobile Number
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                    <TextField
-                                variant='outlined'
-                                label='Mobile Number'
-                                fullWidth
-                                defaultValue={userInfo.mobileNum}
-                                sx={{ my: 2}}
-                            />
+                        <TextField
+                            variant='outlined'
+                            label='Mobile Number'
+                            fullWidth
+                            defaultValue={userInfo.mobileNum}
+                            sx={{ my: 2 }}
+                        />
                     </Grid>
                     <Grid item xs={12}>
-                            <Divider variant='middle' sx={{my: 2}} />
-                        </Grid>
+                        <Divider variant='middle' sx={{ my: 2 }} />
+                    </Grid>
                     <Grid item xs={6}>
                         <Typography variant='h5' >
                             Date
@@ -154,36 +160,43 @@ const CustomerConfirmationBooking = () => {
                             />
                         </LocalizationProvider>
                     </Grid>
-                        <Grid item xs={6}>
+                    <Grid item xs={6}>
                         <Typography variant='h5'>
-                                Time
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
+                            Time
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <TimePicker
-                                    label="Time"
-                                    value={time}
-                                    onChange={(newValue) => setTime(newValue)}
-                                    renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
-                                    sx={{ width: '100%', my: 2 }}
-                                />
-                            </LocalizationProvider>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Typography variant='h5'>
-                                Seating Capacity
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControl fullWidth>
-                                <Select
-                                    value={generateCapacity}
-                                >
-
-                                </Select>
-                            </FormControl>
-                        </Grid>
+                            <TimePicker
+                                label="Time"
+                                value={time}
+                                onChange={(newValue) => setTime(newValue)}
+                                renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
+                                sx={{ width: '100%', my: 2 }}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Typography variant='h5'>
+                            Seating Capacity
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <FormControl fullWidth>
+                            <Select
+                                value={selectedCapacity}
+                                onChange={(e) => setSelectedCapacity(e.target.value)}
+                                variant="outlined"
+                                fullWidth
+                            >
+                                 {seatingCapacityOptions.map((option, index) => (
+                                    <MenuItem key={index} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
                     <Button
                         variant='contained'
                         sx={{
@@ -193,7 +206,7 @@ const CustomerConfirmationBooking = () => {
                             width: '85%',
                             borderRadius: 5,
                             mt: 5,
-                            height: '7%',
+                            height: '5%',
                             mb: 5,
                         }}
                     >
