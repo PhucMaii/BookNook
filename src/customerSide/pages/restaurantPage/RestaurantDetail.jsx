@@ -1,4 +1,4 @@
-import { Grid, Typography, Box, Divider, Rating, Button, TextField, FormControl, InputLabel, Select, MenuItem, InputAdornment } from '@mui/material'
+import { Grid, Typography, Box, Divider, Rating, Paper} from '@mui/material'
 import React, { useState } from 'react'
 import { dummyImg } from '../../../utils/constants'
 import StarIcon from '@mui/icons-material/Star';
@@ -7,19 +7,15 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import { primary } from '../../../theme/colors';
 import { ProgressStyled, StyledAvatar, iconStyled } from './styled';
 import RestaurantReviewBlock from '../../components/restaurantReviewBlock';
-
+import ReservationMakingBlock from '../../components/ReservatioinMakingBlock/ReservationMakingBlock';
+import CustomerHeader from '../../components/TopNavbar/CustomerHeader';
 
 export const RestaurantDetail = () => {
 
   return (
     <>
       {/* Placeholder for Navbar */}
-      <Box
-        height={95}
-        sx={{ bgcolor: 'orange', justifyContent: 'center', textAlign: 'center' }}
-      >
-        <Typography variant='h1'>Navbar Placeholder</Typography>
-      </Box>
+      <CustomerHeader/>
       <img src={dummyImg} alt='Restaurant picture' width='100%' height='350px' />
       <Grid container p={3} m={0.5} justifyContent='space-between'>
         <Grid xs={8} item container direction='column' rowGap={2} p={2} sx={{ backgroundColor: 'white', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
@@ -128,8 +124,10 @@ export const RestaurantDetail = () => {
           
         </Grid>
 
-        <Grid xs={3.7} item container direction='column' sx={{ backgroundColor: 'white', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-          <Typography variant='h3'>Resevation Making</Typography>
+        <Grid xs={3.7} item container>
+          <Paper sx={{maxHeight:'50vh', position: 'sticky', top: 0}}>
+            <ReservationMakingBlock/>
+          </Paper>
         </Grid>
       </Grid>
     </>
