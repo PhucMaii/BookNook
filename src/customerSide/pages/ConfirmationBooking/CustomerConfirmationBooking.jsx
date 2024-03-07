@@ -5,6 +5,8 @@ import {
     TextField,
     Divider,
     Button,
+    Select,
+    FormControl
 } from '@mui/material'
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -13,6 +15,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { BookingImg } from './styled'
 import TopNavbar from '../../components/TopNavbar/CustomerHeader';
+import { generateCapacity } from '../../../utils/generateConstants';
 
 const CustomerConfirmationBooking = () => {
     const [date, setDate] = useState(dayjs());
@@ -53,49 +56,45 @@ const CustomerConfirmationBooking = () => {
             >
                 {/* xs sm md lg xl */}
                 <Grid item xs={12} md={6} sx={{ paddingRight: 1 }}>
-                    <Typography
-                        variant='h3'
-                        fontWeight="bold"
-                        ml={10}
-                        mb={13}
-                        mt={5}
-                    >
-                        Booking Confirmation
-                    </Typography>
-                    <BookingImg
-                        src={userInfo.img}
-                        alt='Image'
-                    />
-                    <Typography
-                        variant='h4'
-                        fontWeight="bold"
-                        ml={10}
-                        mt={5}
-                    >
-                        {userInfo.name}
-                    </Typography>
+                    <Grid item xs={12}>
+                        <Typography
+                            variant='h3'
+                            fontWeight="bold"
+                            ml={10}
+                            mb={13}
+                            mt={5}
+                        >
+                            Booking Confirmation
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <BookingImg
+                            src={userInfo.img}
+                            alt='Image'
+                        />
+                        <Typography
+                            variant='h4'
+                            fontWeight="bold"
+                            ml={10}
+                            mt={5}
+                        >
+                            {userInfo.name}
+                        </Typography>
+                    </Grid>
                 </Grid>
-
-                <Grid container item xs={12} md={6} sx={{pr: 4,}}>
+                <Grid container item xs={12} md={6} sx={{pr: 4}}>
                     <Grid item xs={12}>
                         <Typography
                             variant='h4'
                             fontWeight={600}
-                            mt={24}
+                            mt={20}
                             mb={2}
                         >
                             Diner Details
                         </Typography>
                     </Grid>
-                    {/* <Box
-                        display='flex'
-                        flexDirection='column'
-                        justifyContent='flex-start'
-                        mr={10}
-                        gap={2}
-                    > */}
                     <Grid item xs={6}>
-                        <Typography variant='h5' fontWeight={500} padding={3}>
+                        <Typography variant='h5' >
                             Name
                         </Typography>
                     </Grid>
@@ -105,73 +104,86 @@ const CustomerConfirmationBooking = () => {
                             label='Name'
                             fullWidth
                             defaultValue={userInfo.name}
+                            sx={{ my: 2}}
                         />
                     </Grid>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
-                                Email Address
-                            </Typography>
-                            <TextField
-                                variant='outlined'
-                                label='Email Address'
-                                fullWidth
-                                defaultValue={userInfo.emailAdd}
-                            />
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
-                                Mobile Number
-                            </Typography>
-                            <TextField
+                    <Grid item xs={6}>
+                        <Typography variant='h5'>
+                                    Email Address
+                                </Typography>
+                        </Grid>
+                    <Grid item xs={6}>
+                        <TextField
+                                    variant='outlined'
+                                    label='Email Address'
+                                    fullWidth
+                                    defaultValue={userInfo.emailAdd}
+                                    sx={{ my: 2}}
+                                />
+                        </Grid>
+                    <Grid item xs={6}>
+                        <Typography variant='h5' >
+                            Mobile Number
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                    <TextField
                                 variant='outlined'
                                 label='Mobile Number'
                                 fullWidth
                                 defaultValue={userInfo.mobileNum}
+                                sx={{ my: 2}}
                             />
-                        </div>
-                        <Grid item xs={12}>
+                    </Grid>
+                    <Grid item xs={12}>
                             <Divider variant='middle' sx={{my: 2}} />
                         </Grid>
-                        <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
-                                Date
-                            </Typography>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DatePicker
-                                    label="Date"
-                                    value={date}
-                                    onChange={(newValue) => setDate(newValue)}
-                                    renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
-                                    sx={{ width: '100%' }}
-                                />
-                            </LocalizationProvider>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
+                    <Grid item xs={6}>
+                        <Typography variant='h5' >
+                            Date
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Date"
+                                value={date}
+                                onChange={(newValue) => setDate(newValue)}
+                                renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
+                                sx={{ width: '100%', my: 2 }}
+                            />
+                        </LocalizationProvider>
+                    </Grid>
+                        <Grid item xs={6}>
+                        <Typography variant='h5'>
                                 Time
                             </Typography>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        </Grid>
+                        <Grid item xs={6}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <TimePicker
                                     label="Time"
                                     value={time}
                                     onChange={(newValue) => setTime(newValue)}
                                     renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
-                                    sx={{ width: '100%' }}
+                                    sx={{ width: '100%', my: 2 }}
                                 />
                             </LocalizationProvider>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Typography variant='h5'>
                                 Seating Capacity
                             </Typography>
-                            <TextField
-                                variant='outlined'
-                                label='Seating Capacity'
-                                fullWidth
-                                defaultValue={userInfo.seatingCap}
-                            />
-                        </div>
-                    {/* </Box> */}
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl fullWidth>
+                                <Select
+                                    value={generateCapacity}
+                                >
+
+                                </Select>
+                            </FormControl>
+                        </Grid>
                     <Button
                         variant='contained'
                         sx={{
