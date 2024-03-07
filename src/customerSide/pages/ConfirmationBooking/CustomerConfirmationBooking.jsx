@@ -94,7 +94,7 @@ const CustomerConfirmationBooking = () => {
                         gap={2}
                     >
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={600} padding={3} width={600}>
+                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Name
                             </Typography>
                             <TextField
@@ -105,7 +105,7 @@ const CustomerConfirmationBooking = () => {
                             />
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={600} padding={3} width={600}>
+                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Email Address
                             </Typography>
                             <TextField
@@ -116,7 +116,7 @@ const CustomerConfirmationBooking = () => {
                             />
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={600} padding={3} width={600}>
+                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Mobile Number
                             </Typography>
                             <TextField
@@ -128,7 +128,7 @@ const CustomerConfirmationBooking = () => {
                         </div>
                         <Divider variant='middle' />
                         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                            <Typography variant='h5' fontWeight={600} padding={3} width={600}>
+                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Date
                             </Typography>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -142,7 +142,7 @@ const CustomerConfirmationBooking = () => {
                             </LocalizationProvider>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                            <Typography variant='h5' fontWeight={600} padding={3} width={600}>
+                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Time
                             </Typography>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -156,7 +156,7 @@ const CustomerConfirmationBooking = () => {
                             </LocalizationProvider>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Typography variant='h5' fontWeight={600} padding={3} width={600}>
+                            <Typography variant='h5' fontWeight={500} padding={3} width={600}>
                                 Seating Capacity
                             </Typography>
                             <TextField
