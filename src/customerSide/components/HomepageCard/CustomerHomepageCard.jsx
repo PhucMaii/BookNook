@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card,
@@ -15,19 +15,35 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import StarIcon from '@mui/icons-material/Star';
 import { ratings } from '../../utils/constants';
 import { grey } from '@mui/material/colors';
+import { fetchData } from '../../../utils/firebase';
+import { where } from 'firebase/firestore';
 
 const CustomerHomepageCard = ({ restaurant }) => {
+    useEffect(() => {
+        fetchTimeSlots();
+    }, [])
+
     const handleShowAddress = () => {
-        return  restaurant.address ? 
-        `${restaurant.address.split(', ')[1]}, ${restaurant.address.split(', ')[2]}` : 
+        return restaurant.address ? 
+        `${restaurant.address.description.split(', ')[1]}, ${restaurant.address.description.split(', ')[2]}` : 
         'Not provided'
     }
+
+    const fetchTimeSlots = async () => {
+        try {
+            const timeSlots = await fetchData('timeSlots', where('restaurantId', '==', restaurant.id));
+            console.log(timeSlots, 'timeSlots');
+        } catch (error) {
+            console.log('Fail to fetch restaurants time slots: ', error);
+        }
+    }
+
   return (
     <Card
       sx={{
         width: 325,
         pb: 2,
-        maxHeight: 400,
+        maxHeight: 420,
         borderRadius: '20px',
         boxShadow: 0,
       }}

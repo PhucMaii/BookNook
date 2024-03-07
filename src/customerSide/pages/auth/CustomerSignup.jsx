@@ -34,6 +34,7 @@ import { auth, db, googleProvider } from '../../../../firebaseConfig';
 import Notification from '../../../restaurantSide/components/Notification';
 import { LoadingButton } from '@mui/lab';
 import { AuthContext } from '../../context/AuthContext';
+import { fetchLatLong } from '../../../utils/location';
 
 const CustomerSignUp = () => {
   const [address, setAddress] = useState('');
@@ -115,11 +116,12 @@ const CustomerSignUp = () => {
         );
         // eslint-disable-next-line no-unused-vars
         const { confirmPassword, password, ...submittedData } = values;
+        const location = await fetchLatLong(address.description);
         const usersCollection = collection(db, 'users');
         const docData = await addDoc(usersCollection, {
           ...submittedData,
           uid: userCredential.user.uid,
-          location: address.description
+          address: { description: address.description, ...location }
         });
         setCustomerIds(() => ({
           uid: userCredential.user.uid,

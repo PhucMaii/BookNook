@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import AddressInput from '../../components/AddressInput';
 import { generateInitialTimeSlots } from '../../../utils/time';
+import { fetchLatLong } from '../../../utils/location';
 
 const RestaurantInformation = () => {
   const [address, setAddress] = useState(null);
@@ -40,24 +41,6 @@ const RestaurantInformation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { restaurantIds } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  const fetchLatLong = async () => {
-    const encodedAddress = encodeURIComponent(address.description);
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${import.meta.env.VITE_MAPS_KEY}`;
-    
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data.status === 'OK' & data.results.length > 0) {
-        const location = data.results[0].geometry.location;
-        return location;
-      }
-      throw new Error('No results found for the address');
-    } catch (error) {
-      console.log('Error fetching latitudes and longtitudes: ', error);
-    }
-  
-  }
 
   const handleRestaurantTypeChange = (event) => {
     setRestaurantType(event.target.value);
@@ -87,7 +70,7 @@ const RestaurantInformation = () => {
 
       let location = {};
       if (address) {
-        location = await fetchLatLong();
+        location = await fetchLatLong(address.description);
       }
       const submittedData = {
         name: restaurantName,

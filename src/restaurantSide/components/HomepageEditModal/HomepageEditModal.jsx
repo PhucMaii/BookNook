@@ -58,8 +58,6 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
       }
     });
 
-    console.log(submittedData, 'submittedData');
-
     updateDoc(reservationRef, submittedData)
       .then(() => {
         console.log('Document successfully updated!');
@@ -76,8 +74,6 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
       };
 
       updateUI(data.reservationId, updatedUIData);
-      console.log(updatedUIData, 'updatedUIData' );
-
   }
 
   return (
@@ -159,7 +155,6 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
                     onChange={(newValue) => {
                       // Converting Dayjs date object to a JavaScript Date object
                       const jsDate = newValue.toDate();
-                      console.log(jsDate)
                       // Update the state with the new selected date
                       setDate(jsDate);
                     }}

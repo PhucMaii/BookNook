@@ -1,22 +1,26 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import TopNavbar from '../../components/TopNavbar/CustomerHeader';
 import Searchbar from '../../components/CustomerSearchbar/CustomerSearchbar';
 import CustomerHomepageCard from '../../components/HomepageCard/CustomerHomepageCard';
 import FilterSidebar from '../../components/FilterSidebar';
 import { Box, Typography, useMediaQuery } from '@mui/material';
 import Carousel from '@itseasy21/react-elastic-carousel';
-import { fetchData } from '../../../utils/firebase';
+import { fetchData, fetchDoc } from '../../../utils/firebase';
 import { where } from '@firebase/firestore';
 import { StyleSheetManager } from 'styled-components';
 import isPropValid from '@emotion/is-prop-valid';
 import { SplashScreen } from '../../../lib/utils';
+import { AuthContext } from '../../context/AuthContext';
+import { calculateDistance } from '../../../utils/location';
 
 
 export default function CustomerHomepage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [closestRestaurantList, setClosestRestaurantList] = useState([]);
   const [restaurantList, setRestaurantList] = useState([]);
   const [popularRestaurantList, setPopularRestaurantList] = useState([]);
+  const { customerIds } = useContext(AuthContext);
 
   const breakpoints = [
     { width: 400, itemsToShow: 1 },
@@ -28,14 +32,17 @@ export default function CustomerHomepage() {
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   useEffect(() => {
-    fetchRestaurants();
-  }, []);
+    if (customerIds.docId) {
+      fetchRestaurants();
+    }
+  }, [customerIds]);
 
   const fetchRestaurants = async () => {
     try {
       const restaurants = await fetchData('restaurants');
       setRestaurantList(restaurants);
       await getMostPopularRestaurants(restaurants);
+      await getClosestRestaurants(restaurants);
       setIsLoading(false);
     } catch (error) {
       console.log('Fail to fetch restaurants: ', error);
@@ -70,12 +77,31 @@ export default function CustomerHomepage() {
           if (restaurantA.starsAvg < restaurantB.starsAvg) return -1;
         }
       );
-      console.log(sortedRestaurantList.slice(0, 6))
       setPopularRestaurantList(sortedRestaurantList.slice(0, 6));
     } catch (error) {
       console.log('Fail to get most popular restaurants');
     }
   };
+
+  const getClosestRestaurants = async (restaurants) => {
+    try {
+      const userData = await fetchDoc('users', customerIds.docId);
+      const data = userData.docData;
+      const newRestaurantList = restaurants.map((restaurant) => {
+        if (!restaurant.address) {
+          return null;
+        }
+        const distance = calculateDistance(data.address.lat, data.address.lng, restaurant.address.lat, restaurant.address.lng);
+        return { ...restaurant, distance };
+      });
+
+      const filteredRestaurants = newRestaurantList.filter((restaurant) => restaurant !== null);
+      const sortedByDistance = filteredRestaurants.sort((restaurantA, restaurantB) => restaurantA.distance - restaurantB.distance);
+      setClosestRestaurantList(sortedByDistance.slice(0, 5));
+    } catch (error) {
+      console.log('Fail to get closest restaurants: ', error);
+    }
+  }
 
   if (isLoading) {
     return <SplashScreen />
@@ -115,22 +141,17 @@ export default function CustomerHomepage() {
             </div>
 
             <Typography variant="h4" fontWeight="bold" mt={5} mb={3}>
-              Available for Late Dinner
+              Nearby Restaurants
             </Typography>
             <div>
-              {/* <Carousel breakPoints={breakpoints}>
-                {lateDinnerRestaurants.map((restaurant, index) => (
+              <Carousel breakPoints={breakpoints}>
+                {closestRestaurantList.map((restaurant, index) => (
                   <CustomerHomepageCard
                     key={index}
-                    img={restaurant.img}
-                    name={restaurant.name}
-                    location={restaurant.location}
-                    type={restaurant.type}
-                    reviewStars={restaurant.reviewStars}
-                    numberOfReviews={restaurant.numberOfReviews}
+                    restaurant={restaurant}
                   />
                 ))}
-              </Carousel> */}
+              </Carousel>
             </div>
           </Box>
         </Box>
