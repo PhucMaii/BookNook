@@ -1,5 +1,5 @@
 import { Grid, Typography, Box, Divider, Rating, Paper} from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import { dummyImg } from '../../../utils/constants'
 import StarIcon from '@mui/icons-material/Star';
 import RestaurantIcon from '@mui/icons-material/Restaurant';

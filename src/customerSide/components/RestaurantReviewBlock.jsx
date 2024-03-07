@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Avatar, Button, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Rating, Select, TextField, Typography } from '@mui/material'
+import { Avatar, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Rating, Select, TextField, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import { dummyAvatar } from '../../utils/constants';
 import { Box } from '@mui/system';
 import { primary } from '../../theme/colors';
+import ReviewCreateModal from './Modals/ReviewCreateModal/ReviewCreateModal';
 
 const RestaurantReviewBlock = props => {
     return (
@@ -46,7 +47,7 @@ const RestaurantReviewBlock = props => {
                     />
                 </Grid>
                 <Grid item xs={3}>
-                    <Button color='secondary' variant='contained'>WRITE A REVIEW</Button>
+                    <ReviewCreateModal/>
                 </Grid>
             </Grid>
 
