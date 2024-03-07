@@ -15,6 +15,7 @@ import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
 import CustomerSignup from './customerSide/pages/auth/CustomerSignup';
 import CustomerAuthProvider from './customerSide/context/AuthContext';
 import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
+import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
 import './App.css';
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/signup" element={<CustomerSignup />} />
             <Route path="/" element={<CustomerHomepage/>} />
+            <Route path='/customer/successful-page' element={<CustomerSuccessfulPage/>} />
           </Routes>
         </CustomerAuthProvider>
       </BrowserRouter>
