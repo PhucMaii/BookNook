@@ -166,7 +166,7 @@ export default function SettingsPage() {
   if (isLoading) {
     return (
       <Sidebar>
-        <SplashScreen />
+        <SplashScreen color="secondary"/>
       </Sidebar>
     );
   }

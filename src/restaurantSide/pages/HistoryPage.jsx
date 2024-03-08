@@ -191,7 +191,7 @@ export default function HistoryPage() {
   if (isLoading) {
     return (
       <Sidebar>
-        <SplashScreen />
+        <SplashScreen color="secondary"/>
       </Sidebar>
     );
   }

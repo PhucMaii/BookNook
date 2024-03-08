@@ -309,7 +309,7 @@ export default function EditTableTimeSlot() {
   if (isLoading) {
     return (
       <Sidebar>
-        <SplashScreen />
+        <SplashScreen color="secondary"/>
       </Sidebar>
     )
   }

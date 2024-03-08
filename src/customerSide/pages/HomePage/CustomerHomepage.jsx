@@ -22,6 +22,7 @@ export default function CustomerHomepage() {
   const [popularRestaurantList, setPopularRestaurantList] = useState([]);
   const { customerIds } = useContext(AuthContext);
 
+  console.log(closestRestaurantList);
   const breakpoints = [
     { width: 400, itemsToShow: 1 },
     { width: 600, itemsToShow: 1.8 },
@@ -32,9 +33,14 @@ export default function CustomerHomepage() {
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   useEffect(() => {
-    if (customerIds.docId) {
-      fetchRestaurants();
+    const handleFetchRestaurants = async () => {
+      const restaurants = await fetchRestaurants();
+      if (customerIds.docId) {
+        await getClosestRestaurants(restaurants);
+      }
+      setIsLoading(false);
     }
+    handleFetchRestaurants();
   }, [customerIds]);
 
   const fetchRestaurants = async () => {
@@ -42,8 +48,7 @@ export default function CustomerHomepage() {
       const restaurants = await fetchData('restaurants');
       setRestaurantList(restaurants);
       await getMostPopularRestaurants(restaurants);
-      await getClosestRestaurants(restaurants);
-      setIsLoading(false);
+      return restaurants;
     } catch (error) {
       console.log('Fail to fetch restaurants: ', error);
     }
@@ -132,27 +137,28 @@ export default function CustomerHomepage() {
             <div>
               <Carousel breakPoints={breakpoints}>
                 {popularRestaurantList.map((restaurant, index) => (
-                  <CustomerHomepageCard
-                    key={index}
-                    restaurant={restaurant}
-                  />
+                  <CustomerHomepageCard key={index} restaurant={restaurant} />
                 ))}
               </Carousel>
             </div>
 
-            <Typography variant="h4" fontWeight="bold" mt={5} mb={3}>
-              Nearby Restaurants
-            </Typography>
-            <div>
-              <Carousel breakPoints={breakpoints}>
-                {closestRestaurantList.map((restaurant, index) => (
-                  <CustomerHomepageCard
-                    key={index}
-                    restaurant={restaurant}
-                  />
-                ))}
-              </Carousel>
-            </div>
+            { Object.keys(customerIds).length > 0 &&
+              <>
+                <Typography variant="h4" fontWeight="bold" mt={5} mb={3}>
+                  Nearby Restaurants
+                </Typography>
+                <div>
+                  <Carousel breakPoints={breakpoints}>
+                    {closestRestaurantList.map((restaurant, index) => (
+                      <CustomerHomepageCard
+                        key={index}
+                        restaurant={restaurant}
+                      />
+                    ))}
+                  </Carousel>
+                </div>
+              </>
+            }
           </Box>
         </Box>
       </Box>

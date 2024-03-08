@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children }) {
   const navigate = useNavigate();
   
   if (restaurantIds.uid === null) {
-    return <SplashScreen/>
+    return <SplashScreen color="secondary"/>
   }
 
   if (!restaurantIds.uid) {
