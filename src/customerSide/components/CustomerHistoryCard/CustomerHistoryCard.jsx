@@ -6,7 +6,7 @@ import { CardStyled, IconBackground } from './styled';
 const CustomerHistoryCard = ({ title, data, icon, marginLeft, marginRight}) => {
   return (
     <CardStyled style={{ height: '90px', width: '250px', padding: '16px', marginLeft, marginRight}}>
-      <Grid container justifyContent="center" alignItems="center" spacing={10} style={{ height: '100%' }}>
+      <Grid container justifyContent="center" alignItems="center" spacing={5} style={{ height: '100%' }}>
         <Grid item xs={4}>
           <IconBackground>
             <img

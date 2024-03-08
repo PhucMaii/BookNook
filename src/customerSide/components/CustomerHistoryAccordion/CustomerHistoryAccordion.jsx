@@ -1,85 +1,90 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Grid, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { green, red } from '@mui/material/colors';
-import { PingStyled } from './styled';
-import { background, error, success } from '../../../theme/colors';
 
-export default function CustomerHistoryAccordion({ data }) {
+import {
+  AccordionContainerStyled,
+  AccordionCardContentStyled,
+  AccordionContentWrapper,
+  iconStyles,
+} from './styled';
+
+const CustomerHistoryAccordion = ({ reservation }) => {
+  const [expandedPanel, setExpandedPanel] = useState(null);
+
+  const handleAccordionChange = (panel) => {
+    setExpandedPanel(panel === expandedPanel ? null : panel);
+  };
+
+  const accordionSummaryStyles = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  };
+
   return (
     <Accordion
-      elevation={0}
-      sx={{
-        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
-        borderRadius: '10px',
-        '&.MuiAccordion-root::before': {
-          backgroundColor: background,
-        },
-        '&.MuiAccordion-root:last-of-type': {
-          borderRadius: '10px',
-        },
-      }}
+      expanded={expandedPanel === 'panel'}
+      onChange={() => handleAccordionChange('panel')}
     >
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Grid container alignItems="center">
-          <Grid item xs={12} md={6}>
-            <Box display="flex" alignItems="center" gap={4}>
-              <PingStyled $isCompleted={data['Status'] === 'Completed'} />
-              <Avatar />
-              <Box display="flex" flexDirection="column" alignItems="left">
-                <Typography fontWeight="light" variant="subtitle1">{data['Restaurant Id']}</Typography>
-                <Typography fontWeight="bold" variant="h6">
-                  {data['Restaurant Name']}
-                </Typography>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6} textAlign="center">
-            <Box display="flex" flexDirection="column" alignItems="left">
-              <Typography>Number of guests: {data['Number of guests']}</Typography> 
-            </Box>
-          </Grid>
-        </Grid>
-      </AccordionSummary>
+      <AccordionContainerStyled>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} style={accordionSummaryStyles}>
+          <AccordionContentWrapper>
+            <span style={{ ...iconStyles, marginLeft: '125px' }}>•</span>
+            <span style={{ marginLeft: '1px' }}> <strong></strong>
+            <span>{reservation.restaurantId || 'N/A'}</span> </span>
+          </AccordionContentWrapper>
+          <AccordionContentWrapper>
+          <span style={{ marginLeft: '90px' }}>
+            <strong></strong>
+            <span>{reservation.restaurantName || 'N/A'}</span></span>
+          </AccordionContentWrapper>
+          <AccordionContentWrapper>
+            <strong>Number of Guests:</strong>
+            <span>{reservation.numGuests || 'N/A'}</span>
+          </AccordionContentWrapper>
+          <AccordionContentWrapper>
+          <span style={{ marginLeft: '0px' }}>
+            <strong>Booked Time:</strong>
+            <span>{reservation.bookedTime || 'N/A'}</span></span>
+          </AccordionContentWrapper>
+        </AccordionSummary>
+      </AccordionContainerStyled>
+
       <AccordionDetails>
-        <Grid container mx={4}>
-          {data &&
-            Object.keys(data).map((key, index) => {
-              if (key === 'Status') {
-                return null; 
-              }
-              return (
-                <Grid key={index} item xs={12} sm={6} md={4} textAlign="left" mt={2}>
-                  <Box display="flex" flexDirection="column">
-                    <Typography variant="subtitle1">{key}</Typography>
-                  </Box>
-                </Grid>
-              );
-            })}
-          <Grid item xs={12} sm={6} md={4} textAlign="left" mt={2}>
-            <Box display="flex" flexDirection="column">
-              <Typography variant="subtitle1">Status</Typography>
-              <Typography
-                color={data['Status'] === 'Completed' ? success : error}
-                fontWeight="bold"
-                variant="h6"
-                sx={{
-                  backgroundColor: data['Status'] === 'Completed' ? green[100] : red[100],
-                  mr: 'auto',
-                  px: 2,
-                  borderRadius: '10px',
-                }}
-              >
-                {data['Status']}
+        <AccordionCardContentStyled>
+          
+              <Typography variant="body2">
+              <strong>Restaurant ID:</strong> {reservation.restaurantId || 'N/A'}
+                <br />
+                <strong>Restaurant Name:</strong> {reservation.restaurantName || 'N/A'}
+                <br />
+                <strong>Restaurant Location:</strong> {reservation.restaurantLocation || 'N/A'}
+                <br />
+                <strong>Number of Guests:</strong> {reservation.numGuests || 'N/A'}
+                <br />
+                <strong>Booked Time:</strong> {reservation.bookedTime || 'N/A'}
+                <br />
+                <strong>Status:</strong> {reservation.status || 'N/A'}
               </Typography>
-            </Box>
-          </Grid>
-        </Grid>
+           
+        </AccordionCardContentStyled>
       </AccordionDetails>
     </Accordion>
   );
-}
-CustomerHistoryAccordion.propTypes = {
-  data: PropTypes.object,
 };
+
+CustomerHistoryAccordion.propTypes = {
+  reservation: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    restaurantId: PropTypes.string,
+    restaurantName: PropTypes.string,
+    restaurantLocation: PropTypes.string,
+    numGuests: PropTypes.number,
+    bookedTime: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
+};
+
+export default CustomerHistoryAccordion;
