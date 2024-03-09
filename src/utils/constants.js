@@ -1,10 +1,17 @@
 import PieChartOutlinedIcon from '@mui/icons-material/PieChartOutlined';
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
-import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 
 export const drawerWidth = 300;
 
-export const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+export const daysOfWeek = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
 
 export const upperTabs = [
   {
@@ -17,11 +24,11 @@ export const upperTabs = [
     path: '/restaurant/history',
     icon: PieChartOutlinedIcon,
   },
-  {
-    name: 'Reviews',
-    path: '/restaurant/reviews',
-    icon: ReviewsRoundedIcon,
-  },
+  //{
+  //  name: 'Reviews',
+  //  path: '/restaurant/reviews',
+  //  icon: ReviewsRoundedIcon,
+  //},
 ];
 
 export const lowerTabs = [

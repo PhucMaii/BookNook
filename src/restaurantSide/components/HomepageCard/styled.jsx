@@ -2,9 +2,9 @@ import { Card } from '@mui/material';
 import styled from 'styled-components';
 
 export const CardStyled = styled(Card)`
-    border-radius: 14px; 
+    border-radius: 15px !important; 
     max-width: 100%; 
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
 `
 
 export const IconBackground = styled.div`
