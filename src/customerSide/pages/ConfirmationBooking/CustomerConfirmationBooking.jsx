@@ -204,6 +204,9 @@ const CustomerConfirmationBooking = () => {
                             height: '6%',
                             mb: 5,
                         }}
+                        onClick={() => {
+                            window.location.href = '/customer/successful-page';
+                        }}
                     >
                         <Typography variant='subtitle1'>
                             Submit Reservation

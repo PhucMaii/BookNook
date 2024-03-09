@@ -28,8 +28,11 @@ export default function SuccessfulPage() {
                 variant='contained'
                 sx={{
                     color: 'white',
-                    height: '35px',
-                    width: '7%',
+                    height: '45px',
+                    width: 'auto',
+                }}
+                onClick={() => {
+                    window.location.href = '/';
                 }}
             >
                 BACK TO HOME
