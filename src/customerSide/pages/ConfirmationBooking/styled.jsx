@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const BookingImg = styled.img`
-    width: 650px;
-    height: 350px;
-    border-radius: 20px;
-    margin-left: 80px;
+    width: 80%;
+    height: 280px;
+    border-radius: 25px;
+    margin-left: 10%;
 `;

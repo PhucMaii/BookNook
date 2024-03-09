@@ -60,8 +60,7 @@ const CustomerConfirmationBooking = () => {
                 container
                 spacing={2}
             >
-                {/* xs sm md lg xl */}
-                <Grid item xs={12} md={6} sx={{ paddingRight: 1 }}>
+                <Grid item md={12} lg={6} sx={{ paddingRight: 1 }}>
                     <Grid item xs={12}>
                         <Typography
                             variant='h3'
@@ -88,19 +87,20 @@ const CustomerConfirmationBooking = () => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container item xs={12} md={6} sx={{ pr: 4 }}>
+                <Grid container item md={12} lg={6} sx={{ pr: 4 }}>
                     <Grid item xs={12}>
                         <Typography
                             variant='h4'
                             fontWeight={600}
                             mt={20}
                             mb={2}
+                            pl={2}
                         >
                             Diner Details
                         </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                        <Typography variant='h5' >
+                        <Typography variant='h5' pl={2} >
                             Name
                         </Typography>
                     </Grid>
@@ -114,7 +114,7 @@ const CustomerConfirmationBooking = () => {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <Typography variant='h5'>
+                        <Typography variant='h5' pl={2} >
                             Email Address
                         </Typography>
                     </Grid>
@@ -128,7 +128,7 @@ const CustomerConfirmationBooking = () => {
                         />
                     </Grid>
                     <Grid item xs={6}>
-                        <Typography variant='h5' >
+                        <Typography variant='h5' pl={2} >
                             Mobile Number
                         </Typography>
                     </Grid>
@@ -145,7 +145,7 @@ const CustomerConfirmationBooking = () => {
                         <Divider variant='middle' sx={{ my: 2 }} />
                     </Grid>
                     <Grid item xs={6}>
-                        <Typography variant='h5' >
+                        <Typography variant='h5' pl={2} >
                             Date
                         </Typography>
                     </Grid>
@@ -161,7 +161,7 @@ const CustomerConfirmationBooking = () => {
                         </LocalizationProvider>
                     </Grid>
                     <Grid item xs={6}>
-                        <Typography variant='h5'>
+                        <Typography variant='h5' pl={2} >
                             Time
                         </Typography>
                     </Grid>
@@ -177,7 +177,7 @@ const CustomerConfirmationBooking = () => {
                         </LocalizationProvider>
                     </Grid>
                     <Grid item xs={6}>
-                        <Typography variant='h5'>
+                        <Typography variant='h5' pl={2} >
                             Seating Capacity
                         </Typography>
                     </Grid>
@@ -189,7 +189,7 @@ const CustomerConfirmationBooking = () => {
                                 variant="outlined"
                                 fullWidth
                             >
-                                 {seatingCapacityOptions.map((option, index) => (
+                                {seatingCapacityOptions.map((option, index) => (
                                     <MenuItem key={index} value={option.value}>
                                         {option.label}
                                     </MenuItem>
