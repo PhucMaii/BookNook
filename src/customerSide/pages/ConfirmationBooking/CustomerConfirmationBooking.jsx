@@ -16,11 +16,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { BookingImg } from './styled'
 import TopNavbar from '../../components/TopNavbar/CustomerHeader';
+import { generateCapacity } from '../../../utils/generateConstants';
 
 const CustomerConfirmationBooking = () => {
     const [date, setDate] = useState(dayjs());
     const [time, setTime] = useState(dayjs());
-    const [selectedCapacity, setSelectedCapacity] = useState('');
+    const [selectedCapacity, setSelectedCapacity] = useState('2 people');
 
     useEffect(() => {
         const dateIntervalId = setInterval(() => {
@@ -48,11 +49,6 @@ const CustomerConfirmationBooking = () => {
         seatingCap: 2,
     };
 
-    const seatingCapacityOptions = Array.from({ length: 20 }, (_, index) => ({
-        value: index + 1,
-        label: `${index + 1} person${index !== 0 ? 's' : ''}`
-    }));
-
     return (
         <div>
             <TopNavbar />
@@ -64,7 +60,7 @@ const CustomerConfirmationBooking = () => {
                     <Grid item xs={12}>
                         <Typography
                             variant='h3'
-                            fontWeight="bold"
+                            fontWeight='bold'
                             ml={10}
                             mb={13}
                             mt={5}
@@ -79,7 +75,7 @@ const CustomerConfirmationBooking = () => {
                         />
                         <Typography
                             variant='h4'
-                            fontWeight="bold"
+                            fontWeight='bold'
                             ml={10}
                             mt={5}
                         >
@@ -87,11 +83,11 @@ const CustomerConfirmationBooking = () => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container item md={12} lg={6} sx={{ pr: 4 }}>
+                <Grid container alignItems='center' item md={12} lg={6} sx={{ pr: 4 }}>
                     <Grid item xs={12}>
                         <Typography
                             variant='h4'
-                            fontWeight={600}
+                            fontWeight='bold'
                             mt={20}
                             mb={2}
                             pl={2}
@@ -152,10 +148,10 @@ const CustomerConfirmationBooking = () => {
                     <Grid item xs={6}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
-                                label="Date"
+                                label='Date'
                                 value={date}
                                 onChange={(newValue) => setDate(newValue)}
-                                renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
+                                renderInput={(params) => <TextField {...params} variant='outlined' fullWidth />}
                                 sx={{ width: '100%', my: 2 }}
                             />
                         </LocalizationProvider>
@@ -168,10 +164,10 @@ const CustomerConfirmationBooking = () => {
                     <Grid item xs={6}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <TimePicker
-                                label="Time"
+                                label='Time'
                                 value={time}
                                 onChange={(newValue) => setTime(newValue)}
-                                renderInput={(params) => <TextField {...params} variant="outlined" fullWidth />}
+                                renderInput={(params) => <TextField {...params} variant='outlined' fullWidth />}
                                 sx={{ width: '100%', my: 2 }}
                             />
                         </LocalizationProvider>
@@ -186,12 +182,12 @@ const CustomerConfirmationBooking = () => {
                             <Select
                                 value={selectedCapacity}
                                 onChange={(e) => setSelectedCapacity(e.target.value)}
-                                variant="outlined"
+                                variant='outlined'
                                 fullWidth
                             >
-                                {seatingCapacityOptions.map((option, index) => (
-                                    <MenuItem key={index} value={option.value}>
-                                        {option.label}
+                                {generateCapacity().map((option, index) => (
+                                    <MenuItem key={index} value={option}>
+                                        {option}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -201,16 +197,17 @@ const CustomerConfirmationBooking = () => {
                         variant='contained'
                         sx={{
                             color: 'white',
-                            ml: 5,
-                            mr: 5,
-                            width: '85%',
-                            borderRadius: 5,
+                            m: 'auto',
+                            width: '100%',
+                            borderRadius: 4,
                             mt: 5,
-                            height: '5%',
+                            height: '6%',
                             mb: 5,
                         }}
                     >
-                        Submit Reservation
+                        <Typography variant='subtitle1'>
+                            Submit Reservation
+                        </Typography>
                     </Button>
                 </Grid>
             </Grid>
