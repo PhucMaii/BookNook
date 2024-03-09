@@ -33,8 +33,9 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
-import { generateToday, sortTimeAscend } from '../../utils/time';
-import { HomepageEditModal } from '../components/HomepageEditModal/HomepageEditModal';
+import { formatHoursAndMinutes, generateToday } from '../../utils/time';
+import { ReservationEditModal } from '../components/Modals/ReservationEditModal';
+import Notification from '../components/Notification';
 
 export default function HomePage() {
   const [filter, setFilter] = useState('All');
@@ -45,6 +46,11 @@ export default function HomePage() {
   const [tableData, setTableData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [tableIdList, setTableIdList] = useState([]);
+  const [notification, setNotification] = useState({
+    on: false,
+    severity: '',
+    message: '',
+  });
 
   const { restaurantIds } = useContext(AuthContext);
 
@@ -77,16 +83,6 @@ export default function HomePage() {
         setTableData(cancelledFilteredData);
         break;
       }
-      case 'Newest to Oldest': {
-        const newToOldTimeFilterData = sortTimeAscend(reservationList).reverse();
-        setTableData(newToOldTimeFilterData);
-        break;
-      }
-      case 'Oldest to Newest': {
-        const oldToNewTimeFilterData = sortTimeAscend(reservationList);
-        setTableData(oldToNewTimeFilterData);
-        break;
-      }
       default: {
         setTableData(reservationList);
         break;
@@ -106,7 +102,7 @@ export default function HomePage() {
   };
 
   const handleSearch = (word) => {
-    const filteredItems = tableData.filter(item => 
+    const filteredItems = tableData.filter(item =>
       item.customerName.includes(word) || item.tableNumber.toString().includes(word)
     );
     setTableData(filteredItems)
@@ -141,7 +137,7 @@ export default function HomePage() {
     setReviewStars(avgStar)
   }
 
-  const fetchTable = async() => {
+  const fetchTable = async () => {
     setIsLoading(true)
     try {
       const tempTableIdList = [];
@@ -224,9 +220,6 @@ export default function HomePage() {
         const userSnapshot = await getDoc(userRef);
         const userData = userSnapshot.data();
 
-        const timeSlotRef = doc(db, 'timeSlots', reservationData.timeSlotId);
-        const timeSlotSnapshot = await getDoc(timeSlotRef);
-        const timeSlotData = timeSlotSnapshot.data();
         // Convert firebase timestamp to js timestamp
         const date = reservationData.date.toDate();
 
@@ -237,7 +230,6 @@ export default function HomePage() {
           customerName: userData.name,
           tableId: reservationData.tableId,
           tableNumber: tableData.tableNumber,
-          time: timeSlotData.startTime,
           status: reservationData.status,
           date: date,
           email: userData.email
@@ -269,6 +261,11 @@ export default function HomePage() {
       return item;
     })
     setTableData(tableDataCopy)
+    setNotification({
+      on: true,
+      severity: 'success',
+      message: 'Reservation Updated Successfully.',
+    });
   }
 
   if (isLoading) {
@@ -281,6 +278,9 @@ export default function HomePage() {
 
   return (
     <Sidebar>
+      <Notification
+        notification={notification}
+        onClose={() => setNotification({ ...notification, on: false })} />
       <Box display='flex' flexDirection='column' gap={4} width='100%' mx={8}>
         <Grid container spacing={3} marginTop={0.5}>
           <Grid item xs={12} sm={6} md={4}>
@@ -307,7 +307,7 @@ export default function HomePage() {
           Today Reservations
         </Typography>
 
-        <Paper>
+        <Paper sx={{boxShadow:'rgba(149, 157, 165, 0.2) 0px 8px 24px', borderRadius: 2}}>
           <Grid
             container
             spacing={2}
@@ -356,12 +356,6 @@ export default function HomePage() {
                   <MenuItem value='Cancelled'>
                     Cancelled
                   </MenuItem>
-                  <MenuItem value='Newest to Oldest'>
-                    Newest to Oldest
-                  </MenuItem>
-                  <MenuItem value='Oldest to Newest'>
-                    Oldest to Newest
-                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -382,19 +376,19 @@ export default function HomePage() {
                 <TableRow key={index}>
                   <TableCell>{row.customerName}</TableCell>
                   <TableCell>{row.tableNumber}</TableCell>
-                  <TableCell>{row.time}</TableCell>
+                  <TableCell>{formatHoursAndMinutes(row.date)}</TableCell>
                   <TableCell style={{ width: '12%' }}>
-                    <StatusText 
-                      text={row.status} 
+                    <StatusText
+                      text={row.status}
                       type={
-                        row.status === 'Completed' ? 'success' : 
-                        row.status === 'Incomplete' ? 'warning' : 
-                        'error'
-                      } 
+                        row.status === 'Completed' ? 'success' :
+                          row.status === 'Incomplete' ? 'warning' :
+                            'error'
+                      }
                     />
                   </TableCell>
                   <TableCell align='center'>
-                    <HomepageEditModal data={row} tableData={tableIdList} updateUI={updateReservation}/>
+                    <ReservationEditModal data={row} tableData={tableIdList} updateUI={updateReservation} />
                   </TableCell>
                 </TableRow>
               ))}

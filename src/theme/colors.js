@@ -14,3 +14,4 @@ export const warningBackground = yellow[50];
 
 export const primary = '#FF6347';
 export const secondary = '#3498DB';
+export const lightSecondary = '#3498db24';

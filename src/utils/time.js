@@ -12,6 +12,17 @@ export const convertHourToMinutes = (timeString) => {
   return hours * 60 + minutes;
 };
 
+export const formatHoursAndMinutes = (timestamp) => {
+  const hours = timestamp.getHours();
+  let minutes = timestamp.getMinutes();
+
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  return `${hours}:${minutes}`;
+};
+
 export const convertTimestampToDate = (timestamp) => {
   if (!timestamp) {
     return 'N/A';
@@ -68,41 +79,13 @@ export const sortTimeAscend = (data) => {
 export const generateTimeSlots = () => {
   const timeSlots = [];
 
-  for (let i = 1; i <= 24; i++) {
+  for (let i = 0; i <= 23; i++) {
     let timeSlot = i;
-    let session = '';
 
-    if (i < 12) {
-      session = 'AM';
-    } else {
-      session = 'PM';
-      timeSlot = timeSlot % 12 === 0 ? 12 : timeSlot % 12;
-    }
-
-    timeSlots.push(`${timeSlot}:00 ${session}`);
-    timeSlots.push(`${timeSlot}:15 ${session}`);
-    timeSlots.push(`${timeSlot}:30 ${session}`);
-    timeSlots.push(`${timeSlot}:45 ${session}`);
-  }
-
-  return timeSlots;
-};
-
-export const generateInitialTimeSlots = () => {
-  const timeSlots = [];
-  for (let i = 9; i <= 22; i++) {
-    let timeSlot = i;
-    let session = '';
-
-    if (i < 12) {
-      session = 'AM';
-    } else {
-      session = 'PM';
-      timeSlot = timeSlot % 12 === 0 ? 12 : timeSlot % 12;
-    }
-
-    timeSlots.push(`${timeSlot}:00 ${session}`);
-    timeSlots.push(`${timeSlot}:30 ${session}`);
+    timeSlots.push(`${timeSlot}:00`);
+    timeSlots.push(`${timeSlot}:15`);
+    timeSlots.push(`${timeSlot}:30`);
+    timeSlots.push(`${timeSlot}:45`);
   }
 
   return timeSlots;

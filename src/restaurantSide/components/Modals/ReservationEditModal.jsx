@@ -14,7 +14,7 @@ import { guestSelect } from '../../../utils/constants';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
 import PropTypes from 'prop-types';
-import { generateTimeSlots } from '../../../utils/time';
+import { formatHoursAndMinutes, generateTimeSlots } from '../../../utils/time';
 
 const style = {
   position: 'absolute',
@@ -27,15 +27,14 @@ const style = {
   p: 4,
 };
 
-export const HomepageEditModal = ({ data, tableData, updateUI}) => {
+export const ReservationEditModal = ({ data, tableData, updateUI}) => {
   const [open, setOpen] = useState(false);
   const [tableId, setTableId] = useState(data.tableId);
   const [date, setDate] = useState(dayjs(data.date));
-  const [time, setTime] = useState(data.time);
+  const [time, setTime] = useState(formatHoursAndMinutes(data.date));
   const [guestNumber, setGuestNumber] = useState(data.numberOfGuests);
   const [status, setStatus] = useState(data.status);
 
-  // setUpdatedData({...updatedData, date: value})
   const [updatedData, setUpdatedData] = useState({
     tableId: null,
     date: null,
@@ -43,39 +42,30 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
     numberOfGuests: null,
     status: null
   });
-  // const [phoneNumber, setPhoneNumber] = useState();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     const reservationRef = doc(db, 'reservations', data.reservationId);
 
     const submittedData = {};
     Object.keys(updatedData).map((key) => {
       if (updatedData[key]) {
-        submittedData[key] = updatedData[key]; 
+        submittedData[key] = updatedData[key];
       }
     });
 
-    updateDoc(reservationRef, submittedData)
-      .then(() => {
-        console.log('Document successfully updated!');
-      })
-      .catch((error) => {
-        console.error('Error updating document: ', error);
-      })
+    await updateDoc(reservationRef, submittedData)
 
-      const targetTable = tableData.find((table) => table.tableId === tableId);
-      const updatedUIData = {
-        ...data,
-        ...submittedData,
-        tableNumber: targetTable.tableNumber,
-      };
-
-      updateUI(data.reservationId, updatedUIData);
+    const targetTable = tableData.find((table) => table.tableId === tableId);
+    const updatedUIData = {
+      ...data,
+      ...submittedData,
+      tableNumber: targetTable.tableNumber,
+    };
+    updateUI(data.reservationId, updatedUIData);
   }
-
   return (
     <div>
       <Button
@@ -150,12 +140,11 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
               <Grid item xs={6} color={'secondary'}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="datePicker"
+                    color="secondary"
+                    label="Date"
                     value={date}
                     onChange={(newValue) => {
-                      // Converting Dayjs date object to a JavaScript Date object
                       const jsDate = newValue.toDate();
-                      // Update the state with the new selected date
                       setDate(jsDate);
                     }}
                   />
@@ -173,8 +162,12 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
                     value={time}
                     label='Time'
                     onChange={(e) => {
+                      const time = e.target.value;
                       setTime(e.target.value)
-                      setUpdatedData({...updatedData, time: e.target.value})
+                      const updatedDate = new Date(date);
+                      updatedDate.setHours(time.split(':')[0]);
+                      updatedDate.setMinutes(time.split(':')[1]);
+                      setUpdatedData({...updatedData, date: updatedDate})
                     }}
                   >
                     {generateTimeSlots().map((item, index) =>
@@ -264,7 +257,7 @@ export const HomepageEditModal = ({ data, tableData, updateUI}) => {
   );
 };
 
-HomepageEditModal.propTypes = {
+ReservationEditModal.propTypes = {
   data: PropTypes.object,
   tableData: PropTypes.array,
   updateUI: PropTypes.func

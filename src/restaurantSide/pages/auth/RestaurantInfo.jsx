@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import SettingsCellIcon from '@mui/icons-material/SettingsCell';
-import { restaurantTypes, averagePrices, daysOfWeek } from '../../../utils/constants';
+import { restaurantTypes, averagePrices } from '../../../utils/constants';
 import { LogoImg, SideImg } from './styled';
 import { addDoc, collection, getDocs, query, where, updateDoc, } from '@firebase/firestore';
 import { db } from '../../../../firebaseConfig';
@@ -23,7 +23,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import AddressInput from '../../components/AddressInput';
-import { generateInitialTimeSlots } from '../../../utils/time';
 import { fetchLatLong } from '../../../utils/location';
 
 const RestaurantInformation = () => {
@@ -95,7 +94,7 @@ const RestaurantInformation = () => {
         message: 'Setting up...',                
       });
 
-      await setupTablesAndTimeSlots();
+      await setupTables();
 
       setNotification({
         on: true,
@@ -117,10 +116,9 @@ const RestaurantInformation = () => {
     }
   };
 
-  const setupTablesAndTimeSlots = async () => {
+  const setupTables = async () => {
     try {
       const tableCollection = collection(db, 'diningTables');
-      const timeSlotsCollection = collection(db, 'timeSlots');
 
       for (let i = 1; i <= 20; i++) {
         const data = {
@@ -132,21 +130,6 @@ const RestaurantInformation = () => {
         }
         await addDoc(tableCollection, data)
       }
-
-      const initialTimeSlots = generateInitialTimeSlots();
-
-      for (const day of daysOfWeek) {
-        for (const timeSlot of initialTimeSlots) {
-          const data = {
-            restaurantId: restaurantIds.docId,
-            day,
-            isAvailable: true,
-            startTime: timeSlot
-          }
-          await addDoc(timeSlotsCollection, data);
-        }
-      }
-
     } catch (error) {
       console.log('Fail to add tables and time slots: ', error);
     }
