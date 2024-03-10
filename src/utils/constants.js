@@ -4,13 +4,13 @@ import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 export const drawerWidth = 300;
 
 export const daysOfWeek = [
+  'Sunday',
   'Monday',
   'Tuesday',
   'Wednesday',
   'Thursday',
   'Friday',
   'Saturday',
-  'Sunday',
 ];
 
 export const upperTabs = [

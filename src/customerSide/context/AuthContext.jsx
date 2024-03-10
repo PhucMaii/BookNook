@@ -22,10 +22,15 @@ export default function CustomerAuthProvider({ children }) {
           where('uid', '==', user.uid)
         );
         const querySnapshot = await getDocs(usersQuery);
+        let docId;
         querySnapshot.docs.forEach((doc) => {
-          const id = doc.id;
-          setCustomerIds({ docId: id, uid: user.uid });
+          docId = doc.id;
         });
+        if (!docId || !user.uid) {
+          setCustomerIds({});
+        } else {
+          setCustomerIds({ docId: docId, uid: user.uid });
+        }
       } else {
         // User is signed out
         setCustomerIds({});

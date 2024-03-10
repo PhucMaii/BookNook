@@ -12,7 +12,7 @@ export default function ProtectedRoute({ children }) {
     return <SplashScreen color="secondary"/>
   }
 
-  if (!restaurantIds.uid) {
+  if (!restaurantIds.uid || !restaurantIds.docId) {
     navigate('/restaurant/login');
   }
   

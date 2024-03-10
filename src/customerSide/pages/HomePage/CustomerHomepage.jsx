@@ -13,7 +13,7 @@ import isPropValid from '@emotion/is-prop-valid';
 import { SplashScreen } from '../../../lib/utils';
 import { AuthContext } from '../../context/AuthContext';
 import { calculateDistance } from '../../../utils/location';
-
+import { checkIsRestaurantAvailable } from '../../utils/logic';
 
 export default function CustomerHomepage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +22,6 @@ export default function CustomerHomepage() {
   const [popularRestaurantList, setPopularRestaurantList] = useState([]);
   const { customerIds } = useContext(AuthContext);
 
-  console.log(closestRestaurantList);
   const breakpoints = [
     { width: 400, itemsToShow: 1 },
     { width: 600, itemsToShow: 1.8 },
@@ -31,6 +30,10 @@ export default function CustomerHomepage() {
     { width: 1500, itemsToShow: 5 },
   ];
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
+
+  useEffect(() => {
+    // checkIsRestaurantAvailable();
+  }, [])
 
   useEffect(() => {
     const handleFetchRestaurants = async () => {
@@ -43,12 +46,22 @@ export default function CustomerHomepage() {
     handleFetchRestaurants();
   }, [customerIds]);
 
+  const filterAvailableRestaurants = async (restaurants) => {
+    const availableRestaurants = await Promise.all(restaurants.map(async (restaurant) => {
+      const isRestaurantAvailable = await checkIsRestaurantAvailable(restaurant);
+      return isRestaurantAvailable ? restaurant : null;
+    }));
+    const filteredRestaurants = availableRestaurants.filter(restaurant => restaurant !== null);
+    return filteredRestaurants;
+  }
+
   const fetchRestaurants = async () => {
     try {
       const restaurants = await fetchData('restaurants');
-      setRestaurantList(restaurants);
-      await getMostPopularRestaurants(restaurants);
-      return restaurants;
+      const availableRestaurant = await filterAvailableRestaurants(restaurants);
+      setRestaurantList(availableRestaurant);
+      await getMostPopularRestaurants(availableRestaurant);
+      return availableRestaurant;
     } catch (error) {
       console.log('Fail to fetch restaurants: ', error);
     }
@@ -107,6 +120,8 @@ export default function CustomerHomepage() {
       console.log('Fail to get closest restaurants: ', error);
     }
   }
+
+  console.log(customerIds);
 
   if (isLoading) {
     return <SplashScreen />

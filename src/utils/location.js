@@ -16,24 +16,25 @@ export const fetchLatLong = async (address) => {
 };
 
 export const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const earthRadius = 6371;
-    const latDifference = toRadians(lat2 - lat1);
-    const lonDifference = toRadians(lon2 - lon1);
+  const earthRadius = 6371;
+  const latDifference = toRadians(lat2 - lat1);
+  const lonDifference = toRadians(lon2 - lon1);
 
-    const a = 
-        Math.sin(latDifference / 2) * Math.sin(latDifference / 2) +
-        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
-        Math.sin(lonDifference / 2) * Math.sin(lonDifference / 2);
-    
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = earthRadius * c; // in kilometers
-    return distance;
-}
+  const a =
+    Math.sin(latDifference / 2) * Math.sin(latDifference / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(lonDifference / 2) *
+      Math.sin(lonDifference / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = earthRadius * c; // in kilometers
+  return distance;
+};
 
 const toRadians = (degrees) => {
-    return degrees * Math.PI / 180;
-}
-
+  return (degrees * Math.PI) / 180;
+};
 
 // function calculateDistance(lat1, lon1, lat2, lon2) {
 //     const R = 6371; // Radius of the Earth in kilometers

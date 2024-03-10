@@ -208,6 +208,7 @@ export default function HomePage() {
         orderBy('date')
       );
       const querySnapshot = await getDocs(reservationQuery);
+      console.log(restaurantIds);
 
       const reservationPromises = querySnapshot.docs.map(async (document) => {
         const reservationData = document.data();
@@ -248,7 +249,7 @@ export default function HomePage() {
       }, 1000);
     } catch (error) {
       setIsLoading(false);
-      console.log('Fail to fetch history, ', error);
+      console.log('Fail to fetch reservations, ', error);
     }
   };
 

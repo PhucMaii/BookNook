@@ -12,7 +12,7 @@ export const fetchData = async (collectionName, condition) => {
     } else {
       queryRef = query(collectionRef);
     }
-    
+
     const querySnapshot = await getDocs(queryRef);
     querySnapshot.docs.map((doc) => {
       const id = doc.id;

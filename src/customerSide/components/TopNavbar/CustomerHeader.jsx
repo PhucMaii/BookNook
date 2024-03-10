@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
+  Button,
 } from '@mui/material';
 import { HeaderLogo } from './styled';
 import { Link, useNavigate } from 'react-router-dom';
@@ -63,8 +64,7 @@ function CustomerHeader() {
               Merchant Login
             </Link>
 
-            {
-                isLogin ? 
+            {isLogin ? (
               <>
                 <IconButton
                   color="inherit"
@@ -119,9 +119,16 @@ function CustomerHeader() {
                     Sign out
                   </MenuItem>
                 </Menu>
-              </> :
-              <Link to='/customer/login'>Sign in</Link>
-            }
+              </>
+            ) : (
+              <Button
+                onClick={() => navigate('/customer/login')}
+                variant="contained"
+                sx={{color: 'white'}}
+              >
+                Sign in
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
