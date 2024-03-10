@@ -186,7 +186,6 @@ const CustomerLogin = () => {
             <form noValidate onSubmit={formik.handleSubmit}>
               <Box display="flex" flexDirection="column" gap={3} mt={3}>
                 <TextField
-                  color="secondary"
                   id="outlined-required"
                   label="Email Address"
                   name="email"
@@ -211,11 +210,10 @@ const CustomerLogin = () => {
                   width="100%"
                 >
                   <FormControl error={!!(formik.touched.password && formik.errors.password)} variant="outlined">
-                    <InputLabel color="secondary">Password</InputLabel>
+                    <InputLabel>Password</InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-password"
                       type={showPassword ? 'text' : 'password'}
-                      color="secondary"
                       name="password"
                       value={formik.values.password}
                       onChange={formik.handleChange}

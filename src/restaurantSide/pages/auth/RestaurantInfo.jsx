@@ -23,6 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import AddressInput from '../../components/AddressInput';
+import { fetchLatLong } from '../../../utils/location';
 
 const RestaurantInformation = () => {
   const [address, setAddress] = useState(null);
@@ -65,9 +66,14 @@ const RestaurantInformation = () => {
         severity: 'success',
         message: 'Registering...',
       });
+
+      let location = {};
+      if (address) {
+        location = await fetchLatLong(address.description);
+      }
       const submittedData = {
         name: restaurantName,
-        address: address.description,
+        address: { description: address.description, ...location },
         type: restaurantType,
         avgPrice: price,
         phoneNumber: contactNumber,
@@ -85,7 +91,7 @@ const RestaurantInformation = () => {
       setNotification({
         on: true,
         severity: 'success',
-        message: 'Setting up...',
+        message: 'Setting up...',                
       });
 
       await setupTables();
