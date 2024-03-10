@@ -1,8 +1,17 @@
 import PieChartOutlinedIcon from '@mui/icons-material/PieChartOutlined';
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
-import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 
 export const drawerWidth = 300;
+
+export const daysOfWeek = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
 
 export const upperTabs = [
   {
@@ -15,11 +24,11 @@ export const upperTabs = [
     path: '/restaurant/history',
     icon: PieChartOutlinedIcon,
   },
-  {
-    name: 'Reviews',
-    path: '/restaurant/reviews',
-    icon: ReviewsRoundedIcon,
-  },
+  //{
+  //  name: 'Reviews',
+  //  path: '/restaurant/reviews',
+  //  icon: ReviewsRoundedIcon,
+  //},
 ];
 
 export const lowerTabs = [
@@ -53,6 +62,33 @@ export const averagePrices = [
   'Greater than $200',
 ];
 
+export const timeSelect = [
+  '9:00 AM',
+  '10:00 AM',
+  '11:00 AM',
+  '12:00 AM',
+  '1:00 PM',
+  '2:00 PM',
+  '3:00 PM',
+  '4:00 PM',
+  '5:00 PM',
+  '6:00 PM',
+  '7:00 PM',
+  '8:00 PM',
+  '9:00 PM',
+];
+
+export const tableTypes = [
+  'Rooftop',
+  'Counter',
+  'Standard',
+  'Indoor',
+  'Outdoor',
+  'Bar',
+  'Window Seat',
+  'Other',
+];
+
 export const cardContent = [
   {
     img: '/Reservation.png',
@@ -71,23 +107,4 @@ export const cardContent = [
   },
 ];
 
-export const tableContent = [
-  {
-    customerName: 'Jane Cooper',
-    tableName: 'Table 2',
-    time: '9:00AM',
-    status: 'seated',
-  },
-  {
-    customerName: 'Wade Warren',
-    tableName: 'Table 3',
-    time: '10:00AM',
-    status: 'Confirmed',
-  },
-  {
-    customerName: 'Esther Howard',
-    tableName: 'Table 1',
-    time: '11:00AM',
-    status: 'Unconfirmed',
-  },
-];
+export const guestSelect = [1, 2, 3, 4, 5, 6, 7, 8, 9];

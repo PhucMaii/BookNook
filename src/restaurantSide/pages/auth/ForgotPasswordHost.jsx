@@ -12,6 +12,7 @@ import {
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { LogoImg } from './styled';
 import { grey } from '@mui/material/colors';
+import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 import UnprotectedRoute from '../../context/UnprotectedRoute';
 
 const ForgotPasswordHost = () => {
@@ -23,6 +24,8 @@ const ForgotPasswordHost = () => {
     message: '',
   });
 
+  const auth = getAuth();
+
   const handleForgotPassword = async () => {
     if (!email) {
       setNotification({
@@ -33,12 +36,23 @@ const ForgotPasswordHost = () => {
       return;
     }
 
+    try {
+      await sendPasswordResetEmail(auth, email); 
+      setNotification({
+        open: true,
+        severity: 'success',
+        message: 'Password reset email sent. Check your inbox.',
+      });
+    } catch (error) {
+      console.error(error);
+
     setNotification({
       open: true,
-      severity: 'success',
-      message: 'Password reset email sent. Check your inbox.',
+      severity: 'error',
+      message: 'Error sending password reset email.',
     });
-  };
+  }
+};
 
   const handleCloseNotification = () => {
     setNotification({ ...notification, open: false });

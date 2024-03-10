@@ -148,6 +148,9 @@ const SignUp = () => {
         password
       );
 
+      const closedDaysCollection = collection(db, 'closedDays');
+      await addDoc(closedDaysCollection, {restaurantId: docData.id, closedDays: []});
+
       setNotification({
         on: true,
         severity: 'success',
