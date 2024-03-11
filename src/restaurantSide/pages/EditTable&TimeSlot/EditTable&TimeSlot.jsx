@@ -2,25 +2,24 @@ import React, { useContext, useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import TableOverview from '../../components/TableOverview';
 import TableList from '../../components/TableList';
-import { 
-  Box, 
-  Button, 
-  Chip, 
-  Divider, 
-  FormControl, 
-  Grid, 
-  InputLabel, 
-  MenuItem, 
-  Select, 
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  Grid,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
   TextField,
   Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { BoxStyled } from './styled';
 import { daysOfWeek } from '../../../utils/constants';
-import { secondary } from '../../../theme/colors';
-import { convertHourToMinutes, generateTimeSlots } from '../../../utils/time';
-import DayTimeSlot from '../../components/DayTimeSlot';
+import { generateTimeSlots } from '../../../utils/time';
 import { addDoc, collection, deleteDoc, updateDoc, where } from 'firebase/firestore';
 import { AuthContext } from '../../context/AuthContext';
 import { SplashScreen } from '../../../lib/utils';
@@ -28,30 +27,43 @@ import { fetchData, fetchDoc } from '../../../utils/firebase';
 import AddTableModal from '../../components/Modals/AddTableModal';
 import { db } from '../../../../firebaseConfig';
 import Notification from '../../components/Notification';
-import { LoadingButton } from '@mui/lab';
 import ProtectedRoute from '../../context/ProtectedRoute';
+import { lightSecondary } from '../../../theme/colors';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
 export default function EditTableTimeSlot() {
   const [availableTables, setAvailableTables] = useState([]);
+  const [availableTime, setAvailableTime] = useState({
+    openTime: '',
+    closeTime: ''
+  });
+  const [closedDays, setClosedDays] = useState([]);
   const [filterOption, setFilterOption] = useState('All');
-  const [isAddTimeSlotLoading, setIsAddTimeSlotLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpenAddTable, setIsOpenAddTable] = useState(false);
   const [notification, setNotification] = useState({});
   const [tableList, setTableList] = useState([]);
   const [tempTableList, setTempTableList] = useState([]);
-  const [timeSlotList, _setTimeSlotList] = useState(generateTimeSlots());
-  const [timeSlotSelected, setTimeSlotSelected] = useState('9:00 AM');
-  const [restaurantTimeSlots, setRestaurantTimeSlots] = useState([]);
+
   const [searchKeywords, setSearchKeywords] = useState('');
-  const [selectedDays, setSelectedDays] = useState([]);
   const [unavailableTables, setUnavailableTables] = useState([]);
   const { restaurantIds } = useContext(AuthContext);
 
   useEffect(() => {
-    if (restaurantIds) {
+    if (restaurantIds.docId) {
       fetchTables();
-      fetchTimeSlots();
+      fetchClosedDays();
+      fetchRestaurantTimes();
     }
   }, [restaurantIds]);
 
@@ -79,24 +91,47 @@ export default function EditTableTimeSlot() {
     // Search on all values
     const newTableList = tableList.filter((table) => {
       return Object.values(table).some((value) =>
-        typeof value === 'string' && value.toLowerCase().includes(searchKeywords.toLowerCase())) 
-      || Object.values(table).some((value) => {
+        typeof value === 'string' && value.toLowerCase().includes(searchKeywords.toLowerCase()))
+        || Object.values(table).some((value) => {
           return typeof value === 'number' && value === parseInt(searchKeywords);
         })
-      })
+    })
 
     setTempTableList(newTableList);
-  }, [searchKeywords])
+  }, [searchKeywords]);
+
+  const fetchClosedDays = async () => {
+    try {   
+      const closedDaysData = await fetchData('closedDays', where('restaurantId', '==', restaurantIds.docId));
+      const restaurantClosedDays = closedDaysData[0];
+      setClosedDays(restaurantClosedDays.closedDays);
+    } catch (error) {
+      console.log('Fail to fetch closed days: ', error);
+    }
+  }
 
   const filterTablesByStatus = (tables, isAvailable) => {
     const newTableList = tables.filter((table) => {
-      return isAvailable ? table.isAvailable : !table.isAvailable; 
+      return isAvailable ? table.isAvailable : !table.isAvailable;
     });
 
     if (isAvailable) {
       setAvailableTables(newTableList);
     } else {
       setUnavailableTables(newTableList);
+    }
+  }
+
+  const fetchRestaurantTimes = async () => {
+    try {
+      const restaurant = await fetchDoc('restaurants', restaurantIds.docId);
+      setAvailableTime({
+        openTime: restaurant.docData.openTime,
+        closeTime: restaurant.docData.closeTime,
+      })
+      setIsLoading(false);
+    } catch (error) {
+      console.log('Fail to fetch restaurant times: ', error);
     }
   }
 
@@ -119,39 +154,6 @@ export default function EditTableTimeSlot() {
     }
   };
 
-  const fetchTimeSlots = async () => {
-    try {
-      const data = await fetchData(
-        'timeSlots',
-        where('restaurantId', '==', restaurantIds.docId)
-      );
-
-      const sortedData = data.sort(
-        (a, b) =>
-          convertHourToMinutes(a.startTime) - convertHourToMinutes(b.startTime)
-      );
-
-      const formattedData = {};
-      for (let day of daysOfWeek) {
-        formattedData[day] = [];
-      }
-
-      for (let timeSlot of sortedData) {
-        // Get the first 3 char in day, ex: Mon, Tue, etc
-        formattedData[timeSlot.day.slice(0, 3)] = [
-          ...formattedData[timeSlot.day.slice(0, 3)],
-          timeSlot,
-        ];
-      }
-
-      setRestaurantTimeSlots(formattedData);
-      setIsLoading(false);
-    } catch (error) {
-      console.log('Fail to fetch time slots: ', error);
-      setIsLoading(false);
-    }
-  }
-
   const handleAddTable = async (data) => {
     // check is table valid to be added
     const isTableNumberExisted = tableList.find((table) => table.tableNumber === data.tableNumber);
@@ -165,7 +167,7 @@ export default function EditTableTimeSlot() {
     }
 
     try {
-      const submittedData = {...data, restaurantId: restaurantIds.docId};
+      const submittedData = { ...data, restaurantId: restaurantIds.docId };
       const tableCollection = collection(db, 'diningTables');
       await addDoc(tableCollection, submittedData);
 
@@ -187,46 +189,6 @@ export default function EditTableTimeSlot() {
     }
   }
 
-  const handleAddTimeSlot = async () => {
-    setIsAddTimeSlotLoading(true);
-    try {
-      const timeSlotCollection = collection(db, 'timeSlots');
-
-      for (const day of selectedDays) {
-        const submittedData = {
-          startTime: timeSlotSelected,
-          day,
-          isAvailable: true,
-          restaurantId: restaurantIds.docId,
-        };
-        await addDoc(timeSlotCollection, submittedData);
-      }
-
-      await fetchTimeSlots();
-
-      setNotification({
-        on: true,
-        severity: 'success',
-        message: 'Add Time Slot Successfully'
-      });
-      setIsAddTimeSlotLoading(false);
-
-    } catch (error) {
-      console.log('Fail to add time slot: ', error);
-      setIsAddTimeSlotLoading(false);
-    }
-  }
-
-  const handleAddSelectedDays = (targetDay) => {
-    setSelectedDays(prevSelectedDays => {
-      if (!prevSelectedDays.includes(targetDay)) {
-        return [...prevSelectedDays, targetDay];
-      } else {
-        return prevSelectedDays.filter(day => day !== targetDay);
-      }
-    });
-  };
-
   const handleDeleteTable = async (tableId) => {
     try {
       const { docRef } = await fetchDoc('diningTables', tableId);
@@ -247,22 +209,6 @@ export default function EditTableTimeSlot() {
     }
   }
 
-  const handleDeleteTimeSlot = async (timeSlotId) => {
-    try {
-      const { docRef } = await fetchDoc('timeSlots', timeSlotId);
-      await deleteDoc(docRef);
-      await fetchTimeSlots();
-
-      setNotification({
-        on: true,
-        severity: 'success',
-        message: 'Delete Time Slot Successfully'
-      });
-    } catch (error) {
-      console.log('Fail to delete time slot: ', error);
-    }
-  }
-
   const handleUpdateTable = async (docId, data) => {
     try {
       const { docRef } = await fetchDoc('diningTables', docId);
@@ -274,7 +220,7 @@ export default function EditTableTimeSlot() {
         }
         return table;
       })
-  
+
       handleUpdateTableUI(newTableList);
     } catch (error) {
       console.log('Fail to update table: ', error)
@@ -306,10 +252,35 @@ export default function EditTableTimeSlot() {
     }
   }
 
+  const handleUpdateTime = async (time) => {
+    try {
+      const restaurantRef = await fetchDoc('restaurants', restaurantIds.docId)
+      await updateDoc(restaurantRef.docRef, time);
+      setAvailableTime(time);
+    } catch(error) {
+      console.log('Fail to update time: ', error);
+    }
+  }
+
+  const handleUpdateUnavailableDays = async (e) => {
+    try {
+      const selectedDays = e.target.value;
+      const newClosedDays = typeof selectedDays === 'string' ? selectedDays.split(',') : selectedDays;
+      
+      setClosedDays(newClosedDays);
+
+      const restaurantClosedDays = await fetchData('closedDays', where('restaurantId', '==', restaurantIds.docId));
+      const restaurantClosedDaysDoc = await fetchDoc('closedDays', restaurantClosedDays[0].id);
+      await updateDoc(restaurantClosedDaysDoc.docRef, {closedDays: newClosedDays});
+      } catch (error) {
+      console.log('Fail to update unavailable days: ', error);
+    }
+  }
+
   if (isLoading) {
     return (
       <Sidebar>
-        <SplashScreen />
+        <SplashScreen color="secondary"/>
       </Sidebar>
     )
   }
@@ -334,6 +305,107 @@ export default function EditTableTimeSlot() {
             open={isOpenAddTable}
             onClose={() => setIsOpenAddTable(false)}
           />
+          <BoxStyled
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            p={2}
+            width="100%"
+          >
+            <Typography variant='h5' fontWeight='bold'>Edit Time</Typography>
+            <Grid container spacing={2} alignItems='center'>
+              <Grid item xs={5.8}>
+                <FormControl fullWidth >
+                  <InputLabel color='secondary' id='timeSelectLabel'>Opening</InputLabel>
+                  <Select
+                    color='secondary'
+                    labelId='timeSelectLabel'
+                    value={availableTime.openTime}
+                    label='startTime'
+                    onChange={(e) => {
+                      const time = { ...availableTime, openTime: e.target.value };
+                      handleUpdateTime(time);
+                    }}
+                  >
+                    {generateTimeSlots().map((item, index) =>
+                      <MenuItem
+                        key={index}
+                        value={item}
+                        sx={{
+                          '&.Mui-selected:hover, &.Mui-selected ': {
+                            backgroundColor: lightSecondary,
+                          },
+                        }}>{item}</MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={0.4} textAlign="center">
+                <Typography variant='h6' fontWeight='bold'>-</Typography>
+              </Grid>
+              <Grid item xs={5.8}>
+                <FormControl fullWidth >
+                  <InputLabel color='secondary' id='timeSelectLabel'>Closing</InputLabel>
+                  <Select
+                    color='secondary'
+                    labelId='timeSelectLabel'
+                    value={availableTime.closeTime}
+                    label='startTime'
+                    onChange={(e) => {
+                      const time = { ...availableTime, closeTime: e.target.value };
+                      handleUpdateTime(time);
+                    }}
+                  >
+                    {generateTimeSlots().map((item, index) =>
+                      <MenuItem
+                        key={index}
+                        value={item}
+                        sx={{
+                          '&.Mui-selected:hover, &.Mui-selected ': {
+                            backgroundColor: lightSecondary,
+                          },
+                        }}
+                      >
+                        {item}
+                      </MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Typography variant="h5" fontWeight="bold">
+              Select Unavailable Days
+            </Typography>
+            <FormControl color="secondary" sx={{ m: 1 }}>
+              <InputLabel id="demo-multiple-checkbox-label">Days</InputLabel>
+              <Select
+                color="secondary"
+                labelId="demo-multiple-checkbox-label"
+                id="demo-multiple-checkbox"
+                multiple
+                value={closedDays}
+                onChange={handleUpdateUnavailableDays}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={(selected) => selected.join(', ')}
+                MenuProps={MenuProps}
+              >
+                {daysOfWeek.map((day) => (
+                  <MenuItem
+                    key={day}
+                    value={day}
+                    sx={{
+                      '&.Mui-selected:hover, &.Mui-selected ': {
+                        backgroundColor: lightSecondary,
+                      },
+                    }}
+                  >
+                    <Checkbox color="secondary" checked={closedDays.indexOf(day) > -1} />
+                    <ListItemText primary={day} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </BoxStyled>
           <TableOverview
             numberOfAvailable={availableTables.length}
             numberOfUnavailable={unavailableTables.length}
@@ -393,86 +465,6 @@ export default function EditTableTimeSlot() {
               setNotification={setNotification}
               tableList={tempTableList}
             />
-          </BoxStyled>
-          <BoxStyled
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            width="100%"
-            p={2}
-            mt={2}
-          >
-            <Typography variant="h6">Time Slots</Typography>
-            <FormControl id="time-slot-label">
-              <Select
-                labelId="time-slot-label"
-                color="secondary"
-                value={timeSlotSelected}
-                onChange={(e) => setTimeSlotSelected(e.target.value)}
-              >
-                {timeSlotList &&
-                  timeSlotList.map((timeSlot, index) => {
-                    return (
-                      <MenuItem color="secondary" key={index} value={timeSlot}>
-                        {timeSlot}
-                      </MenuItem>
-                    );
-                  })}
-              </Select>
-            </FormControl>
-            <Box display="flex" flexDirection="column" gap={1}>
-              <Typography variant="subtitle1">
-                Select days of the week you want to add time slot
-              </Typography>
-              <Box display="flex" gap={2} width="100%" justifyContent="space-between" flexWrap="wrap">
-                {daysOfWeek &&
-                  daysOfWeek.map((day, index) => {
-                    return (
-                      <Chip
-                        color="secondary"
-                        onClick={() => handleAddSelectedDays(day)}
-                        key={index}
-                        label={day}
-                        variant="outlined"
-                        sx={{
-                          width: 'calc(14.28% - 20px)',
-                          backgroundColor: selectedDays.includes(day)
-                            ? secondary
-                            : '',
-                          color: selectedDays.includes(day) ? 'white' : '',
-                        }}
-                      />
-                    );
-                  })}
-              </Box>
-            </Box>
-            <LoadingButton
-              loading={isAddTimeSlotLoading}
-              loadingIndicator="Adding..."
-              color="secondary"
-              fullWidth
-              onClick={handleAddTimeSlot}
-              variant="contained"
-            >
-              Add
-            </LoadingButton>
-            <Grid container>
-              {daysOfWeek &&
-                daysOfWeek.map((day, index) => {
-                  return (
-                    <Grid item md={1.7} sm={3} xs={4} key={index} sx={{width: '100%'}}>
-                      <Box display="flex">
-                        <DayTimeSlot
-                          day={day}
-                          timeSlots={restaurantTimeSlots[day]}
-                          onDelete={handleDeleteTimeSlot}
-                        />
-                        <Divider flexItem component="div" orientation='vertical' />
-                      </Box>
-                    </Grid>
-                  );
-                })}
-            </Grid>
           </BoxStyled>
         </Box>
       </Sidebar>

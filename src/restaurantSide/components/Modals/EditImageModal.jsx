@@ -16,7 +16,6 @@ const EditImageModal = ({imgURL, onClose}) => {
     const updateURL = async () => {
         try {
             const hostRef = doc(db,'restaurants',restaurantIds.docId)
-            console.log(hostImage,'submitURL')
             updateDoc(hostRef, {imgURL: hostImage})
             setIsOpen(false)
             onClose();

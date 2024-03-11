@@ -136,6 +136,8 @@ const SignUp = () => {
       const submittedData = {
         email: userCredential.user.email,
         uid: userCredential.user.uid,
+        closedTime: '21:00',
+        openTime: '9:00'
       };
 
       const restaurantCollection = collection(db, 'restaurants');
@@ -147,6 +149,9 @@ const SignUp = () => {
         email,
         password
       );
+
+      const closedDaysCollection = collection(db, 'closedDays');
+      await addDoc(closedDaysCollection, {restaurantId: docData.id, closedDays: []});
 
       setNotification({
         on: true,
