@@ -16,13 +16,16 @@ import { calculateDistance } from '../../../utils/location';
 import { checkIsRestaurantAvailable } from '../../utils/logic';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { grey } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
 
 export default function CustomerHomepage() {
   const [isLoading, setIsLoading] = useState(true);
   const [closestRestaurantList, setClosestRestaurantList] = useState([]);
   const [restaurantList, setRestaurantList] = useState([]);
   const [popularRestaurantList, setPopularRestaurantList] = useState([]);
+  const [filterParams, setFilterParams] = useState('');
   const { customerIds } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const breakpoints = [
     { width: 400, itemsToShow: 1 },
@@ -123,6 +126,8 @@ export default function CustomerHomepage() {
     }
   }
 
+  console.log(filterParams, 'filterParams');
+
   if (isLoading) {
     return <SplashScreen />
   }
@@ -144,7 +149,7 @@ export default function CustomerHomepage() {
       >
         <Searchbar />
         <Box width="100%" display="flex" alignItems="flex-start" gap={2}>
-          <FilterSidebar />
+          <FilterSidebar onDataReceived={(data) => setFilterParams(data)} />
           <Box width="100%" sx={{ width: '100vw' }}>
             {popularRestaurantList.length === 0 ? (
               <Box
@@ -154,13 +159,13 @@ export default function CustomerHomepage() {
                 alignItems="center"
                 gap={2}
               >
-                <ErrorOutlineIcon sx={{color: grey[700]}} fontSize='large' />
+                <ErrorOutlineIcon sx={{ color: grey[700] }} fontSize="large" />
                 <Typography
                   textAlign="center"
                   variant="h4"
                   mb={2}
                   fontWeight="bold"
-                  sx={{color: grey[700]}}
+                  sx={{ color: grey[700] }}
                 >
                   No Available Restaurants At The Moment
                 </Typography>

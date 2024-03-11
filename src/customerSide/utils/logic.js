@@ -8,6 +8,11 @@ export const checkIsRestaurantOpenToday = async (restaurant, today) => {
       'closedDays',
       where('restaurantId', '==', restaurant.id)
     );
+
+    if (restaurantClosedDays.length === 0) {
+      return false;
+    }
+    
     return !restaurantClosedDays[0].closedDays.includes(today);
   } catch (error) {
     console.log('Fail to check restaurant available: ', error);
@@ -77,6 +82,7 @@ export const checkRestaurantHasTable = async (restaurant, currentHour) => {
 export const checkIsRestaurantAvailable = async (restaurant) => {
   const currentDate = new Date();
   const today = daysOfWeek[currentDate.getDay()];
+  // Convert the hour to 4 digits number
   const currentHour = currentDate.getHours() * 100 + currentDate.getMinutes();
 
   try {
@@ -84,18 +90,26 @@ export const checkIsRestaurantAvailable = async (restaurant) => {
       restaurant,
       today
     );
+
+    if (!isRestaurantAvailableToday) {
+      return false;
+    }
+
     const isRestaurantOpen = await checkIsRestaurantOpenCurrently(
       restaurant,
       currentHour
     );
+
+    if (!isRestaurantOpen) {
+      return false;
+    }
+
     const isRestaurantHasTables = await checkRestaurantHasTable(
       restaurant,
       currentHour
     );
 
-    return (
-      isRestaurantAvailableToday && isRestaurantOpen && isRestaurantHasTables
-    );
+    return isRestaurantHasTables;
   } catch (error) {
     console.log('Fail to check restaurant availability: ', error);
   }
