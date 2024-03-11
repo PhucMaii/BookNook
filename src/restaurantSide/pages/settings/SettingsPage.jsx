@@ -34,6 +34,7 @@ export default function SettingsPage() {
   const [address, setAddress] = useState({ description: '' });
   const [imgURL, setImgURL] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [description, setDescription] = useState('')
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [value, setValue] = useState(0);
@@ -85,6 +86,7 @@ export default function SettingsPage() {
       setName(hostData.name)
       setPhoneNumber(hostData.phoneNumber)
       setImgURL(hostData.imgURL)
+      setDescription(hostData.description)
 
       setIsLoading(false)
     } catch (error) {
@@ -239,6 +241,7 @@ export default function SettingsPage() {
                             </Typography>
                             <Typography variant="h6"> Email:</Typography>
                             <Typography variant="h6">Address:</Typography>
+                            <Typography variant="h6">Description:</Typography>
                           </Box>
                         </Grid>
                         <Grid item md={8}>
@@ -280,6 +283,17 @@ export default function SettingsPage() {
                             <AddressInput
                               onDataReceived={(data) => setAddress(data)}
                               initialValue={address}
+                            />
+                            <TextField
+                              multiline
+                              rows={4}
+                              id="Description"
+                              color="secondary"
+                              value={description}
+                              onChange={(e) => {
+                                setDescription(e.target.value)
+                                setUpdateData({ ...updateData, description: e.target.value })
+                              }}
                             />
                           </Box>
                         </Grid>

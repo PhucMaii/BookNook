@@ -14,7 +14,7 @@ import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot/EditTab
 import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
 import CustomerSignup from './customerSide/pages/auth/CustomerSignup';
 import CustomerAuthProvider from './customerSide/context/AuthContext';
-import { RestaurantDetail } from './customerSide/pages/restaurantPage/RestaurantDetail';
+import RestaurantDetail from './customerSide/pages/restaurantPage/RestaurantDetail';
 import CustomerConfirmationBooking from './customerSide/pages/ConfirmationBooking/CustomerConfirmationBooking';
 import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
 import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
@@ -46,7 +46,7 @@ function App() {
           <Routes>
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/signup" element={<CustomerSignup />} />
-            <Route path="/test" element={<RestaurantDetail />} />
+            <Route path="/customer/restaurantDetails/:restaurantId" element={<RestaurantDetail />} />
             <Route path='/customer/booking-confirmation'
               element={<CustomerConfirmationBooking />}
             />
