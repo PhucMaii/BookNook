@@ -18,6 +18,7 @@ import CustomerConfirmationBooking from './customerSide/pages/ConfirmationBookin
 import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
 import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
 import './App.css';
+import SearchResultPage from './customerSide/pages/SearchResultPage';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
               element={<CustomerConfirmationBooking />}
             />
             <Route path="/" element={<CustomerHomepage/>} />
+            <Route path="/customer/search" element={<SearchResultPage />} />
             <Route path='/customer/successful-page' element={<CustomerSuccessfulPage/>} />
           </Routes>
         </CustomerAuthProvider>
