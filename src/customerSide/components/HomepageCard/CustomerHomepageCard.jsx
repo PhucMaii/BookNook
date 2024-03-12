@@ -12,10 +12,9 @@ import {
 import { CardImage } from './styled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
-import StarIcon from '@mui/icons-material/Star';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { grey } from '@mui/material/colors';
 import { generateTimeSlots } from '../../../utils/time';
+import { renderReviewStars } from '../../utils/render';
 
 const CustomerHomepageCard = ({ restaurant }) => {
   const renderTimeSlots = () => {
@@ -64,20 +63,6 @@ const CustomerHomepageCard = ({ restaurant }) => {
       : 'Not provided';
   };
 
-  const renderReviewStars = () => {
-    const stars = [];
-    const starAvg = restaurant.starsAvg ? parseInt(restaurant.starsAvg) : 0;
-    for (let i = 1; i <= starAvg; i++) {
-      stars.push(<StarIcon key={i} sx={{ color: 'red' }} />);
-    }
-
-    for (let i = starAvg + 1; i <= 5; i++) {
-      stars.push(<StarBorderIcon key={i} sx={{ color: 'red' }} />);
-    }
-
-    return stars;
-  };
-
   return (
     <Card
       sx={{
@@ -122,7 +107,7 @@ const CustomerHomepageCard = ({ restaurant }) => {
           </Typography>
         </Box>
         <Box display="flex" mt={2} alignItems="center">
-          {renderReviewStars()}
+          {renderReviewStars(restaurant)}
           <Typography fontWeight="bold" variant="body2" ml={1}>
             • {restaurant.numberOfReviews ? restaurant.numberOfReviews : 0}{' '}
             {restaurant.numberOfReviews === 1 ? 'Review' : 'Reviews'}

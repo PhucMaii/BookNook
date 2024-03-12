@@ -14,6 +14,8 @@ import { SplashScreen } from '../../../lib/utils';
 import { AuthContext } from '../../context/AuthContext';
 import { calculateDistance } from '../../../utils/location';
 import { checkIsRestaurantAvailable } from '../../utils/logic';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { grey } from '@mui/material/colors';
 
 export default function CustomerHomepage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -121,8 +123,6 @@ export default function CustomerHomepage() {
     }
   }
 
-  console.log(customerIds);
-
   if (isLoading) {
     return <SplashScreen />
   }
@@ -146,18 +146,44 @@ export default function CustomerHomepage() {
         <Box width="100%" display="flex" alignItems="flex-start" gap={2}>
           <FilterSidebar />
           <Box width="100%" sx={{ width: '100vw' }}>
-            <Typography variant="h4" mb={2} fontWeight="bold">
-              Most Popular
-            </Typography>
-            <div>
-              <Carousel breakPoints={breakpoints}>
-                {popularRestaurantList.map((restaurant, index) => (
-                  <CustomerHomepageCard key={index} restaurant={restaurant} />
-                ))}
-              </Carousel>
-            </div>
+            {popularRestaurantList.length === 0 ? (
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                gap={2}
+              >
+                <ErrorOutlineIcon sx={{color: grey[700]}} fontSize='large' />
+                <Typography
+                  textAlign="center"
+                  variant="h4"
+                  mb={2}
+                  fontWeight="bold"
+                  sx={{color: grey[700]}}
+                >
+                  No Available Restaurants At The Moment
+                </Typography>
+              </Box>
+            ) : (
+              <>
+                <Typography variant="h4" mb={2} fontWeight="bold">
+                  Most Popular
+                </Typography>
+                <div>
+                  <Carousel breakPoints={breakpoints}>
+                    {popularRestaurantList.map((restaurant, index) => (
+                      <CustomerHomepageCard
+                        key={index}
+                        restaurant={restaurant}
+                      />
+                    ))}
+                  </Carousel>
+                </div>
+              </>
+            )}
 
-            { Object.keys(customerIds).length > 0 &&
+            {Object.keys(customerIds).length > 0 && (
               <>
                 <Typography variant="h4" fontWeight="bold" mt={5} mb={3}>
                   Nearby Restaurants
@@ -173,7 +199,7 @@ export default function CustomerHomepage() {
                   </Carousel>
                 </div>
               </>
-            }
+            )}
           </Box>
         </Box>
       </Box>
