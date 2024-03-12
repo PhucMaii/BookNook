@@ -1,5 +1,5 @@
 import { Grid, Typography, Box, Divider, Rating, Paper} from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { dummyImg } from '../../../utils/constants'
 import StarIcon from '@mui/icons-material/Star';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -9,17 +9,92 @@ import { ProgressStyled, StyledAvatar, iconStyled } from './styled';
 import RestaurantReviewBlock from '../../components/restaurantReviewBlock';
 import ReservationMakingBlock from '../../components/ReservatioinMakingBlock/ReservationMakingBlock';
 import CustomerHeader from '../../components/TopNavbar/CustomerHeader';
+import { SplashScreen } from '../../../lib/utils';
+import { fetchData, fetchDoc } from '../../../utils/firebase';
+import { useParams } from 'react-router-dom';
+import { getAggregateFromServer, where } from 'firebase/firestore';
 
-export const RestaurantDetail = () => {
+const RestaurantDetail = () => {
+  const [avgStar, setAvgStar] = useState()
+  const [isLoading, setIsLoading] = useState(true)
+  const [hostData, setHostData] = useState()
+  const [hostReviews, setHostReviews] = useState()
+  const [reservationFilter, setReservationFilter] = useState({})
+  const [reviewFilter, setReviewFilter] = useState()
+  const [starsObj, setStarsObj] = useState({
+    '1 Star':0,
+    '2 Star':0,
+    '3 Star':0,
+    '4 Star':0,
+    '5 Star':0
+  })
+
+  const {restaurantId} = useParams();
+
+  useEffect(() => {
+    if (restaurantId) {
+      fetchHostData()
+      fetchReviews()
+    }
+  }, [restaurantId])
+
+  const fetchHostData = async() => {
+    try {
+      const fetchResult = await fetchDoc('restaurants',restaurantId)
+      setHostData(fetchResult.docData)
+    } catch (error) {
+      console.log('Fail to fetch host data: ',error)
+      setIsLoading(false);
+    }
+  }
+
+  const fetchReviews = async() => {
+    try {
+      const fetchResult = await fetchData('reviews', where('restaurantId', '==', restaurantId))
+      setHostReviews(fetchResult)
+      console.log(fetchResult)
+      processReviews(fetchResult)
+      setIsLoading(false)
+    } catch (error) {
+      console.log('Fail to fetch reviews: ', error)
+      setIsLoading(false);
+    }
+  }
+
+  const processReviews = (reviews) => {
+    let totalStar = 0;
+    if (!reviews) {
+      console.error('Reviews is undefined or null.');
+      return;
+    }
+    reviews.map((reviews) => {
+      totalStar += reviews.stars
+      switch(reviews.stars){
+        case 1:{
+
+        }
+
+      }
+    })
+    const avgStar = parseFloat((totalStar / reviews.length).toFixed(1))
+    setAvgStar(avgStar)
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <SplashScreen />
+      </>
+    );
+  }
 
   return (
     <>
-      {/* Placeholder for Navbar */}
       <CustomerHeader/>
-      <img src={dummyImg} alt='Restaurant picture' width='100%' height='350px' />
+      <img src={hostData.imgURL} alt='Restaurant picture' width='100%' height='350px' />
       <Grid container p={3} m={0.5} justifyContent='space-between'>
         <Grid xs={8} item container direction='column' rowGap={2} p={2} sx={{ backgroundColor: 'white', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-          <Typography variant='h4' fontWeight='bold'>Miku Restaurant</Typography>
+          <Typography variant='h4' fontWeight='bold'>{hostData.name}</Typography>
           <Grid container>
             <Grid item xs={4}>
               <Grid container justifyContent="space-around" alignItems="center">
@@ -29,10 +104,10 @@ export const RestaurantDetail = () => {
                   </StyledAvatar>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h4' fontWeight='bold' color={primary}>4.3</Typography>
+                  <Typography variant='h4' fontWeight='bold' color={primary}>{avgStar}</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant='body2'>(300 reviews)</Typography>
+                  <Typography variant='body2'>({hostReviews.length} reviews)</Typography>
                 </Grid>
                 <Grid item>
                   <Divider component='span' orientation='vertical' />
@@ -48,7 +123,7 @@ export const RestaurantDetail = () => {
                   </StyledAvatar>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h4' fontWeight='bold' color={primary}>Asian</Typography>
+                  <Typography variant='h4' fontWeight='bold' color={primary}>{hostData.type}</Typography>
                 </Grid>
                 <Grid item>
                   <Divider component='span' orientation='vertical' />
@@ -64,7 +139,7 @@ export const RestaurantDetail = () => {
                   </StyledAvatar>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h4' fontWeight='bold' color={primary}>Less than $50</Typography>
+                  <Typography variant='h4' fontWeight='bold' color={primary}>{hostData.avgPrice}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -72,7 +147,7 @@ export const RestaurantDetail = () => {
 
           <Typography variant='h6' fontWeight='bold'>Description</Typography>
           <Divider />
-          <Typography variant='subtitle2'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Est doloribus quis dolorum suscipit. Unde veniam libero iure dicta consequuntur ut dolor eveniet cumque porro quis. Reprehenderit dolor temporibus quis suscipit!</Typography>
+          <Typography variant='subtitle2'>{hostData.description}</Typography>
           <Typography variant='h6' fontWeight='bold'>Reviews</Typography>
           <Divider />
           <Grid container
@@ -86,10 +161,10 @@ export const RestaurantDetail = () => {
               mt={4}>
               <Typography variant='h6' sx={{ marginLeft: '5px' }}>Overall Rating</Typography>
               <Box display={'flex'} alignItems="center">
-                <Rating name="Overall rating" value={4.5} precision={0.5} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
-                <Typography variant='h6' sx={{ marginLeft: '5px' }}>4.5</Typography>
+                <Rating name="Overall rating" value={avgStar} precision={0.5} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
+                <Typography variant='h6' sx={{ marginLeft: '5px' }}>{avgStar}</Typography>
               </Box>
-              <Typography variant='h6' sx={{ marginLeft: '5px' }}>200 reviews</Typography>
+              <Typography variant='h6' sx={{ marginLeft: '5px' }}>{hostReviews.length} reviews</Typography>
             </Grid>
 
             <Grid item xs={6} container
@@ -98,7 +173,7 @@ export const RestaurantDetail = () => {
             >
               <Box display='flex' alignItems="center">
                 <Typography variant='h6' minWidth='75px' >5 Stars</Typography>
-                <ProgressStyled variant="determinate" value={60} />
+                <ProgressStyled variant="determinate" value={50} />
               </Box>
               <Box display='flex' alignItems="center">
                 <Typography variant='h6' minWidth='75px'>4 Stars</Typography>
@@ -134,3 +209,5 @@ export const RestaurantDetail = () => {
 
   )
 }
+
+export default RestaurantDetail;
