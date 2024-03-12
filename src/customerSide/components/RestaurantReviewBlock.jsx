@@ -7,7 +7,7 @@ import { Box } from '@mui/system';
 import { primary } from '../../theme/colors';
 import ReviewCreateModal from './Modals/ReviewCreateModal/ReviewCreateModal';
 
-const RestaurantReviewBlock = props => {
+const RestaurantReviewBlock = ({reviews}) => {
     return (
         <>
             <Grid container justifyContent='space-between' spacing={2} alignItems='center'>
@@ -75,6 +75,8 @@ const RestaurantReviewBlock = props => {
     )
 }
 
-RestaurantReviewBlock.propTypes = {}
+RestaurantReviewBlock.propTypes = {
+    reviews:PropTypes.array
+}
 
 export default RestaurantReviewBlock

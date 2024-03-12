@@ -22,11 +22,11 @@ const RestaurantDetail = () => {
   const [reservationFilter, setReservationFilter] = useState({})
   const [reviewFilter, setReviewFilter] = useState()
   const [starsObj, setStarsObj] = useState({
-    '1 Star':0,
-    '2 Star':0,
-    '3 Star':0,
-    '4 Star':0,
-    '5 Star':0
+    oneStar:0,
+    twoStar:0,
+    threeStar:0,
+    fourStar:0,
+    fiveStar:0
   })
 
   const {restaurantId} = useParams();
@@ -52,7 +52,6 @@ const RestaurantDetail = () => {
     try {
       const fetchResult = await fetchData('reviews', where('restaurantId', '==', restaurantId))
       setHostReviews(fetchResult)
-      console.log(fetchResult)
       processReviews(fetchResult)
       setIsLoading(false)
     } catch (error) {
@@ -63,6 +62,8 @@ const RestaurantDetail = () => {
 
   const processReviews = (reviews) => {
     let totalStar = 0;
+    let tempStarsObj = { ...starsObj };
+
     if (!reviews) {
       console.error('Reviews is undefined or null.');
       return;
@@ -71,13 +72,39 @@ const RestaurantDetail = () => {
       totalStar += reviews.stars
       switch(reviews.stars){
         case 1:{
-
+          tempStarsObj.oneStar++
+          break;
         }
-
+        case 2:{
+          tempStarsObj.twoStar++
+          break;
+        }
+        case 3:{
+          tempStarsObj.threeStar++
+          break;
+        }
+        case 4:{
+          tempStarsObj.fourStar++
+          break;
+        }
+        case 5:{
+          tempStarsObj.fiveStar++
+          break;
+        }
+        default:{
+          console.log('Unable to group reviews.')
+          break;
+        }
       }
     })
+    setStarsObj(tempStarsObj);
+
     const avgStar = parseFloat((totalStar / reviews.length).toFixed(1))
     setAvgStar(avgStar)
+  }
+
+  const getStarValue = (star) => {
+    return (star/hostReviews.length)*100
   }
 
   if (isLoading) {
@@ -173,23 +200,23 @@ const RestaurantDetail = () => {
             >
               <Box display='flex' alignItems="center">
                 <Typography variant='h6' minWidth='75px' >5 Stars</Typography>
-                <ProgressStyled variant="determinate" value={50} />
+                <ProgressStyled variant="determinate" value={getStarValue(starsObj.fiveStar)} />
               </Box>
               <Box display='flex' alignItems="center">
                 <Typography variant='h6' minWidth='75px'>4 Stars</Typography>
-                <ProgressStyled variant="determinate" value={20} />
+                <ProgressStyled variant="determinate" value={getStarValue(starsObj.fourStar)} />
               </Box>
               <Box display='flex' alignItems="center">
                 <Typography variant='h6' minWidth='75px'>3 Stars</Typography>
-                <ProgressStyled variant="determinate" value={10} />
+                <ProgressStyled variant="determinate" value={getStarValue(starsObj.threeStar)} />
               </Box>
               <Box display='flex' alignItems="center">
                 <Typography variant='h6' minWidth='75px'>2 Stars</Typography>
-                <ProgressStyled variant="determinate" value={5} />
+                <ProgressStyled variant="determinate" value={getStarValue(starsObj.twoStar)} />
               </Box>
               <Box display='flex' alignItems="center">
                 <Typography variant='h6' minWidth='75px'>1 Stars</Typography>
-                <ProgressStyled variant="determinate" value={5} />
+                <ProgressStyled variant="determinate" value={getStarValue(starsObj.oneStar)} />
               </Box>
             </Grid>
           </Grid>
