@@ -14,21 +14,19 @@ import {
     TableRow,
     TableCell,
     TableBody,
-    Button,
     Box
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import TopHeader from '../../components/TopNavbar/CustomerHeader';
 import dayjs from 'dayjs';
 import StatusText from '../../../restaurantSide/components/StatusText/StatusText';
-import { success, error } from '../../../theme/colors';
 
 export default function ActiveBooking() {
     const [filter, setFilter] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
     const [tableData, setTableData] = useState([]);
-    const [date, setDate] = useState(dayjs());
-    const [time, setTime] = useState(dayjs());
+    const [date] = useState(dayjs());
+    const [time] = useState(dayjs());
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
@@ -49,41 +47,6 @@ export default function ActiveBooking() {
     const handleSelect = (e) => {
         setFilter(e.target.value)
     }
-
-    // const confirmBooking = (id) => {
-    //     const updatedData = tableData.map(item => {
-    //         if (item.id === id) {
-    //             return { ...item, bookingStatus: 'Confirmed' };
-    //         }
-    //         return item;
-    //     });
-    //     setTableData(updatedData);
-    // };
-
-    // const cancelBooking = (id) => {
-    //     const updatedData = tableData.map(item => {
-    //         if (item.id === id) {
-    //             return { ...item, bookingStatus: 'Cancelled' };
-    //         }
-    //         return item;
-    //     });
-    //     setTableData(updatedData);
-    // };
-
-    useEffect(() => {
-        const dateIntervalId = setInterval(() => {
-            setDate(dayjs());
-        }, 86400000); // 24 hours in milliseconds
-
-        const timeIntervalId = setInterval(() => {
-            setTime(dayjs());
-        }, 60000); // 1 minute in milliseconds
-
-        return () => {
-            clearInterval(dateIntervalId);
-            clearInterval(timeIntervalId);
-        };
-    }, []);
 
     const options = [
         { label: 'All', value: 'All' },
@@ -162,7 +125,6 @@ export default function ActiveBooking() {
                     >
                         <Grid item xs={6}>
                             <TextField
-                                color='secondary'
                                 fullWidth
                                 variant='standard'
                                 placeholder='Hit ENTER to search name, table name, etc.'
@@ -180,9 +142,8 @@ export default function ActiveBooking() {
                         </Grid>
                         <Grid item xs={2}>
                             <FormControl fullWidth>
-                                <InputLabel id='filter' color='secondary'>Filter</InputLabel>
+                                <InputLabel id='filter'>Filter</InputLabel>
                                 <Select
-                                    color='secondary'
                                     labelId='filter'
                                     id='filter-select'
                                     value={filter}
@@ -205,7 +166,6 @@ export default function ActiveBooking() {
                                 <TableCell>DATE</TableCell>
                                 <TableCell>TIME</TableCell>
                                 <TableCell>STATUS</TableCell>
-                                {/* <TableCell align='center'>ACTIONS</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -213,31 +173,11 @@ export default function ActiveBooking() {
                                 <TableRow key={index}>
                                     <TableCell>{row.customerName}</TableCell>
                                     <TableCell>{row.seatingCap}</TableCell>
-                                    <TableCell>{dayjs(row.bookingDate).format('YYYY-MM-DD')}</TableCell>
+                                    <TableCell>{dayjs(row.bookingDate).format('MM-DD-YYYY')}</TableCell>
                                     <TableCell>{dayjs(row.bookingTime).format('h:mm A')}</TableCell>
-                                    <TableCell style={{ textAlign: 'center', paddingRight: 0}}>
+                                    <TableCell style={{ textAlign: 'center', paddingRight: 0 }}>
                                         <StatusText text={row.bookingStatus} type={row.bookingStatus === 'Unconfirmed' ? 'error' : 'success'} />
                                     </TableCell>
-                                    {/* <TableCell align='center'>
-                                        {row.bookingStatus === 'Unconfirmed' ? (
-                                            <Button
-                                                variant='contained'
-                                                // style={{ backgroundColor: success, color: 'white' }} // Set custom color
-                                                color='success'
-                                                onClick={() => confirmBooking(row.id)}
-                                            >
-                                                Confirm
-                                            </Button>
-                                        ) : (
-                                            <Button
-                                                variant='contained'
-                                                color='error'
-                                                onClick={() => cancelBooking(row.id)}
-                                            >
-                                                Cancel
-                                            </Button>
-                                        )}
-                                    </TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>
