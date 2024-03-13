@@ -20,7 +20,7 @@ import { fetchLatLong } from '../../../utils/location';
 import { generateTimeSlots } from '../../../utils/time';
 import { useNavigate } from 'react-router-dom';
 
-const getCurrentTime = () => {
+export const getCurrentTime = () => {
   const currentDate = new Date();
   let currentHour = currentDate.getHours();
   let currentMinutes = currentDate.getMinutes();
@@ -38,12 +38,13 @@ const getCurrentTime = () => {
 };
 
 
-const CustomerSearchbar = ({handleFilterSearch}) => {
+const CustomerSearchbar = ({filterParams}) => {
     const [address, setAddress] = useState(null);
     const [date, setDate] = useState(dayjs());
     const [time, setTime] = useState(() => getCurrentTime());
     const [numberOfGuests, setNumberOfGuests] = useState('');
     const navigate = useNavigate();
+    const currentDate = new Date();
 
     useEffect(() => {
       const dateIntervalId = setInterval(() => {
@@ -64,7 +65,7 @@ const CustomerSearchbar = ({handleFilterSearch}) => {
 
       if (address) {
         const addressObj = await fetchLatLong(address.description);
-        searchOptions.address = {...addressObj, description: address.description};
+        searchOptions.address = JSON.stringify({...addressObj, description: address.description});
       }
       
       if (date) {
@@ -81,15 +82,48 @@ const CustomerSearchbar = ({handleFilterSearch}) => {
       }
       
       const params = new URLSearchParams(searchOptions).toString();
-      const filterParams = handleFilterSearch();
-      console.log(filterParams, 'filterParams');
-      navigate(`/customer/search?${params}${filterParams && `&${filterParams}`}`);
+      navigate(`/customer/search?${params}&${filterParams}`);
     }
+
+    const getCurrentTimeIndex = (currentTime) => {
+      const timeSlots = generateTimeSlots();
+      const currentTimeIndex = timeSlots.indexOf(currentTime);
+
+      return currentTimeIndex;
+    }
+
+    const renderTimeSlots = () => {
+      const renderedTimeSlots = generateTimeSlots().map((timeSlot, index) => {
+        const currentTime = getCurrentTime();
+        const currentTimeIndex = getCurrentTimeIndex(currentTime);
+        const todayObj = dayjs();
+
+        if (
+          date.$D === todayObj.$D &&
+          date.$M === todayObj.$M &&
+          date.$y === todayObj.$y &&
+          index <= currentTimeIndex
+        ) {
+          return (
+            <MenuItem disabled key={timeSlot} value={timeSlot}>
+              {timeSlot}
+            </MenuItem>
+          );
+        }
+        return (
+          <MenuItem key={timeSlot} value={timeSlot}>
+            {timeSlot}
+          </MenuItem>
+        );
+      });
+
+      return renderedTimeSlots;
+    };
 
     return (
       <Grid
-        alignItems="center"
         container
+        alignItems="center"
         mt={2}
         py={4}
         px={2}
@@ -98,14 +132,17 @@ const CustomerSearchbar = ({handleFilterSearch}) => {
         columnSpacing={1}
         rowGap={2}
       >
-        <Grid item xs={5.9} lg={2.5}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DatePicker']}>
+        <Grid item xs={5.9} lg={2.5} mb={1}>
+          <LocalizationProvider fullWidth dateAdapter={AdapterDayjs}>
+            <DemoContainer fullWidth components={['DatePicker']}>
               <DatePicker
+                disablePast
+                minDate={currentDate}
                 label="Date"
                 value={date}
                 onChange={(newValue) => setDate(newValue)}
                 sx={{
+                  width: '100%',
                   '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
                     borderColor: '#3498DB',
                   },
@@ -128,11 +165,7 @@ const CustomerSearchbar = ({handleFilterSearch}) => {
               label="Time"
               onChange={(e) => setTime(e.target.value)}
             >
-              {generateTimeSlots().map((timeSlot) => (
-                <MenuItem key={timeSlot} value={timeSlot}>
-                  {timeSlot}
-                </MenuItem>
-              ))}
+              {renderTimeSlots()}
             </Select>
           </FormControl>
         </Grid>
@@ -184,7 +217,7 @@ const CustomerSearchbar = ({handleFilterSearch}) => {
 }
 
 CustomerSearchbar.propTypes = {
-  handleFilterSearch: PropTypes.func
+  filterParams: PropTypes.string
 }
 
 export default CustomerSearchbar;

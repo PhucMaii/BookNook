@@ -37,10 +37,6 @@ export default function CustomerHomepage() {
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   useEffect(() => {
-    // checkIsRestaurantAvailable();
-  }, [])
-
-  useEffect(() => {
     const handleFetchRestaurants = async () => {
       const restaurants = await fetchRestaurants();
       if (customerIds.docId) {
@@ -126,8 +122,6 @@ export default function CustomerHomepage() {
     }
   }
 
-  console.log(filterParams, 'filterParams');
-
   if (isLoading) {
     return <SplashScreen />
   }
@@ -147,7 +141,7 @@ export default function CustomerHomepage() {
         justifyContent="flex-start"
         gap={2}
       >
-        <Searchbar />
+        <Searchbar filterParams={filterParams} />
         <Box width="100%" display="flex" alignItems="flex-start" gap={2}>
           <FilterSidebar onDataReceived={(data) => setFilterParams(data)} />
           <Box width="100%" sx={{ width: '100vw' }}>

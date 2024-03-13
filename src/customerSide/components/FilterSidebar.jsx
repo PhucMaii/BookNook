@@ -155,6 +155,12 @@ const FilterSidebar = (props) => {
               defaultValue="female"
               name="radio-buttons-group"
             >
+              <FormControlLabel 
+                value="No Reviews"
+                control={<Radio />}
+                label="No Reviews"
+                onChange={() => setRating('No')}
+              />
               {[1, 2, 3, 4, 5].map((star, index) => (
                 <FormControlLabel
                   key={index}

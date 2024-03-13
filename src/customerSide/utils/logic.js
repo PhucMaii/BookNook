@@ -12,7 +12,7 @@ export const checkIsRestaurantOpenToday = async (restaurant, today) => {
     if (restaurantClosedDays.length === 0) {
       return false;
     }
-    
+
     return !restaurantClosedDays[0].closedDays.includes(today);
   } catch (error) {
     console.log('Fail to check restaurant available: ', error);
@@ -70,10 +70,10 @@ export const checkRestaurantHasTable = async (restaurant, currentHour) => {
       const availableTables = restaurantTables.filter(
         (table) => !unavailableTables.includes(table.id)
       );
-      return availableTables.length > 0;
+      return availableTables.length > 0 ? availableTables : false;
     }
 
-    return true;
+    return restaurantTables;
   } catch (error) {
     console.log('Fail to check restaurant has table: ', error);
   }
