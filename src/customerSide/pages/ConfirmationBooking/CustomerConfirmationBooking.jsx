@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Grid,
     Typography,
@@ -17,11 +17,20 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { BookingImg } from './styled'
 import TopNavbar from '../../components/TopNavbar/CustomerHeader';
 import { generateCapacity } from '../../../utils/generateConstants';
+import { SplashScreen } from '../../../lib/utils';
+import { BookingDataContext } from '../../context/BookingDataContext';
+import { useNavigate } from 'react-router-dom';
+import AuthModal from '../../components/AuthModal/AuthModal';
 
 const CustomerConfirmationBooking = () => {
     const [date, setDate] = useState(dayjs());
+    const [isLoading, setIsLoading] = useState(true);
     const [time, setTime] = useState(dayjs());
     const [selectedCapacity, setSelectedCapacity] = useState('2 people');
+    const { bookingData } = useContext(BookingDataContext);
+    const navigate = useNavigate();
+
+    console.log(bookingData, 'bookingData');
 
     useEffect(() => {
         const dateIntervalId = setInterval(() => {
@@ -38,6 +47,14 @@ const CustomerConfirmationBooking = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (Object.keys(bookingData).length === 0) {
+            navigate('/404');
+        } else {
+            setIsLoading(false);
+        }
+    }, [bookingData])
+
     const userInfo = {
         id: 1,
         img: '/settingsDummyImg.png',
@@ -49,8 +66,15 @@ const CustomerConfirmationBooking = () => {
         seatingCap: 2,
     };
 
+    if (isLoading) {
+        return (
+            <SplashScreen />
+        )
+    }
+
     return (
         <div>
+                  <AuthModal open={true}/>
             <TopNavbar />
             <Grid
                 container

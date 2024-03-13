@@ -14,7 +14,6 @@ import { grey } from '@mui/material/colors';
 import { calculateDistance } from '../../utils/location';
 import { SplashScreen } from '../../lib/utils';
 
-
 export default function SearchResultPage() {
   const [filterParams, setFilterParams] = useState('');
   const [isLoading, setIsLoading] = useState(true);

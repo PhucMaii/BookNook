@@ -19,6 +19,8 @@ import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
 import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
 import './App.css';
 import SearchResultPage from './customerSide/pages/SearchResultPage';
+import BookingDataProvider from './customerSide/context/BookingDataContext';
+import ErrorPage from './customerSide/pages/404';
 
 function App() {
   return (
@@ -42,16 +44,19 @@ function App() {
           </Routes>
         </AuthProvider>
         <CustomerAuthProvider>
-          <Routes>
-            <Route path="/customer/login" element={<CustomerLogin />} />
-            <Route path="/customer/signup" element={<CustomerSignup />} />
-            <Route path='/customer/booking-confirmation'
-              element={<CustomerConfirmationBooking />}
-            />
-            <Route path="/" element={<CustomerHomepage/>} />
-            <Route path="/customer/search" element={<SearchResultPage />} />
-            <Route path='/customer/successful-page' element={<CustomerSuccessfulPage/>} />
-          </Routes>
+          <BookingDataProvider>
+            <Routes>
+              <Route path="/customer/login" element={<CustomerLogin />} />
+              <Route path="/customer/signup" element={<CustomerSignup />} />
+              <Route path='/customer/booking-confirmation'
+                element={<CustomerConfirmationBooking />}
+              />
+              <Route path="/" element={<CustomerHomepage/>} />
+              <Route path="/customer/search" element={<SearchResultPage />} />
+              <Route path='/customer/successful-page' element={<CustomerSuccessfulPage/>} />
+              <Route path='/404' element={<ErrorPage />}/>            
+            </Routes>
+          </BookingDataProvider>
         </CustomerAuthProvider>
       </BrowserRouter>
     </ThemeProvider>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card,
@@ -13,51 +13,38 @@ import { CardImage } from './styled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { grey } from '@mui/material/colors';
-import { generateTimeSlots } from '../../../utils/time';
-import { renderReviewStars } from '../../utils/render';
+import { renderReviewStars, renderTimeSlots } from '../../utils/render';
+import { AuthContext } from '../../context/AuthContext';
+import { fetchDoc } from '../../../utils/firebase';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+import { BookingDataContext } from '../../context/BookingDataContext';
+
+export const handleReservationBooking = async (timeSlot, restaurant, customerIds, setBookingData, navigate) => {
+  try {
+    const date = dayjs();
+    const formattedDate = `${date.$M + 1}/${date.$D}/${date.$y}`;
+    const bookingData = {timeSlot, ...restaurant, date: formattedDate};
+
+    if (Object.keys(customerIds).length > 0 && customerIds.docId !== null) {
+      const user = await fetchDoc('users', customerIds.docId);
+      const userData = user.docData;
+      bookingData.user = userData;
+      console.log(bookingData, 'booking data in home page card');
+    }
+
+    setBookingData(bookingData);
+    navigate('/customer/booking-confirmation')
+  } catch (error) {
+    console.log('Fail to book a reservation: ', error);
+  }
+}
 
 const CustomerHomepageCard = ({ restaurant }) => {
-  const renderTimeSlots = () => {
-    const currentDate = new Date();
-    let currentHour = currentDate.getHours();
-    let currentMinutes = currentDate.getMinutes();
-    currentMinutes = Math.ceil(currentMinutes / 15) * 15;
+  const { customerIds } = useContext(AuthContext);
+  const { setBookingData } = useContext(BookingDataContext);
 
-    // Adjust to 0 when reaching 60
-    if (currentMinutes === 60) {
-      currentMinutes = `00`;
-      currentHour += 1;
-    }
-
-    const currentTime = `${currentHour}:${currentMinutes}`;
-    const timeSlots = generateTimeSlots();
-    let currentHourIndex = timeSlots.indexOf(currentTime);
-    
-    const renderedTimeSlots = [];
-    let i = currentHourIndex;
-    while (i < timeSlots.length && i <= currentHourIndex + 3) {
-      renderedTimeSlots.push(
-        <Button key={i} variant="contained" style={{ color: 'white' }}>
-          {timeSlots[i]}
-        </Button>
-      );
-      i++;
-    }
-    // handle if i is larger than time slots length but still smaller than currentHourIndex
-    if (i >= currentHourIndex) {
-      currentHourIndex = currentHourIndex - (timeSlots.length - 1);
-      i = 0;
-      while(i <= currentHourIndex + 3) {
-        renderedTimeSlots.push(
-          <Button key={i} variant="contained" style={{ color: 'white' }}>
-            {timeSlots[i]}
-          </Button>
-        );
-        i++;
-      }
-    }
-    return renderedTimeSlots;
-  };
+  const navigate = useNavigate();
 
   const handleShowAddress = () => {
     return restaurant.address
@@ -118,7 +105,26 @@ const CustomerHomepageCard = ({ restaurant }) => {
       </CardContent>
       <CardActions>
         <Box display="flex" flexWrap="wrap" gap={2}>
-          {renderTimeSlots()}
+          {renderTimeSlots().map((timeSlot, index) => {
+            return (
+              <Button
+                key={index}
+                onClick={() =>
+                  handleReservationBooking(
+                    timeSlot,
+                    restaurant,
+                    customerIds,
+                    setBookingData,
+                    navigate
+                  )
+                }
+                variant="contained"
+                style={{ color: 'white' }}
+              >
+                {timeSlot}
+              </Button>
+            );
+          })}
         </Box>
       </CardActions>
     </Card>
