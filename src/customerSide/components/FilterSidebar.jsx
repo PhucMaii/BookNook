@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import {
     Box,
     Typography,
@@ -13,30 +14,62 @@ import {
     Drawer
 } from '@mui/material';
 import { restaurantTypes, averagePrices, tableTypes } from '../../utils/constants';
-import { ratings } from '../utils/constants';
 import MenuIcon from '@mui/icons-material/Menu';
 
-const FilterSidebar = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+const FilterSidebar = (props) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState([]);
+  const [selectedSeatingOptions, setSelectedSeatingOptions] = useState([]);
+  const [selectedPrice, setSelectedPrice] = useState('');
+  const [rating, setRating] = useState();
 
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
+
+  useEffect(() => {
+    if (props.onDataReceived) {
+      const filterOptions = handleFilterSearch();
+      props.onDataReceived(filterOptions);
+    }
+  }, [selectedTypes, selectedSeatingOptions, selectedPrice, rating]);
 
   const handleShowMore = () => {
     setShowMore(!showMore);
   };
 
-  const handleTypeChange = (targetType) => {
-    const index = selectedTypes.indexOf(targetType);
+  const handleSelectedCheckBox = (targetValue, arrayState, setState) => {
+    const index = arrayState.indexOf(targetValue);
     if (index === -1) {
-      setSelectedTypes([...selectedTypes, targetType]);
+      setState([...arrayState, targetValue]);
     } else {
-      setSelectedTypes((prevTypes) => {
-        return prevTypes.filter((type) => type !== targetType);
+      setState((prevState) => {
+        return prevState.filter((value) => value !== targetValue);
       });
     }
   };
+
+  const handleFilterSearch = () => {
+    const filterOptions = {};
+
+    if (selectedTypes.length > 0) {
+      filterOptions.selectedTypes = selectedTypes;
+    }
+
+    if (selectedSeatingOptions.length > 0) {
+      filterOptions.selectedSeatingOptions = selectedSeatingOptions;
+    }
+
+    if (selectedPrice.length > 0) {
+      filterOptions.selectedPrice = selectedPrice;
+    }
+
+    if (rating) {
+      filterOptions.rating = rating;
+    }
+
+    const params = new URLSearchParams(filterOptions).toString();
+    return params;
+  }
 
   const sidebar = (
     <Box
@@ -61,7 +94,9 @@ const FilterSidebar = () => {
             key={index}
             control={<Checkbox />}
             label={type}
-            onChange={() => handleTypeChange(type)}
+            onChange={() =>
+              handleSelectedCheckBox(type, selectedTypes, setSelectedTypes)
+            }
           />
         ))}
         {showMore &&
@@ -72,7 +107,9 @@ const FilterSidebar = () => {
                 key={index + 2}
                 control={<Checkbox />}
                 label={type}
-                onChange={() => handleTypeChange(type)}
+                onChange={() =>
+                  handleSelectedCheckBox(type, selectedTypes, setSelectedTypes)
+                }
               />
             ))}
       </FormGroup>
@@ -86,7 +123,14 @@ const FilterSidebar = () => {
       </Typography>
       <Box display="flex" flexDirection="column">
         {tableTypes.map((option, index) => (
-          <FormControlLabel key={index} control={<Checkbox />} label={option} />
+          <FormControlLabel
+            key={index}
+            control={<Checkbox />}
+            label={option}
+            onChange={() =>
+              handleSelectedCheckBox(option, selectedSeatingOptions, setSelectedSeatingOptions)
+            }
+          />
         ))}
       </Box>
       <Typography variant="body1" fontWeight="bold">
@@ -94,7 +138,12 @@ const FilterSidebar = () => {
       </Typography>
       <Box display="flex" flexDirection="column">
         {averagePrices.map((range, index) => (
-          <FormControlLabel key={index} control={<Checkbox />} label={range} />
+          <FormControlLabel 
+            key={index} 
+            control={<Checkbox />} 
+            label={range} 
+            onClick={() => handleSelectedCheckBox(range, selectedPrice, setSelectedPrice)}
+          />
         ))}
         <Typography variant="body1" fontWeight="bold">
           Rating
@@ -106,12 +155,19 @@ const FilterSidebar = () => {
               defaultValue="female"
               name="radio-buttons-group"
             >
-              {ratings.map((rating, index) => (
+              <FormControlLabel 
+                value="No Reviews"
+                control={<Radio />}
+                label="No Reviews"
+                onChange={() => setRating('No')}
+              />
+              {[1, 2, 3, 4, 5].map((star, index) => (
                 <FormControlLabel
                   key={index}
-                  value={rating}
+                  value={star}
                   control={<Radio />}
-                  label={rating}
+                  label={`${star} stars`}
+                  onChange={(e) => setRating(e.target.value)}
                 />
               ))}
             </RadioGroup>
@@ -127,10 +183,10 @@ const FilterSidebar = () => {
         <Button onClick={() => setIsSidebarOpen(true)}>
           <MenuIcon />
         </Button>
-        <Drawer 
-            anchor="left" 
-            open={isSidebarOpen} 
-            onClose={() => setIsSidebarOpen(false)}
+        <Drawer
+          anchor="left"
+          open={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         >
           {sidebar}
         </Drawer>
@@ -139,6 +195,10 @@ const FilterSidebar = () => {
   }
 
   return sidebar;
+};
+
+FilterSidebar.propTypes = {
+  onDataReceived: PropTypes.func
 }
 
 export default FilterSidebar;

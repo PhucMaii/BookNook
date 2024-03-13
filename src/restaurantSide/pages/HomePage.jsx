@@ -208,7 +208,6 @@ export default function HomePage() {
         orderBy('date')
       );
       const querySnapshot = await getDocs(reservationQuery);
-      console.log(restaurantIds);
 
       const reservationPromises = querySnapshot.docs.map(async (document) => {
         const reservationData = document.data();

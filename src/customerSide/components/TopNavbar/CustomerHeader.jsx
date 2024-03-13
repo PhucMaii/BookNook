@@ -50,6 +50,8 @@ function CustomerHeader() {
             src="/customerLogo.png"
             alt="Customer Logo"
             style={{ mr: '200' }}
+            onClick={() => navigate('/')}
+
           />
           <PersonPin color="primary" sx={{ fontSize: 40, ml: '25px' }} />
           <Box
