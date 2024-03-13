@@ -20,6 +20,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import TopHeader from '../../components/TopNavbar/CustomerHeader';
 import dayjs from 'dayjs';
+import StatusText from '../../../restaurantSide/components/StatusText/StatusText';
+import { success, error } from '../../../theme/colors';
 
 export default function ActiveBooking() {
     const [filter, setFilter] = useState('All');
@@ -48,25 +50,25 @@ export default function ActiveBooking() {
         setFilter(e.target.value)
     }
 
-    const confirmBooking = (id) => {
-        const updatedData = tableData.map(item => {
-            if (item.id === id) {
-                return { ...item, bookingStatus: 'Confirmed' };
-            }
-            return item;
-        });
-        setTableData(updatedData);
-    };
+    // const confirmBooking = (id) => {
+    //     const updatedData = tableData.map(item => {
+    //         if (item.id === id) {
+    //             return { ...item, bookingStatus: 'Confirmed' };
+    //         }
+    //         return item;
+    //     });
+    //     setTableData(updatedData);
+    // };
 
-    const cancelBooking = (id) => {
-        const updatedData = tableData.map(item => {
-            if (item.id === id) {
-                return { ...item, bookingStatus: 'Cancelled' };
-            }
-            return item;
-        });
-        setTableData(updatedData);
-    };
+    // const cancelBooking = (id) => {
+    //     const updatedData = tableData.map(item => {
+    //         if (item.id === id) {
+    //             return { ...item, bookingStatus: 'Cancelled' };
+    //         }
+    //         return item;
+    //     });
+    //     setTableData(updatedData);
+    // };
 
     useEffect(() => {
         const dateIntervalId = setInterval(() => {
@@ -149,7 +151,7 @@ export default function ActiveBooking() {
                         boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
                         borderRadius: 2,
                         mt: 5,
-                        width: '90%'
+                        width: '80%'
                     }}>
                     <Grid
                         container
@@ -202,8 +204,8 @@ export default function ActiveBooking() {
                                 <TableCell>SEATING CAPACITY</TableCell>
                                 <TableCell>DATE</TableCell>
                                 <TableCell>TIME</TableCell>
-                                <TableCell align='center' >STATUS</TableCell>
-                                <TableCell align='center'>ACTIONS</TableCell>
+                                <TableCell>STATUS</TableCell>
+                                {/* <TableCell align='center'>ACTIONS</TableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -213,26 +215,15 @@ export default function ActiveBooking() {
                                     <TableCell>{row.seatingCap}</TableCell>
                                     <TableCell>{dayjs(row.bookingDate).format('YYYY-MM-DD')}</TableCell>
                                     <TableCell>{dayjs(row.bookingTime).format('h:mm A')}</TableCell>
-                                    <TableCell align='center'>
-                                        <Box
-                                            display='inline-block'
-                                            justifyContent='center'
-                                            px={2}
-                                            sx={{
-                                                backgroundColor: row.bookingStatus === 'Confirmed' ? '#ECFDF5' : '#FEF2F2', // Background color based on booking status
-                                                color: row.bookingStatus === 'Confirmed' ? '#064E3B' : '#991B1B', // Text color based on booking status
-                                            }}
-                                        >
-                                            <Typography variant='body1' align='center'>
-                                                {row.bookingStatus}
-                                            </Typography>
-                                        </Box>
+                                    <TableCell style={{ textAlign: 'center', paddingRight: 0}}>
+                                        <StatusText text={row.bookingStatus} type={row.bookingStatus === 'Unconfirmed' ? 'error' : 'success'} />
                                     </TableCell>
-                                    <TableCell align='center'>
+                                    {/* <TableCell align='center'>
                                         {row.bookingStatus === 'Unconfirmed' ? (
                                             <Button
                                                 variant='contained'
-                                                style={{ backgroundColor: '#2E7D32', color: 'white' }} // Set custom color
+                                                // style={{ backgroundColor: success, color: 'white' }} // Set custom color
+                                                color='success'
                                                 onClick={() => confirmBooking(row.id)}
                                             >
                                                 Confirm
@@ -246,8 +237,7 @@ export default function ActiveBooking() {
                                                 Cancel
                                             </Button>
                                         )}
-                                    </TableCell>
-
+                                    </TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>

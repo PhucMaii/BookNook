@@ -19,17 +19,19 @@ import { renderReviewStars } from '../../utils/render';
 const CustomerHomepageCard = ({ restaurant }) => {
   const renderTimeSlots = () => {
     const currentDate = new Date();
+    let currentHour = currentDate.getHours();
     let currentMinutes = currentDate.getMinutes();
     currentMinutes = Math.ceil(currentMinutes / 15) * 15;
 
     // Adjust to 0 when reaching 60
     if (currentMinutes === 60) {
       currentMinutes = `00`;
+      currentHour += 1;
     }
 
-    const currentHour = `${currentDate.getHours()}:${currentMinutes}`;
+    const currentTime = `${currentHour}:${currentMinutes}`;
     const timeSlots = generateTimeSlots();
-    let currentHourIndex = timeSlots.indexOf(currentHour);
+    let currentHourIndex = timeSlots.indexOf(currentTime);
     
     const renderedTimeSlots = [];
     let i = currentHourIndex;
