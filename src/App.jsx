@@ -19,6 +19,7 @@ import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
 import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
 import './App.css';
 import SearchResultPage from './customerSide/pages/SearchResultPage';
+import ForgotPasswordUser from './customerSide/pages/auth/ForgotPasswordUser';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Routes>
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/signup" element={<CustomerSignup />} />
+            <Route path='/customer/forgot-password' element={<ForgotPasswordUser/>} />
             <Route path='/customer/booking-confirmation'
               element={<CustomerConfirmationBooking />}
             />
