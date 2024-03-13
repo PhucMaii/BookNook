@@ -15,12 +15,8 @@ const UserSettingPage = props => {
             <Grid container direction='column' maxWidth={1200} m='auto' p={2} rowSpacing={2}>
                 <Grid item xs={3} justifyContent='flex-start'>
                     <Typography variant='h4' fontWeight='bold'>User Profile</Typography>
+                    <Divider sx={{ maxWidth: '200px'}} />
                 </Grid>
-
-                <Grid item>
-                    <Divider sx={{ maxWidth: '200px' }} />
-                </Grid>
-
 
                 <Grid container item alignItems='center' justifyContent='space-between'>
                     <Grid item xs={1.5}>
@@ -34,7 +30,7 @@ const UserSettingPage = props => {
                             <Typography variant='h5'>Burnaby,BC</Typography>
                         </Grid>
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={12} md={2} mt={2}>
                         <UpdateUserPicture/>
                     </Grid>
                 </Grid>

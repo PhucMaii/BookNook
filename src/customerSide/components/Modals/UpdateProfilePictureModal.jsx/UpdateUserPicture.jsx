@@ -11,6 +11,7 @@ const UpdateUserPicture = props => {
         <>
             <Button
                 variant="filled"
+                fullWidth
                 style={{ color: '#ffffff', backgroundColor: primary }}
                 onClick={() => setIsOpen(true)}
             >
