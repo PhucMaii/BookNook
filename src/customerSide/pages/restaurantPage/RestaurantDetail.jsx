@@ -1,6 +1,5 @@
-import { Grid, Typography, Box, Divider, Rating, Paper} from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { dummyImg } from '../../../utils/constants'
+import { Grid, Typography, Box, Divider, Rating, Paper, FormControl, InputLabel, Select, MenuItem, TextField, InputAdornment } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
 import StarIcon from '@mui/icons-material/Star';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
@@ -12,7 +11,11 @@ import CustomerHeader from '../../components/TopNavbar/CustomerHeader';
 import { SplashScreen } from '../../../lib/utils';
 import { fetchData, fetchDoc } from '../../../utils/firebase';
 import { useParams } from 'react-router-dom';
-import { getAggregateFromServer, where } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
+import SearchIcon from '@mui/icons-material/Search';
+import ReviewCreateModal from '../../components/Modals/ReviewCreateModal/ReviewCreateModal';
+import { AuthContext } from '../../context/AuthContext';
+
 
 const RestaurantDetail = () => {
   const [avgStar, setAvgStar] = useState()
@@ -22,38 +25,45 @@ const RestaurantDetail = () => {
   const [reservationFilter, setReservationFilter] = useState({})
   const [reviewFilter, setReviewFilter] = useState()
   const [starsObj, setStarsObj] = useState({
-    oneStar:0,
-    twoStar:0,
-    threeStar:0,
-    fourStar:0,
-    fiveStar:0
+    oneStar: 0,
+    twoStar: 0,
+    threeStar: 0,
+    fourStar: 0,
+    fiveStar: 0
   })
+  const [userData, setUserData] = useState()
 
-  const {restaurantId} = useParams();
+  const {customerIds: {docId}} = useContext(AuthContext)
+
+  const { restaurantId } = useParams();
 
   useEffect(() => {
+    console.log(restaurantId, 'restauyrantId')
     if (restaurantId) {
       fetchHostData()
       fetchReviews()
     }
-  }, [restaurantId])
+    if (docId) {
+      fetchUser();
+    }
+  }, [restaurantId, docId])
 
-  const fetchHostData = async() => {
+  const fetchHostData = async () => {
     try {
-      const fetchResult = await fetchDoc('restaurants',restaurantId)
+      const fetchResult = await fetchDoc('restaurants', restaurantId)
       setHostData(fetchResult.docData)
     } catch (error) {
-      console.log('Fail to fetch host data: ',error)
+      console.log('Fail to fetch host data: ', error)
       setIsLoading(false);
     }
   }
 
-  const fetchReviews = async() => {
+  const fetchReviews = async () => {
     try {
       const fetchResult = await fetchData('reviews', where('restaurantId', '==', restaurantId))
       setHostReviews(fetchResult)
-      processReviews(fetchResult)
-      setIsLoading(false)
+      processReviews(fetchResult);
+      setIsLoading(false);
     } catch (error) {
       console.log('Fail to fetch reviews: ', error)
       setIsLoading(false);
@@ -70,28 +80,28 @@ const RestaurantDetail = () => {
     }
     reviews.map((reviews) => {
       totalStar += reviews.stars
-      switch(reviews.stars){
-        case 1:{
+      switch (reviews.stars) {
+        case 1: {
           tempStarsObj.oneStar++
           break;
         }
-        case 2:{
+        case 2: {
           tempStarsObj.twoStar++
           break;
         }
-        case 3:{
+        case 3: {
           tempStarsObj.threeStar++
           break;
         }
-        case 4:{
+        case 4: {
           tempStarsObj.fourStar++
           break;
         }
-        case 5:{
+        case 5: {
           tempStarsObj.fiveStar++
           break;
         }
-        default:{
+        default: {
           console.log('Unable to group reviews.')
           break;
         }
@@ -103,8 +113,20 @@ const RestaurantDetail = () => {
     setAvgStar(avgStar)
   }
 
+  const fetchUser = async () => {
+    try {
+      const fetchResult = await fetchDoc('users', docId)
+      setUserData(fetchResult.docData)
+      setIsLoading(false)
+    } catch (error) {
+      console.log('Fail to fetch user data: ', error)
+      setIsLoading(false);
+    }
+  }
+
+  
   const getStarValue = (star) => {
-    return (star/hostReviews.length)*100
+    return (star / hostReviews.length) * 100
   }
 
   if (isLoading) {
@@ -117,7 +139,7 @@ const RestaurantDetail = () => {
 
   return (
     <>
-      <CustomerHeader/>
+      <CustomerHeader />
       <img src={hostData.imgURL} alt='Restaurant picture' width='100%' height='350px' />
       <Grid container p={3} m={0.5} justifyContent='space-between'>
         <Grid xs={8} item container direction='column' rowGap={2} p={2} sx={{ backgroundColor: 'white', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
@@ -221,14 +243,62 @@ const RestaurantDetail = () => {
             </Grid>
           </Grid>
 
+          <Grid container justifyContent='space-between' spacing={2} alignItems='center'>
+            <Grid item xs={3}>
+              <FormControl fullWidth>
+                <InputLabel id='filter' color='secondary'>Filter</InputLabel>
+                <Select
+                  color='secondary'
+                  labelId='filter'
+                  id='filter-select'
+                  label='Filter'>
+                  <MenuItem value='NEWEST'>
+                    NEWEST
+                  </MenuItem>
+                  <MenuItem value='HIGHEST'>
+                    HIGHEST
+                  </MenuItem>
+                  <MenuItem value='LOWEST'>
+                    LOWEST
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                color='secondary'
+                fullWidth
+                variant='standard'
+                placeholder='Hit ENTER to search name, table name, etc.'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            {
+              userData && (
+            <Grid item xs={3}>
+              <ReviewCreateModal data={userData} />
+            </Grid>
+
+              )
+            }
+          </Grid>
           {/* Review Block */}
-          <RestaurantReviewBlock/>
-          
+          {hostReviews.map((review, index) => {
+            return <RestaurantReviewBlock key={index} data={review} />
+          })}
+
+
         </Grid>
 
         <Grid xs={3.7} item container>
-          <Paper sx={{maxHeight:'50vh', position: 'sticky', top: 0}}>
-            <ReservationMakingBlock/>
+          <Paper sx={{ maxHeight: '50vh', position: 'sticky', top: 0 }}>
+            <ReservationMakingBlock />
           </Paper>
         </Grid>
       </Grid>
