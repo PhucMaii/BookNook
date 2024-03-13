@@ -38,7 +38,6 @@ const RestaurantDetail = () => {
   const { restaurantId } = useParams();
 
   useEffect(() => {
-    console.log(restaurantId, 'restauyrantId')
     if (restaurantId) {
       fetchHostData()
       fetchReviews()
@@ -125,9 +124,13 @@ const RestaurantDetail = () => {
   }
 
   
-  const getStarValue = (star) => {
-    return (star / hostReviews.length) * 100
-  }
+  const getStarValue = (starCount) => {
+    if (hostReviews.length === 0) {
+        return 0; 
+    }
+    return (starCount / hostReviews.length) * 100;
+}
+
 
   if (isLoading) {
     return (
@@ -282,7 +285,10 @@ const RestaurantDetail = () => {
             {
               userData && (
             <Grid item xs={3}>
-              <ReviewCreateModal data={userData} />
+              <ReviewCreateModal
+                data={userData} 
+                uid={docId} 
+                restaurantId={restaurantId} />
             </Grid>
 
               )

@@ -20,6 +20,7 @@ import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
 import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
 import './App.css';
 import SearchResultPage from './customerSide/pages/SearchResultPage';
+import UserSettingPage from './customerSide/pages/userSettingPage/UserSettingPage';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             <Route path='/customer/booking-confirmation'
               element={<CustomerConfirmationBooking />}
             />
+            <Route path="/customer/setting" element={<UserSettingPage/>} />
             <Route path="/" element={<CustomerHomepage/>} />
             <Route path="/customer/search" element={<SearchResultPage />} />
             <Route path='/customer/successful-page' element={<CustomerSuccessfulPage/>} />
