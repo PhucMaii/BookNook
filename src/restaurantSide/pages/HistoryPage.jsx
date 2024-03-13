@@ -121,7 +121,6 @@ export default function HistoryPage() {
       const { startDate, endDate } = generateToday();
 
       const reservationCollection = collection(db, 'reservations');
-      console.log(restaurantIds, 'restaurantIds');
       const historyQuery = query(
         reservationCollection,
         and (
