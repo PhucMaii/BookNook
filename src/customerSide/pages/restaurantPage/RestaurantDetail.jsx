@@ -22,8 +22,8 @@ const RestaurantDetail = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [hostData, setHostData] = useState()
   const [hostReviews, setHostReviews] = useState()
-  const [reservationFilter, setReservationFilter] = useState({})
-  const [reviewFilter, setReviewFilter] = useState()
+  const [_reservationFilter, _setReservationFilter] = useState({})
+  const [_reviewFilter, _setReviewFilter] = useState()
   const [starsObj, setStarsObj] = useState({
     oneStar: 0,
     twoStar: 0,

@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Avatar, Button, Grid, Modal, Rating, TextField, Typography } from '@mui/material'
-import { dummyAvatar } from '../../../../utils/constants';
 import { primary } from '../../../../theme/colors';
-import { Timestamp, addDoc, collection, doc, updateDoc } from 'firebase/firestore';
+import { Timestamp, addDoc, collection} from 'firebase/firestore';
 import { db } from '../../../../../firebaseConfig';
 import Notification from '../../../../restaurantSide/components/Notification';
 
@@ -20,7 +19,7 @@ const ReviewCreateModal = ({ data, uid, restaurantId }) => {
 
     const uploadData = async () => {
         try {
-            const docRef = await addDoc(collection(db, "reviews"), {
+            await addDoc(collection(db, 'reviews'), {
                 message: message,
                 postTime: myTimestamp,
                 reply: '',

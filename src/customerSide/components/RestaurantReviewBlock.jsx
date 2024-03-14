@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Avatar, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Rating, Select, TextField, Typography } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search';
-import { dummyAvatar } from '../../utils/constants';
+import { Avatar,  Grid,Rating,Typography } from '@mui/material'
 import { Box } from '@mui/system';
 import { primary } from '../../theme/colors';
-import ReviewCreateModal from './Modals/ReviewCreateModal/ReviewCreateModal';
 import { fetchDoc } from '../../utils/firebase';
 import { SplashScreen } from '../../lib/utils';
-import { convertTimestampToDate } from '../../utils/time';
 import moment from 'moment/moment';
 
 const RestaurantReviewBlock = ({ data }) => {

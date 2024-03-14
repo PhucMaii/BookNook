@@ -12,7 +12,7 @@ export const errorBackground = red[50];
 export const warning = yellow[900];
 export const warningBackground = yellow[50];
 
-export const primary15 = 'rgba(255, 99, 71, 0.15)'
+export const primary15 = 'rgba(255, 99, 71, 0.15)';
 export const primary = '#FF6347';
 export const secondary = '#3498DB';
 export const lightSecondary = '#3498db24';

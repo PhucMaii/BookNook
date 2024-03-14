@@ -7,7 +7,7 @@ import AddressInput from '../../../restaurantSide/components/AddressInput'
 import UpdateUserPicture from '../../components/Modals/UpdateProfilePictureModal.jsx/UpdateUserPicture'
 
 const UserSettingPage = props => {
-    const [address, setAddress] = useState('');
+    const [_address, setAddress] = useState('');
 
     return (
         <>
