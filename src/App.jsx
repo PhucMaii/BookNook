@@ -20,7 +20,7 @@ import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/Sucessfu
 import './App.css';
 import SearchResultPage from './customerSide/pages/SearchResultPage';
 import BookingDataProvider from './customerSide/context/BookingDataContext';
-import ErrorPage from './customerSide/pages/404';
+import ErrorPage from './customerSide/pages/404/404';
 
 function App() {
   return (
@@ -54,7 +54,8 @@ function App() {
               <Route path="/" element={<CustomerHomepage/>} />
               <Route path="/customer/search" element={<SearchResultPage />} />
               <Route path='/customer/successful-page' element={<CustomerSuccessfulPage/>} />
-              <Route path='/404' element={<ErrorPage />}/>            
+              <Route path='/404' element={<ErrorPage />}/>  
+              <Route path="*" component={<ErrorPage />} />          
             </Routes>
           </BookingDataProvider>
         </CustomerAuthProvider>
