@@ -1,63 +1,56 @@
-import styled from 'styled-components';
+import React from 'react';
+import { Grid } from '@mui/material';
 
-const AccordionPingStyled = styled.div`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: ${(props) => (props.$isCompleted ? 'success' : 'error')};
-`;
+const AccordionPingStyled = (
+  <div
+    style={{
+      width: 'px',
+      height: '10px',
+      borderRadius: '50%',
+      
+    }}
+  />
+);
 
-const AccordionContainerStyled = styled.div`
-  margin: 5px 0; 
-  border-radius: 8px; 
-  border: 0px solid #ccc; 
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-`;
+const AccordionContainerStyled = (props) => (
+  <Grid container justifyContent="space-evenly" {...props} />
+);
 
-const AccordionCardStyled = styled.div`
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border-radius: 8px; 
-`;
+const AccordionCardStyled = (props) => (
+  <Grid
+    container
+    justifyContent="center"
+    spacing={2}
+    style={{
+      boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
+      borderRadius: '8px',
+    }}
+    {...props}
+  />
+);
 
-const AccordionCardContentStyled = styled.div`
-  padding: 20px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  display: flex;
-  justify-content: flex-end;
-  margin: 10px;
+const AccordionCardContentStyled = (props) => (
+  <Grid
+    container
+    spacing={2}
+    justifyContent="center"
+    style={{
+      padding: '20px',
+      boxShadow: 'rgba(149, 157, 165, 0.2) 0px 0px 0px',
+      margin: '10px',
+    }}
+    {...props}
+  />
+);
 
-  & > * {
-    margin-right: 50px;
-  }
-`;
-
-const AccordionContentWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-
-  span {
-    color: green,
-    fontSize: 1.2em,
-    margin-right: 1px; 
-  }
-
-  strong {
-    flex: 0 0 140px;
-    margin-right: 1px;
-  }
-
-  span,
-  strong {
-    flex: 1;
-  }
-`;
+const AccordionContentWrapper = (props) => (
+  <Grid item {...props} />
+);
 
 const iconStyles = {
   color: 'green',
   fontSize: '1.2em',
-  marginRight: '1px', 
+  marginRight: '1px',
 };
 
 export {

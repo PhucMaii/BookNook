@@ -1,74 +1,94 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+  Grid,
+  Box
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import {
-  AccordionContainerStyled,
   AccordionCardContentStyled,
-  AccordionContentWrapper,
-  iconStyles,
+  iconStyles
 } from './styled';
 
 const CustomerHistoryAccordion = ({ reservation }) => {
   const [expandedPanel, setExpandedPanel] = useState(null);
 
-  const handleAccordionChange = (panel) => {
-    setExpandedPanel(panel === expandedPanel ? null : panel);
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedPanel(isExpanded ? panel : null);
   };
-
-  const accordionSummaryStyles = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  };
-
   return (
     <Accordion
-      expanded={expandedPanel === 'panel'}
-      onChange={() => handleAccordionChange('panel')}
+      expanded={expandedPanel === `panel-${reservation.id}`}
+      onChange={handleAccordionChange(`panel-${reservation.id}`)}
+      style={{
+        marginLeft: '6%',
+        marginRight: '6%',
+        borderRadius: '10px',
+        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.4)',
+      }}
     >
-      <AccordionContainerStyled>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />} style={accordionSummaryStyles}>
-          <AccordionContentWrapper>
-            <span style={{ ...iconStyles, marginLeft: '125px' }}>•</span>
-            <span style={{ marginLeft: '1px' }}> <strong></strong>
-            <span>{reservation.restaurantId || 'N/A'}</span> </span>
-          </AccordionContentWrapper>
-          <AccordionContentWrapper>
-          <span style={{ marginLeft: '90px' }}>
-            <strong></strong>
-            <span>{reservation.restaurantName || 'N/A'}</span></span>
-          </AccordionContentWrapper>
-          <AccordionContentWrapper>
-            <strong>Number of Guests:</strong>
-            <span>{reservation.numGuests || 'N/A'}</span>
-          </AccordionContentWrapper>
-          <AccordionContentWrapper>
-          <span style={{ marginLeft: '0px' }}>
-            <strong>Booked Time:</strong>
-            <span>{reservation.bookedTime || 'N/A'}</span></span>
-          </AccordionContentWrapper>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+        >
+
+          <Grid container spacing={2} alignItems='center'>
+              <Grid item xs={1}>
+                <span style={iconStyles}>•</span>
+              </Grid>
+              <Grid item xs={2} >
+                <span>{reservation.restaurantId}</span>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography variant='body1' style={{ fontWeight: 'bold' }}>{reservation.restaurantName}</Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant='body1'>Number of Guests: {reservation.numGuests}</Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant='body1' style={{ fontWeight: 'bold' }}>Booked Time: {reservation.bookedTime}</Typography>
+              </Grid>
+          </Grid>
         </AccordionSummary>
-      </AccordionContainerStyled>
 
       <AccordionDetails>
         <AccordionCardContentStyled>
-          
-              <Typography variant="body2">
-              <strong>Restaurant ID:</strong> {reservation.restaurantId || 'N/A'}
-                <br />
-                <strong>Restaurant Name:</strong> {reservation.restaurantName || 'N/A'}
-                <br />
-                <strong>Restaurant Location:</strong> {reservation.restaurantLocation || 'N/A'}
-                <br />
-                <strong>Number of Guests:</strong> {reservation.numGuests || 'N/A'}
-                <br />
-                <strong>Booked Time:</strong> {reservation.bookedTime || 'N/A'}
-                <br />
-                <strong>Status:</strong> {reservation.status || 'N/A'}
-              </Typography>
-           
+          <Grid container spacing={20}>
+            <Grid item xs={12} sm={6} md={4} textAlign='left'>
+              <Box display='flex' flexDirection='column'>
+                <Typography variant='subtitle1' >{'Restaurant ID: '}</Typography>
+                <Typography variant='h6' style={{ fontWeight: 'bold' }}>{reservation.restaurantId}</Typography>
+                <Typography variant='subtitle1' >{'Restaurant Name: '}</Typography>
+                <Typography variant='h6' style={{ fontWeight: 'bold' }}>{reservation.restaurantName}</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} textAlign='left'>
+              <Box
+                display='flex'
+                flexDirection='column'
+              >
+                <Typography variant='subtitle1' >{'Location: '}</Typography>
+                <Typography variant='h6' style={{ fontWeight: 'bold' }}>{reservation.restaurantLocation}</Typography>
+                <Typography variant='subtitle1' >{'Booked Time: '}</Typography>
+                <Typography variant='h6' style={{ fontWeight: 'bold' }}>{reservation.bookedTime}</Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} textAlign='left'>
+              <Box
+                display='flex'
+                flexDirection='column'
+              >
+                <Typography variant='subtitle1' >{'Number of Guests: '}</Typography>
+                <Typography variant='h6' style={{ fontWeight: 'bold' }}>{reservation.numGuests}</Typography>
+                <Typography variant='subtitle1' >{'Status: '}</Typography>
+                <Typography variant='h6' style={{ fontWeight: 'bold' }}>{reservation.status}</Typography>
+              </Box>
+            </Grid>
+          </Grid>
         </AccordionCardContentStyled>
       </AccordionDetails>
     </Accordion>

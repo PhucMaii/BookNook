@@ -1,24 +1,21 @@
 import React from 'react';
 import {
-  AppBar,
   Box,
   Grid,
   Typography,
-  Toolbar,
-  Avatar,
 } from '@mui/material';
-import PersonPin from '@mui/icons-material/PersonPin';
 import CustomerHistoryCard from '../components/CustomerHistoryCard/CustomerHistoryCard';
 import CustomerHistoryAccordion from '../components/CustomerHistoryAccordion/CustomerHistoryAccordion';
+import CustomerHeader from '../components/TopNavbar/CustomerHeader';
 
 const customerHistory = [
   {
     id: 1,
     restaurantId: '000123',
-    restaurantName: 'Jollibee',
-    restaurantLocation: 'Strawberry Hill',
+    restaurantName: 'Miku Restaurant',
+    restaurantLocation: 'Vancouver',
     numGuests: 2,
-    bookedTime: '2024-03-01T12:30:00',
+    bookedTime: '21 Jan 2024, 12:21 PM',
     status: 'Confirmed',
   },
   {
@@ -27,7 +24,7 @@ const customerHistory = [
     restaurantName: 'McDonalds',
     restaurantLocation: 'Newton Exchange',
     numGuests: 4,
-    bookedTime: '2024-03-02T14:30:00',
+    bookedTime: '1 Mar 2024, 1:45 PM',
     status: 'Cancelled',
   },
   {
@@ -36,47 +33,52 @@ const customerHistory = [
     restaurantName: 'All About Pho',
     restaurantLocation: 'King George',
     numGuests: 3,
-    bookedTime: '2024-03-02T18:45:00',
+    bookedTime: '13 Dec 2023, 9:00AM',
     status: 'Confirmed',
   },
-  
 ];
 
 const calculateTotalArrivals = () => 50;
 
 const calculateReservationsCancelled = () => 50;
 
-const getInitials = (fullName) => {
-  const names = fullName.split(' ');
-  return names.map((name) => name[0]).join('');
-};
-
 const CustomerHistory = () => {
-  const loggedInUserName = 'Michael Jordan';
-  return (
-    <Box display="flex" flexDirection="column" gap={4} width="100%" p={0} m={0} sx={{ marginRight: '20px', overflowX: 'hidden' }}>
-      <AppBar position="static" color="default" sx={{ backgroundColor: 'white', color: 'black', width: '100%' }}>
-        <Toolbar>
-          <img src="/customerLogo.png" alt="Company Logo" style={{ maxHeight: '60px', marginRight: '16px' }} />
-          <PersonPin sx={{ color: 'Red' }} />
-          <div style={{ marginLeft: 'auto' }}>
-            <Avatar alt={loggedInUserName} src="/userAvatar.png">
-              {getInitials(loggedInUserName)}
-            </Avatar>
-          </div>
-        </Toolbar>
-      </AppBar>
 
-      <Typography variant="h3" align="center" mt={5} fontWeight="bold">
+  return (
+
+    <Box display="flex" flexDirection="column" gap={4} width="100%" sx={{ backgroundColor: '#f0f0f0', overflowX: 'hidden' }}>
+      <CustomerHeader />
+      <Typography
+        variant="h4"
+        align="center"
+        mt={2}
+        fontWeight="bold"
+      >
         Booking History
       </Typography>
 
-      <Grid container spacing={4} justifyContent="auto" alignItems="auto" mt={5} sx={{ marginLeft: '0px' }}>
-        <CustomerHistoryCard title="Total Reservations" data={customerHistory.length} icon="/Reservation.png" marginLeft="auto" marginRight="auto" />
-        <CustomerHistoryCard title="Total Arrived" data={calculateTotalArrivals()} icon="/public/arrive.png" />
-        <CustomerHistoryCard title="Reservations Cancelled" data={calculateReservationsCancelled()} icon="/cancel.png" marginLeft="auto" marginRight="auto" />
+      <Grid
+        container
+        spacing={4}
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          backgroundColor: '#f0f0f0',
+          borderRadius: '8px',
+          padding: '20px',
+        }}
+      >
+        <Grid item xs={12} md={4}>
+          <CustomerHistoryCard title="Total Reservations" data={customerHistory.length} icon="/Reservation.png" />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <CustomerHistoryCard title="Total Arrived" data={calculateTotalArrivals()} icon="/public/arrive.png" />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <CustomerHistoryCard title="Reservations Cancelled" data={calculateReservationsCancelled()} icon="/cancel.png" />
+        </Grid>
       </Grid>
-      
+
       {customerHistory.map((reservation) => (
         <CustomerHistoryAccordion key={reservation.id} reservation={reservation} />
       ))}
