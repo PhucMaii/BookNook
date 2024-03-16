@@ -22,8 +22,11 @@ const RestaurantDetail = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [hostData, setHostData] = useState()
   const [hostReviews, setHostReviews] = useState()
+  const [reviewData, setReviewData] = useState();
   const [_reservationFilter, _setReservationFilter] = useState({})
-  const [_reviewFilter, _setReviewFilter] = useState()
+  const [reviewFilter, setReviewFilter] = useState('ALL')
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modalClosed, setModalClosed] = useState(false);
   const [starsObj, setStarsObj] = useState({
     oneStar: 0,
     twoStar: 0,
@@ -33,24 +36,35 @@ const RestaurantDetail = () => {
   })
   const [userData, setUserData] = useState()
 
-  const {customerIds: {docId}} = useContext(AuthContext)
+  const { customerIds: { docId } } = useContext(AuthContext)
 
   const { restaurantId } = useParams();
 
   useEffect(() => {
+    console.log('modal chaneg ')
     if (restaurantId) {
+      console.log('modal changed with restaurant id', {restaurantId, modalClosed});
       fetchHostData()
       fetchReviews()
     }
     if (docId) {
       fetchUser();
+      setModalClosed(false);
     }
-  }, [restaurantId, docId])
+  }, [restaurantId, docId, modalClosed])
+
+  useEffect(() => {
+    console.log(modalClosed, 'modal Closed')
+  }, [modalClosed])
+
+  const handleModalClose = () => {
+    setModalClosed(true);
+  };
 
   const fetchHostData = async () => {
     try {
       const fetchResult = await fetchDoc('restaurants', restaurantId)
-      setHostData(fetchResult.docData)
+      setHostData({...fetchResult.docData, id: restaurantId})
     } catch (error) {
       console.log('Fail to fetch host data: ', error)
       setIsLoading(false);
@@ -61,7 +75,8 @@ const RestaurantDetail = () => {
     try {
       const fetchResult = await fetchData('reviews', where('restaurantId', '==', restaurantId))
       setHostReviews(fetchResult)
-      processReviews(fetchResult);
+      setReviewData(fetchResult)
+      processReviews(fetchResult)
       setIsLoading(false);
     } catch (error) {
       console.log('Fail to fetch reviews: ', error)
@@ -123,14 +138,66 @@ const RestaurantDetail = () => {
     }
   }
 
-  
+
   const getStarValue = (starCount) => {
     if (hostReviews.length === 0) {
-        return 0; 
+      return 0;
     }
     return (starCount / hostReviews.length) * 100;
-}
+  }
 
+  const handleSelect = (e) => {
+    setReviewFilter(e.target.value)
+  }
+
+  const handleKeyDown = (event) => {
+
+    if (event.key === 'Enter') {
+      handleSearch(searchTerm);
+    }
+  };
+
+  const handleSearch = (word) => {
+    console.log(reviewData[0].message.includes(word))
+    const filteredReviews = reviewData.filter(item =>
+      item.message.includes(word) || item.stars == word
+    );
+    setReviewData(filteredReviews)
+  }
+
+  useEffect(() => {
+    switch (reviewFilter) {
+      case 'All': {
+        setReviewData(hostReviews);
+        break;
+      }
+      case 'NEWEST': {
+        // Sort reviews by timestamp in descending order to get the newest first
+        const newestFirst = hostReviews.slice().sort((a, b) => {
+          return b.postTime.seconds - a.postTime.seconds || b.postTime.nanoseconds - a.postTime.nanoseconds;
+        });
+        setReviewData(newestFirst);
+        break;
+      }
+      case 'HIGHEST': {
+        // Sort reviews by stars in descending order to get the highest rated first
+        const highestFirst = hostReviews.slice().sort((a, b) => b.stars - a.stars);
+        setReviewData(highestFirst);
+        break;
+      }
+      case 'LOWEST': {
+        // Sort reviews by stars in ascending order to get the lowest rated first
+        const lowestFirst = hostReviews.slice().sort((a, b) => a.stars - b.stars);
+        setReviewData(lowestFirst);
+        break;
+      }
+      default: {
+        setReviewData(hostReviews);
+        break;
+      }
+    }
+  }, [reviewFilter, hostReviews]);
+  
 
   if (isLoading) {
     return (
@@ -178,7 +245,7 @@ const RestaurantDetail = () => {
                   <Typography variant='h4' fontWeight='bold' color={primary}>{hostData.type}</Typography>
                 </Grid>
                 <Grid item>
-                  <Divider component='span' orientation='vertical' />
+                  <Divider component='span' orientation='vertical'/>
                 </Grid>
               </Grid>
             </Grid>
@@ -208,12 +275,11 @@ const RestaurantDetail = () => {
             mt={2}>
             <Grid item xs={6} container
               direction='column'
-              justifyContent="space-between"
               alignItems="space-around"
-              mt={4}>
+            >
               <Typography variant='h6' sx={{ marginLeft: '5px' }}>Overall Rating</Typography>
               <Box display={'flex'} alignItems="center">
-                <Rating name="Overall rating" value={avgStar} precision={0.5} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
+                <Rating name="Overall rating" value={avgStar} precision={0.1} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
                 <Typography variant='h6' sx={{ marginLeft: '5px' }}>{avgStar}</Typography>
               </Box>
               <Typography variant='h6' sx={{ marginLeft: '5px' }}>{hostReviews.length} reviews</Typography>
@@ -254,7 +320,12 @@ const RestaurantDetail = () => {
                   color='secondary'
                   labelId='filter'
                   id='filter-select'
-                  label='Filter'>
+                  value={reviewFilter}
+                  label='Filter'
+                  onChange={handleSelect}>
+                  <MenuItem value='ALL'>
+                    ALL
+                  </MenuItem>
                   <MenuItem value='NEWEST'>
                     NEWEST
                   </MenuItem>
@@ -272,7 +343,7 @@ const RestaurantDetail = () => {
                 color='secondary'
                 fullWidth
                 variant='standard'
-                placeholder='Hit ENTER to search name, table name, etc.'
+                placeholder='Hit ENTER to search name or stars.'
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>
@@ -280,23 +351,33 @@ const RestaurantDetail = () => {
                     </InputAdornment>
                   ),
                 }}
+                value={searchTerm}
+                onInput={(event) => setSearchTerm(event.target.value)}
+                onKeyDown={handleKeyDown}
+                onChange={() => {
+                  setReviewData(hostReviews)
+                }}
               />
             </Grid>
             {
               userData && (
-            <Grid item xs={3}>
-              <ReviewCreateModal
-                data={userData} 
-                uid={docId} 
-                restaurantId={restaurantId} />
-            </Grid>
+                <Grid item xs={3}>
+                  <ReviewCreateModal
+                    data={userData}
+                    uid={docId}
+                    restaurantId={restaurantId}
+                    onChange={()=>{
+                      handleModalClose()
+                    }}/>
+                </Grid>
 
               )
             }
           </Grid>
           {/* Review Block */}
-          {hostReviews.map((review, index) => {
-            return <RestaurantReviewBlock key={index} data={review} />
+          {reviewData.map((review, index) => {
+            return <RestaurantReviewBlock key={index} data={review} 
+          />
           })}
 
 
@@ -304,7 +385,7 @@ const RestaurantDetail = () => {
 
         <Grid xs={3.7} item container>
           <Paper sx={{ maxHeight: '50vh', position: 'sticky', top: 0 }}>
-            <ReservationMakingBlock />
+            <ReservationMakingBlock restaurantData = {hostData} />
           </Paper>
         </Grid>
       </Grid>

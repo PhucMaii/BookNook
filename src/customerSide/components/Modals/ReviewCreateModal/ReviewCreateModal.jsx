@@ -6,7 +6,7 @@ import { Timestamp, addDoc, collection} from 'firebase/firestore';
 import { db } from '../../../../../firebaseConfig';
 import Notification from '../../../../restaurantSide/components/Notification';
 
-const ReviewCreateModal = ({ data, uid, restaurantId }) => {
+const ReviewCreateModal = ({ data, uid, restaurantId, onChange }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -34,6 +34,7 @@ const ReviewCreateModal = ({ data, uid, restaurantId }) => {
                         message: 'Your review posted successfully!.'
                     })
                 })
+                onChange();
         } catch (error) {
             console.log('Fail to upload review: ', error)
             setNotification({
@@ -114,7 +115,8 @@ const ReviewCreateModal = ({ data, uid, restaurantId }) => {
 ReviewCreateModal.propTypes = {
     data: PropTypes.object,
     uid: PropTypes.string,
-    restaurantId: PropTypes.string
+    restaurantId: PropTypes.string,
+    onChange: PropTypes.func
 }
 
 export default ReviewCreateModal
