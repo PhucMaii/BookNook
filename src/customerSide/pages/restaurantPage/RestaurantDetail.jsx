@@ -1,6 +1,5 @@
-import { Grid, Typography, Box, Divider, Rating, Paper} from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { dummyImg } from '../../../utils/constants'
+import { Grid, Typography, Box, Divider, Rating, Paper, FormControl, InputLabel, Select, MenuItem, TextField, InputAdornment } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
 import StarIcon from '@mui/icons-material/Star';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
@@ -12,48 +11,73 @@ import CustomerHeader from '../../components/TopNavbar/CustomerHeader';
 import { SplashScreen } from '../../../lib/utils';
 import { fetchData, fetchDoc } from '../../../utils/firebase';
 import { useParams } from 'react-router-dom';
-import { getAggregateFromServer, where } from 'firebase/firestore';
+import { where } from 'firebase/firestore';
+import SearchIcon from '@mui/icons-material/Search';
+import ReviewCreateModal from '../../components/Modals/ReviewCreateModal/ReviewCreateModal';
+import { AuthContext } from '../../context/AuthContext';
+
 
 const RestaurantDetail = () => {
   const [avgStar, setAvgStar] = useState()
   const [isLoading, setIsLoading] = useState(true)
   const [hostData, setHostData] = useState()
   const [hostReviews, setHostReviews] = useState()
-  const [reservationFilter, setReservationFilter] = useState({})
-  const [reviewFilter, setReviewFilter] = useState()
+  const [reviewData, setReviewData] = useState();
+  const [_reservationFilter, _setReservationFilter] = useState({})
+  const [reviewFilter, setReviewFilter] = useState('ALL')
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modalClosed, setModalClosed] = useState(false);
   const [starsObj, setStarsObj] = useState({
-    oneStar:0,
-    twoStar:0,
-    threeStar:0,
-    fourStar:0,
-    fiveStar:0
+    oneStar: 0,
+    twoStar: 0,
+    threeStar: 0,
+    fourStar: 0,
+    fiveStar: 0
   })
+  const [userData, setUserData] = useState()
 
-  const {restaurantId} = useParams();
+  const { customerIds: { docId } } = useContext(AuthContext)
+
+  const { restaurantId } = useParams();
 
   useEffect(() => {
+    console.log('modal chaneg ')
     if (restaurantId) {
+      console.log('modal changed with restaurant id', {restaurantId, modalClosed});
       fetchHostData()
       fetchReviews()
     }
-  }, [restaurantId])
+    if (docId) {
+      fetchUser();
+      setModalClosed(false);
+    }
+  }, [restaurantId, docId, modalClosed])
 
-  const fetchHostData = async() => {
+  useEffect(() => {
+    console.log(modalClosed, 'modal Closed')
+  }, [modalClosed])
+
+  const handleModalClose = () => {
+    setModalClosed(true);
+  };
+
+  const fetchHostData = async () => {
     try {
-      const fetchResult = await fetchDoc('restaurants',restaurantId)
-      setHostData(fetchResult.docData)
+      const fetchResult = await fetchDoc('restaurants', restaurantId)
+      setHostData({...fetchResult.docData, id: restaurantId})
     } catch (error) {
-      console.log('Fail to fetch host data: ',error)
+      console.log('Fail to fetch host data: ', error)
       setIsLoading(false);
     }
   }
 
-  const fetchReviews = async() => {
+  const fetchReviews = async () => {
     try {
       const fetchResult = await fetchData('reviews', where('restaurantId', '==', restaurantId))
       setHostReviews(fetchResult)
+      setReviewData(fetchResult)
       processReviews(fetchResult)
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
       console.log('Fail to fetch reviews: ', error)
       setIsLoading(false);
@@ -70,28 +94,28 @@ const RestaurantDetail = () => {
     }
     reviews.map((reviews) => {
       totalStar += reviews.stars
-      switch(reviews.stars){
-        case 1:{
+      switch (reviews.stars) {
+        case 1: {
           tempStarsObj.oneStar++
           break;
         }
-        case 2:{
+        case 2: {
           tempStarsObj.twoStar++
           break;
         }
-        case 3:{
+        case 3: {
           tempStarsObj.threeStar++
           break;
         }
-        case 4:{
+        case 4: {
           tempStarsObj.fourStar++
           break;
         }
-        case 5:{
+        case 5: {
           tempStarsObj.fiveStar++
           break;
         }
-        default:{
+        default: {
           console.log('Unable to group reviews.')
           break;
         }
@@ -103,9 +127,77 @@ const RestaurantDetail = () => {
     setAvgStar(avgStar)
   }
 
-  const getStarValue = (star) => {
-    return (star/hostReviews.length)*100
+  const fetchUser = async () => {
+    try {
+      const fetchResult = await fetchDoc('users', docId)
+      setUserData(fetchResult.docData)
+      setIsLoading(false)
+    } catch (error) {
+      console.log('Fail to fetch user data: ', error)
+      setIsLoading(false);
+    }
   }
+
+
+  const getStarValue = (starCount) => {
+    if (hostReviews.length === 0) {
+      return 0;
+    }
+    return (starCount / hostReviews.length) * 100;
+  }
+
+  const handleSelect = (e) => {
+    setReviewFilter(e.target.value)
+  }
+
+  const handleKeyDown = (event) => {
+
+    if (event.key === 'Enter') {
+      handleSearch(searchTerm);
+    }
+  };
+
+  const handleSearch = (word) => {
+    console.log(reviewData[0].message.includes(word))
+    const filteredReviews = reviewData.filter(item =>
+      item.message.includes(word) || item.stars == word
+    );
+    setReviewData(filteredReviews)
+  }
+
+  useEffect(() => {
+    switch (reviewFilter) {
+      case 'All': {
+        setReviewData(hostReviews);
+        break;
+      }
+      case 'NEWEST': {
+        // Sort reviews by timestamp in descending order to get the newest first
+        const newestFirst = hostReviews.slice().sort((a, b) => {
+          return b.postTime.seconds - a.postTime.seconds || b.postTime.nanoseconds - a.postTime.nanoseconds;
+        });
+        setReviewData(newestFirst);
+        break;
+      }
+      case 'HIGHEST': {
+        // Sort reviews by stars in descending order to get the highest rated first
+        const highestFirst = hostReviews.slice().sort((a, b) => b.stars - a.stars);
+        setReviewData(highestFirst);
+        break;
+      }
+      case 'LOWEST': {
+        // Sort reviews by stars in ascending order to get the lowest rated first
+        const lowestFirst = hostReviews.slice().sort((a, b) => a.stars - b.stars);
+        setReviewData(lowestFirst);
+        break;
+      }
+      default: {
+        setReviewData(hostReviews);
+        break;
+      }
+    }
+  }, [reviewFilter, hostReviews]);
+  
 
   if (isLoading) {
     return (
@@ -117,7 +209,7 @@ const RestaurantDetail = () => {
 
   return (
     <>
-      <CustomerHeader/>
+      <CustomerHeader />
       <img src={hostData.imgURL} alt='Restaurant picture' width='100%' height='350px' />
       <Grid container p={3} m={0.5} justifyContent='space-between'>
         <Grid xs={8} item container direction='column' rowGap={2} p={2} sx={{ backgroundColor: 'white', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
@@ -153,7 +245,7 @@ const RestaurantDetail = () => {
                   <Typography variant='h4' fontWeight='bold' color={primary}>{hostData.type}</Typography>
                 </Grid>
                 <Grid item>
-                  <Divider component='span' orientation='vertical' />
+                  <Divider component='span' orientation='vertical'/>
                 </Grid>
               </Grid>
             </Grid>
@@ -183,12 +275,11 @@ const RestaurantDetail = () => {
             mt={2}>
             <Grid item xs={6} container
               direction='column'
-              justifyContent="space-between"
               alignItems="space-around"
-              mt={4}>
+            >
               <Typography variant='h6' sx={{ marginLeft: '5px' }}>Overall Rating</Typography>
               <Box display={'flex'} alignItems="center">
-                <Rating name="Overall rating" value={avgStar} precision={0.5} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
+                <Rating name="Overall rating" value={avgStar} precision={0.1} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
                 <Typography variant='h6' sx={{ marginLeft: '5px' }}>{avgStar}</Typography>
               </Box>
               <Typography variant='h6' sx={{ marginLeft: '5px' }}>{hostReviews.length} reviews</Typography>
@@ -221,14 +312,80 @@ const RestaurantDetail = () => {
             </Grid>
           </Grid>
 
+          <Grid container justifyContent='space-between' spacing={2} alignItems='center'>
+            <Grid item xs={3}>
+              <FormControl fullWidth>
+                <InputLabel id='filter' color='secondary'>Filter</InputLabel>
+                <Select
+                  color='secondary'
+                  labelId='filter'
+                  id='filter-select'
+                  value={reviewFilter}
+                  label='Filter'
+                  onChange={handleSelect}>
+                  <MenuItem value='ALL'>
+                    ALL
+                  </MenuItem>
+                  <MenuItem value='NEWEST'>
+                    NEWEST
+                  </MenuItem>
+                  <MenuItem value='HIGHEST'>
+                    HIGHEST
+                  </MenuItem>
+                  <MenuItem value='LOWEST'>
+                    LOWEST
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                color='secondary'
+                fullWidth
+                variant='standard'
+                placeholder='Hit ENTER to search name or stars.'
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                value={searchTerm}
+                onInput={(event) => setSearchTerm(event.target.value)}
+                onKeyDown={handleKeyDown}
+                onChange={() => {
+                  setReviewData(hostReviews)
+                }}
+              />
+            </Grid>
+            {
+              userData && (
+                <Grid item xs={3}>
+                  <ReviewCreateModal
+                    data={userData}
+                    uid={docId}
+                    restaurantId={restaurantId}
+                    onChange={()=>{
+                      handleModalClose()
+                    }}/>
+                </Grid>
+
+              )
+            }
+          </Grid>
           {/* Review Block */}
-          <RestaurantReviewBlock/>
-          
+          {reviewData.map((review, index) => {
+            return <RestaurantReviewBlock key={index} data={review} 
+          />
+          })}
+
+
         </Grid>
 
         <Grid xs={3.7} item container>
-          <Paper sx={{maxHeight:'50vh', position: 'sticky', top: 0}}>
-            <ReservationMakingBlock/>
+          <Paper sx={{ maxHeight: '50vh', position: 'sticky', top: 0 }}>
+            <ReservationMakingBlock restaurantData = {hostData} />
           </Paper>
         </Grid>
       </Grid>
