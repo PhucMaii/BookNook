@@ -20,7 +20,8 @@ import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
 import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
 import './App.css';
 import SearchResultPage from './customerSide/pages/SearchResultPage';
-import UserSettingPage from './customerSide/pages/userSettingPage/UserSettingPage';
+import UserSettingPage from './customerSide/pages/UserSettingPage/UserSettingPage';
+
 
 function App() {
   return (

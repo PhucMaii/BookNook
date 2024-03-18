@@ -15,8 +15,12 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { grey } from '@mui/material/colors';
 import { generateTimeSlots } from '../../../utils/time';
 import { renderReviewStars } from '../../utils/render';
+import { useNavigate } from 'react-router-dom';
 
 const CustomerHomepageCard = ({ restaurant }) => {
+
+  const navigate = useNavigate()
+
   const renderTimeSlots = () => {
     const currentDate = new Date();
     let currentHour = currentDate.getHours();
@@ -32,7 +36,7 @@ const CustomerHomepageCard = ({ restaurant }) => {
     const currentTime = `${currentHour}:${currentMinutes}`;
     const timeSlots = generateTimeSlots();
     let currentHourIndex = timeSlots.indexOf(currentTime);
-    
+
     const renderedTimeSlots = [];
     let i = currentHourIndex;
     while (i < timeSlots.length && i <= currentHourIndex + 3) {
@@ -47,7 +51,7 @@ const CustomerHomepageCard = ({ restaurant }) => {
     if (i >= currentHourIndex) {
       currentHourIndex = currentHourIndex - (timeSlots.length - 1);
       i = 0;
-      while(i <= currentHourIndex + 3) {
+      while (i <= currentHourIndex + 3) {
         renderedTimeSlots.push(
           <Button key={i} variant="contained" style={{ color: 'white' }}>
             {timeSlots[i]}
@@ -80,9 +84,11 @@ const CustomerHomepageCard = ({ restaurant }) => {
           src={restaurant.imgURL ? restaurant.imgURL : '/unavailable_image.png'}
           alt="Card Image"
         />
-        <Typography variant="h5" fontWeight="bold" mt={1}>
-          {restaurant.name}
-        </Typography>
+        <div onClick={() => navigate(`customer/restaurantDetails/${restaurant.id}`)}>
+          <Typography variant="h5" fontWeight="bold" mt={1}>
+            {restaurant.name}
+          </Typography>
+        </div>
         <Box
           display="flex"
           flexDirection="row"
