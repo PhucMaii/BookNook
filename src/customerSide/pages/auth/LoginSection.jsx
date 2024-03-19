@@ -28,6 +28,7 @@ import {
   getAdditionalUserInfo,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
 } from 'firebase/auth';
 import { auth, googleProvider } from '../../../../firebaseConfig';
 import { AuthContext } from '../../context/AuthContext';
@@ -54,6 +55,11 @@ const LoginSection = ({ setNotification, modal, onCloseModal }) => {
     }
   };
 
+  const checkIsEmailInRestaurantDB = async (email) => {
+    const existingRestaurant = await fetchData('restaurants', where('email', '==', email));
+    return existingRestaurant.length > 0;
+  } 
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -75,6 +81,17 @@ const LoginSection = ({ setNotification, modal, onCloseModal }) => {
             on: true,
             severity: 'error',
             message: 'User Does Not Exist',
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        const isEmailInRestaurantDB = await checkIsEmailInRestaurantDB(values.email);
+        if (isEmailInRestaurantDB) {
+          setNotification({
+            on: true,
+            severity: 'error',
+            message: 'Email is not available for this role',
           });
           setIsLoading(false);
           return;
@@ -136,6 +153,18 @@ const LoginSection = ({ setNotification, modal, onCloseModal }) => {
           on: true,
           severity: 'error',
           message: 'User Not Found',
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      const isEmailInRestaurantDB = await checkIsEmailInRestaurantDB(userCredentials.user.email);
+      if (isEmailInRestaurantDB) {
+        await signOut(auth);
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email is not available for this role',
         });
         setIsLoading(false);
         return;

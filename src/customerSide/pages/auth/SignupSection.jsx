@@ -29,6 +29,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
 } from 'firebase/auth';
 import { auth, db, googleProvider } from '../../../../firebaseConfig';
 import { LoadingButton } from '@mui/lab';
@@ -58,6 +59,11 @@ const SignupSection = ({ setNotification, modal, onCloseModal }) => {
       console.log('Fail to check user in DB: ', error);
     }
   };
+
+  const checkIsEmailInRestaurantDB = async (email) => {
+    const existingRestaurant = await fetchData('restaurants', where('email', '==', email));
+    return existingRestaurant.length > 0;
+  } 
 
   const formik = useFormik({
     initialValues: {
@@ -98,6 +104,17 @@ const SignupSection = ({ setNotification, modal, onCloseModal }) => {
             on: true,
             severity: 'error',
             message: 'Email Exists Already',
+          });
+          setIsSubmitButtonLoading(false);
+          return;
+        }
+
+        const isEmailInRestaurantDB = await checkIsEmailInRestaurantDB(values.email);
+        if (isEmailInRestaurantDB) {
+          setNotification({
+            on: true,
+            severity: 'error',
+            message: 'Email is not available for this role',
           });
           setIsSubmitButtonLoading(false);
           return;
@@ -165,11 +182,25 @@ const SignupSection = ({ setNotification, modal, onCloseModal }) => {
         setIsSubmitButtonLoading(false);
         return;
       }
+      
+      const isEmailInRestaurantDB = await checkIsEmailInRestaurantDB(userCredential.user.email);
+      if (isEmailInRestaurantDB) {
+        await signOut(auth);
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email is not available for this role',
+        });
+        setIsSubmitButtonLoading(false);
+        return;
+      }
+      
       const submittedData = {
         name: userCredential.user.displayName,
         email: userCredential.user.email,
         uid: userCredential.user.uid,
       };
+
       const usersCollection = collection(db, 'users');
       const docData = await addDoc(usersCollection, submittedData);
       setCustomerIds(() => ({

@@ -27,11 +27,12 @@ import {
   signOut,
   signInWithPopup
 } from '@firebase/auth';
-import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
+import { addDoc, collection, where } from '@firebase/firestore';
 import { LoadingButton } from '@mui/lab';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import RestaurantInformation from './RestaurantInfo';
 import { AuthContext } from '../../context/AuthContext';
+import { fetchData } from '../../../utils/firebase';
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -57,18 +58,22 @@ const SignUp = () => {
 
   const checkIsUserInDB = async (email) => {
     try {
-      const restaurantCollection = collection(db, 'restaurants');
-      const restaurantQuery = query(restaurantCollection, where('email', '==', email));
-      const querySnapshot = await getDocs(restaurantQuery);
+      const existingRestaurants = await fetchData('restaurants', where('email', '==', email));
 
-      let id;
-      querySnapshot.forEach((doc) => {
-        id = doc.id;
-      })
-      return id ? true : false;
+      const isEmailInUserDB = await checkIsEmailInUserDB(email);
+      if (isEmailInUserDB) {
+        return true;
+      }
+
+      return existingRestaurants.legnth > 0;
     } catch (error) {
       console.log('Fail to check user in DB: ', error);
     }
+  }
+
+  const checkIsEmailInUserDB = async (email) => {
+    const userData = await fetchData('users', where('email', '==', email));
+    return userData.length > 0;
   }
 
   const checkFieldsValid = () => {
@@ -180,7 +185,7 @@ const SignUp = () => {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const isUserInDB = await checkIsUserInDB(userCredential.user.email);
       if (isUserInDB) {
-        await userCredential.user.delete();
+        await signOut(auth);
         setNotification({
           on: true,
           severity: 'error',
@@ -189,6 +194,19 @@ const SignUp = () => {
         setIsLoading(false);
         return;
       }
+
+      const isEmailInUserDB = await checkIsEmailInUserDB(userCredential.user.email);
+      if (isEmailInUserDB) {
+        await signOut(auth);
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email is not available for this role'
+        })
+        setIsLoading(false);
+        return;
+      }
+      
       const submittedData = {
         email: userCredential.user.email,
         uid: userCredential.user.uid,

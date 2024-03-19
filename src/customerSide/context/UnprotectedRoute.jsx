@@ -6,10 +6,6 @@ import PropTypes from 'prop-types';
 export default function UnprotectedRoute({ children }) {
   const { customerIds } = useContext(AuthContext);
   const navigate = useNavigate();
-  
-  // if (restaurantIds.uid === null) {
-  //   return <SplashScreen/>
-  // }
 
   if (customerIds.uid) {
     navigate('/');

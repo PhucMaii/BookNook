@@ -12,7 +12,7 @@ const CustomerSignUp = () => {
     severity: '',
     message: '',
   });
- 
+
   return (  
     <Grid
       container
