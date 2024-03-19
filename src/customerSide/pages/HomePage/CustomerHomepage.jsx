@@ -110,13 +110,20 @@ export default function CustomerHomepage() {
         if (!restaurant.address) {
           return null;
         }
-        const distance = calculateDistance(data.address.lat, data.address.lng, restaurant.address.lat, restaurant.address.lng);
+        const distance = calculateDistance(
+          data.address.lat,
+          data.address.lng,
+          restaurant.address.lat,
+          restaurant.address.lng
+        );
         return { ...restaurant, distance };
       });
 
-      const filteredRestaurants = newRestaurantList.filter((restaurant) => restaurant !== null);
-      const sortedByDistance = filteredRestaurants.sort((restaurantA, restaurantB) => restaurantA.distance - restaurantB.distance);
-      setClosestRestaurantList(sortedByDistance.slice(0, 5));
+      // get restaurant in radius 100km based on user location
+      const filteredRestaurants = newRestaurantList.filter(
+        (restaurant) => restaurant !== null && restaurant.distance < 100
+      );
+      setClosestRestaurantList(filteredRestaurants);
     } catch (error) {
       console.log('Fail to get closest restaurants: ', error);
     }
