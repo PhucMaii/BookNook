@@ -22,10 +22,15 @@ export default function AuthProvider({ children }) {
           where('uid', '==', user.uid)
         );
         const querySnapshot = await getDocs(restaurantQuery);
+        let docId;
         querySnapshot.docs.forEach((doc) => {
-          const id = doc.id;
-          setRestaurantIds({ docId: id, uid: user.uid });
+          docId = doc.id;
         });
+        if (!docId || !user.uid) {
+          setRestaurantIds({});
+        } else {
+          setRestaurantIds({ docId, uid: user.uid });
+        }
       } else {
         // User is signed out
         setRestaurantIds({});

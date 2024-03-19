@@ -13,6 +13,15 @@ import ForgotPasswordHost from './restaurantSide/pages/auth/ForgotPasswordHost';
 import CustomerLogin from './customerSide/pages/auth/CustomerLogin';
 import CustomerSignup from './customerSide/pages/auth/CustomerSignup'
 import CustomerHistory from './customerSide/pages/CustomerHistory';
+import CustomerAuthProvider from './customerSide/context/AuthContext';
+import CustomerConfirmationBooking from './customerSide/pages/ConfirmationBooking/CustomerConfirmationBooking';
+import CustomerHomepage from './customerSide/pages/HomePage/CustomerHomepage';
+import CustomerSuccessfulPage from './customerSide/pages/SuccessfulPage/SucessfulPage';
+import './App.css';
+import SearchResultPage from './customerSide/pages/SearchResultPage';
+import BookingDataProvider from './customerSide/context/BookingDataContext';
+import ErrorPage from './customerSide/pages/404/404';
+import ActiveBooking from './customerSide/pages/ActiveBooking/ActiveBooking';
 
 function App() {
   return (
@@ -29,11 +38,35 @@ function App() {
             />
             <Route path="/restaurant/login" element={<Login />} />
             <Route path="/restaurant/signup" element={<SignUp />} />
-            <Route path='/customer/login' element={<CustomerLogin/>} />
-            <Route path='/customer/signup' element={<CustomerSignup/>} />
-            <Route path='/customer/history' element={<CustomerHistory/>} />
+            <Route path="/customer/login" element={<CustomerLogin />} />
+            <Route path="/customer/signup" element={<CustomerSignup />} />
           </Routes>
         </AuthProvider>
+        <CustomerAuthProvider>
+          <BookingDataProvider>
+            <Routes>
+              <Route path="/customer/history" element={<CustomerHistory />} />
+              <Route path="/customer/login" element={<CustomerLogin />} />
+              <Route path="/customer/signup" element={<CustomerSignup />} />
+              <Route
+                path="/customer/booking-confirmation"
+                element={<CustomerConfirmationBooking />}
+              />
+              <Route path="/" element={<CustomerHomepage />} />
+              <Route path="/customer/search" element={<SearchResultPage />} />
+              <Route
+                path="/customer/successful-page"
+                element={<CustomerSuccessfulPage />}
+              />
+              <Route path="/404" element={<ErrorPage />} />
+              <Route path="*" component={<ErrorPage />} />
+              <Route
+                path="/customer/active-booking"
+                element={<ActiveBooking />}
+              />
+            </Routes>
+          </BookingDataProvider>
+        </CustomerAuthProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

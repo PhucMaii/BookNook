@@ -248,7 +248,7 @@ export default function HomePage() {
       }, 1000);
     } catch (error) {
       setIsLoading(false);
-      console.log('Fail to fetch history, ', error);
+      console.log('Fail to fetch reservations, ', error);
     }
   };
 
