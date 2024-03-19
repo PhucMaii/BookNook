@@ -35,7 +35,7 @@ import { LoadingButton } from '@mui/lab';
 import { AuthContext } from '../../context/AuthContext';
 import { fetchLatLong } from '../../../utils/location';
 
-const SignupSection = ({ setNotification }) => {
+const SignupSection = ({ setNotification, modal, onCloseModal }) => {
   const [address, setAddress] = useState('');
   const [isSubmitButtonLoading, setIsSubmitButtonLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -132,7 +132,11 @@ const SignupSection = ({ setNotification }) => {
 
         setTimeout(() => {
           setIsSubmitButtonLoading(false);
-          navigate('/');
+          if (modal) {
+            onCloseModal();
+          } else {
+            navigate('/');
+          }
         }, 2000);
       } catch (error) {
         console.log('Fail to sign up customer', error);
@@ -181,7 +185,11 @@ const SignupSection = ({ setNotification }) => {
 
       setTimeout(() => {
         setIsSubmitButtonLoading(false);
-        navigate('/customer/homepage');
+        if (modal) {
+            onCloseModal();
+        } else {
+            navigate('/');
+        }
       }, 2000);
     } catch (error) {
       console.log('Fail to sign up with Google: ', error);
@@ -352,19 +360,21 @@ const SignupSection = ({ setNotification }) => {
             </LoadingButton>
           </Box>
         </form>
-        <Typography textAlign="right" variant="subtitle1">
+        {!modal && <Typography textAlign="right" variant="subtitle1">
           Already have an account?
           <Link color="secondary" component="button" to="/customer/login">
             Click here to sign in
           </Link>
-        </Typography>
+        </Typography>}
       </Box>
     </>
   );
 };
 
 SignupSection.propTypes = {
-    setNotification: PropTypes.func
+    setNotification: PropTypes.func,
+    modal: PropTypes.bool,
+    onCloseModal: PropTypes.func
 }
 
 export default SignupSection

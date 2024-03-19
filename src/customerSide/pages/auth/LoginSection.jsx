@@ -18,6 +18,7 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
+  Button,
 } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -33,7 +34,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { LoadingButton } from '@mui/lab';
 import { handleErrorMsg } from '../../../utils/error';
 
-const LoginSection = ({setNotification}) => {
+const LoginSection = ({ setNotification, modal, onCloseModal }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { setCustomerIds } = useContext(AuthContext);
@@ -98,7 +99,11 @@ const LoginSection = ({setNotification}) => {
 
         setTimeout(() => {
           setIsLoading(false);
-          navigate('/');
+          if (modal) {
+            onCloseModal();
+          } else {
+            navigate('/');
+          }
         }, 2000);
       } catch (error) {
         console.log('Fail to log customer in: ', error);
@@ -146,7 +151,11 @@ const LoginSection = ({setNotification}) => {
 
       setTimeout(() => {
         setIsLoading(false);
-        navigate('/restaurant/overview');
+        if (modal) {
+          onCloseModal();
+        } else {
+          navigate('/');
+        }
       }, 2000);
     } catch (error) {
       console.log('Fail to login with google: ', error);
@@ -160,122 +169,139 @@ const LoginSection = ({setNotification}) => {
   };
 
   return (
-      <>
-        <Box display="flex" flexDirection="column" margin="auto" width="50%">
-          <Box display="flex" justifyContent="center" my={6}>
-            <LogoImg src="/customerLogo.png" alt="Restaurant Logo" />
-          </Box>
-          <Typography variant="h3" fontWeight="bold">
-            Login
-          </Typography>
-          <Typography variant="subtitle1" color={grey[500]} fontWeight="bold">
-            Enter your credentials to access your account
-          </Typography>
-          <form noValidate onSubmit={formik.handleSubmit}>
-            <Box display="flex" flexDirection="column" gap={3} mt={3}>
-              <TextField
-                id="outlined-required"
-                label="Email Address"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                helperText={formik.touched.email && formik.errors.email}
-                error={!!(formik.touched.email && formik.errors.email)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailOutlinedIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                fullWidth
-              />
-              <Box
-                display="flex"
-                flexDirection="column"
-                margin="auto"
-                width="100%"
+    <>
+      <Box display="flex" flexDirection="column" margin="auto" width="50%">
+        <Box display="flex" justifyContent="center" my={0}>
+          <LogoImg src="/customerLogo.png" alt="Restaurant Logo" />
+        </Box>
+        <Typography variant="h3" fontWeight="bold">
+          Login
+        </Typography>
+        <Typography variant="subtitle1" color={grey[500]} fontWeight="bold">
+          Enter your credentials to access your account
+        </Typography>
+        <form noValidate onSubmit={formik.handleSubmit}>
+          <Box display="flex" flexDirection="column" gap={3} mt={3}>
+            <TextField
+              id="outlined-required"
+              label="Email Address"
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              helperText={formik.touched.email && formik.errors.email}
+              error={!!(formik.touched.email && formik.errors.email)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailOutlinedIcon />
+                  </InputAdornment>
+                ),
+              }}
+              fullWidth
+            />
+            <Box
+              display="flex"
+              flexDirection="column"
+              margin="auto"
+              width="100%"
+            >
+              <FormControl
+                error={!!(formik.touched.password && formik.errors.password)}
+                variant="outlined"
               >
-                <FormControl
-                  error={!!(formik.touched.password && formik.errors.password)}
-                  variant="outlined"
-                >
-                  <InputLabel>Password</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <KeyIcon />
-                      </InputAdornment>
-                    }
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Password"
-                  />
-                  <FormHelperText>
-                    {formik.touched.password && formik.errors.password}
-                  </FormHelperText>
-                </FormControl>
+                <InputLabel>Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <KeyIcon />
+                    </InputAdornment>
+                  }
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+                <FormHelperText>
+                  {formik.touched.password && formik.errors.password}
+                </FormHelperText>
+              </FormControl>
+              {!modal && (
                 <Link component="button">
                   <Typography textAlign="right" variant="subtitle2">
                     Forgot Password?
                   </Typography>
                 </Link>
-              </Box>
-              <LoadingButton
-                type="submit"
-                loading={isLoading}
-                loadingIndicator="Signing in..."
-                variant="contained"
-                style={{ color: 'white' }}
-              >
-                Sign in
-              </LoadingButton>
-              <Divider variant="middle">
-                <Typography variant="body2">Or</Typography>
-              </Divider>
-              <LoadingButton
-                loading={isLoading}
-                loadingIndicator="Signing in..."
-                onClick={handleSigninWithGoogle}
-                variant="outlined"
-              >
-                <Box display="flex" gap={2} alignItems="center">
-                  <img src="/icons/googleLogo.png" alt="Google Logo" />
-                  <Typography>Sign in with Google</Typography>
-                </Box>
-              </LoadingButton>
+              )}
             </Box>
-          </form>
+            <LoadingButton
+              type="submit"
+              loading={isLoading}
+              loadingIndicator="Signing in..."
+              variant="contained"
+              style={{ color: 'white' }}
+            >
+              Sign in
+            </LoadingButton>
+            <Divider variant="middle">
+              <Typography variant="body2">Or</Typography>
+            </Divider>
+            <LoadingButton
+              loading={isLoading}
+              loadingIndicator="Signing in..."
+              onClick={handleSigninWithGoogle}
+              variant="outlined"
+            >
+              <Box display="flex" gap={2} alignItems="center">
+                <img src="/icons/googleLogo.png" alt="Google Logo" />
+                <Typography>Sign in with Google</Typography>
+              </Box>
+            </LoadingButton>
+          </Box>
+        </form>
+        {!modal ? (
           <Typography textAlign="right" variant="subtitle1">
             Don&apos;t have an account yet?
             <Link component="button" to="/customer/signup">
               Click here to sign up
             </Link>
           </Typography>
-        </Box>
-      </>
+        ) : (
+          <Button 
+            color="inherit"
+            onClick={() => {
+              onCloseModal();
+            }}
+            sx={{ mt: 4 }} 
+            variant="outlined" 
+          >
+            Continue as guest
+          </Button>
+        )}
+      </Box>
+    </>
   );
 };
 
 LoginSection.propTypes = {
     setNotification: PropTypes.func,
+    modal: PropTypes.bool,
+    onCloseModal: PropTypes.func
 }
 
 export default LoginSection;

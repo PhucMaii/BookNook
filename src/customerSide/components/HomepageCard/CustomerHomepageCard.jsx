@@ -20,25 +20,30 @@ import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { BookingDataContext } from '../../context/BookingDataContext';
 
-export const handleReservationBooking = async (timeSlot, restaurant, customerIds, setBookingData, navigate) => {
+export const handleReservationBooking = async (
+  timeSlot,
+  restaurant,
+  customerIds,
+  setBookingData,
+  navigate,
+  date,
+  capacity = '2 people'
+) => {
   try {
-    const date = dayjs();
-    const formattedDate = `${date.$M + 1}/${date.$D}/${date.$y}`;
-    const bookingData = {timeSlot, ...restaurant, date: formattedDate};
+    const bookingData = { timeSlot, ...restaurant, date, capacity };
 
     if (Object.keys(customerIds).length > 0 && customerIds.docId !== null) {
       const user = await fetchDoc('users', customerIds.docId);
       const userData = user.docData;
       bookingData.user = userData;
-      console.log(bookingData, 'booking data in home page card');
     }
 
     setBookingData(bookingData);
-    navigate('/customer/booking-confirmation')
+    navigate('/customer/booking-confirmation');
   } catch (error) {
     console.log('Fail to book a reservation: ', error);
   }
-}
+};
 
 const CustomerHomepageCard = ({ restaurant }) => {
   const { customerIds } = useContext(AuthContext);
@@ -110,13 +115,16 @@ const CustomerHomepageCard = ({ restaurant }) => {
               <Button
                 key={index}
                 onClick={() =>
-                  handleReservationBooking(
+                  {const date = dayjs();
+                    handleReservationBooking(
                     timeSlot,
                     restaurant,
                     customerIds,
                     setBookingData,
-                    navigate
-                  )
+                    navigate,
+                    date,
+                    '2 people'
+                  )}
                 }
                 variant="contained"
                 style={{ color: 'white' }}

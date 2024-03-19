@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Divider, Grid, Typography } from '@mui/material';
 import { CardImage } from './HomepageCard/styled';
@@ -8,13 +8,31 @@ import { renderReviewStars, renderTimeSlots } from '../utils/render';
 import { grey } from '@mui/material/colors';
 import { handleReservationBooking } from './HomepageCard/CustomerHomepageCard';
 import { BookingDataContext } from '../context/BookingDataContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 export default function SearchRestaurantCard({restaurant}) {
   const { customerIds } = useContext(AuthContext);
   const { setBookingData } = useContext(BookingDataContext);
+  const location = useLocation();
+  const [date, setDate] = useState();
+  const [capacity, setCapacity] = useState();
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.forEach((value, key) => {
+      if (key === 'date') {
+        setDate(value);
+      }
+
+      if (key === 'numberOfGuests') {
+        setCapacity(value);
+      } else {
+        setCapacity('2 people')
+      }
+    })
+  }, [location.search])
 
   return (
     <Grid container width="100%" columnSpacing={4}>
@@ -66,7 +84,9 @@ export default function SearchRestaurantCard({restaurant}) {
                       restaurant,
                       customerIds,
                       setBookingData,
-                      navigate
+                      navigate,
+                      date,
+                      capacity
                     )
                   }
                   variant="contained"

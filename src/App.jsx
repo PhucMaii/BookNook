@@ -21,6 +21,7 @@ import './App.css';
 import SearchResultPage from './customerSide/pages/SearchResultPage';
 import BookingDataProvider from './customerSide/context/BookingDataContext';
 import ErrorPage from './customerSide/pages/404/404';
+import ActiveBooking from './customerSide/pages/ActiveBooking/ActiveBooking';
 
 function App() {
   return (
@@ -55,7 +56,8 @@ function App() {
               <Route path="/customer/search" element={<SearchResultPage />} />
               <Route path='/customer/successful-page' element={<CustomerSuccessfulPage/>} />
               <Route path='/404' element={<ErrorPage />}/>  
-              <Route path="*" component={<ErrorPage />} />          
+              <Route path="*" component={<ErrorPage />} /> 
+              <Route path='/customer/active-booking' element={<ActiveBooking/>} />         
             </Routes>
           </BookingDataProvider>
         </CustomerAuthProvider>
