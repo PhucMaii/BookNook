@@ -43,6 +43,7 @@ function App() {
             <Route path="/restaurant/signup" element={<SignUp />} />
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/signup" element={<CustomerSignup />} />
+            <Route path="/customer/setting" element={<UserSettingPage />} />
           </Routes>
         </AuthProvider>
         <CustomerAuthProvider>
@@ -54,6 +55,10 @@ function App() {
               <Route
                 path="/customer/booking-confirmation"
                 element={<CustomerConfirmationBooking />}
+              />
+              <Route
+                path="/customer/restaurantDetails/:restaurantId"
+                element={<RestaurantDetail />}
               />
               <Route path="/" element={<CustomerHomepage />} />
               <Route path="/customer/search" element={<SearchResultPage />} />

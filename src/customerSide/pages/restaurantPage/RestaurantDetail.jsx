@@ -41,9 +41,7 @@ const RestaurantDetail = () => {
   const { restaurantId } = useParams();
 
   useEffect(() => {
-    console.log('modal chaneg ')
     if (restaurantId) {
-      console.log('modal changed with restaurant id', {restaurantId, modalClosed});
       fetchHostData()
       fetchReviews()
     }
@@ -54,7 +52,6 @@ const RestaurantDetail = () => {
   }, [restaurantId, docId, modalClosed])
 
   useEffect(() => {
-    console.log(modalClosed, 'modal Closed')
   }, [modalClosed])
 
   const handleModalClose = () => {
@@ -210,7 +207,7 @@ const RestaurantDetail = () => {
   return (
     <>
       <CustomerHeader />
-      <img src={hostData.imgURL} alt='Restaurant picture' width='100%' height='350px' />
+      <img src={hostData.imgURL ? hostData.imgURL : '/unavailable_image.png'} alt='Restaurant picture' width='100%' height='350px' />
       <Grid container p={3} m={0.5} justifyContent='space-between'>
         <Grid xs={8} item container direction='column' rowGap={2} p={2} sx={{ backgroundColor: 'white', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
           <Typography variant='h4' fontWeight='bold'>{hostData.name}</Typography>

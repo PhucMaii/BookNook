@@ -124,7 +124,6 @@ const ReservationMakingBlock = ({ restaurantData }) => {
         let currentHourIndex = timeSlots.indexOf(time);
         const renderedTimeSlots = []
         let i = currentHourIndex;
-        console.log(availableTable, 'avialble table in render time slots')
         if (availableTable && availableTable.length > 0) {
             let i = currentHourIndex;
             while (i < timeSlots.length && i <= currentHourIndex + 3) {
