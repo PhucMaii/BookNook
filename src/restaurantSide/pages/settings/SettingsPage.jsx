@@ -16,7 +16,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AddressInput from '../../components/AddressInput';
-import SettingsPagePanel from './SettingsPagePanel'
+import Panel from './Panel'
 import EditProfileProps from './EditProfileProps'
 import ProtectedRoute from '../../context/ProtectedRoute';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -224,7 +224,7 @@ export default function SettingsPage() {
                     </Tabs>
                   </Box>
                   <Box display="flex" flexDirection="column">
-                    <SettingsPagePanel value={value} index={0}>
+                    <Panel value={value} index={0}>
                       <Box display="flex" flexDirection="row" mb={5}>
                         <Grid item md={4}>
                           <Box
@@ -308,8 +308,8 @@ export default function SettingsPage() {
                           Save
                         </Button>
                       </Box>
-                    </SettingsPagePanel>
-                    <SettingsPagePanel value={value} index={1}>
+                    </Panel>
+                    <Panel value={value} index={1}>
                       <Box display="flex" flexDirection="row" mb={5}>
                         <Grid item md={4}>
                           <Box
@@ -435,7 +435,7 @@ export default function SettingsPage() {
                           Update
                         </Button>
                       </Box>
-                    </SettingsPagePanel>
+                    </Panel>
                   </Box>
                 </Box>
               </Paper>

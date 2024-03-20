@@ -4,7 +4,12 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../../../firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
-export const AuthContext = createContext(null);
+export const AuthContext = createContext({
+  customerIds: {
+    uid: null,
+    docId: null
+  }
+});
 
 export default function CustomerAuthProvider({ children }) {
   const [customerIds, setCustomerIds] = useState({

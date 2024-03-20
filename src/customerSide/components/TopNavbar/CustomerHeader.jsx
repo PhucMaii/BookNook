@@ -12,24 +12,35 @@ import {
 } from '@mui/material';
 import { HeaderLogo } from './styled';
 import { Link, useNavigate } from 'react-router-dom';
-import PersonPin from '@mui/icons-material/PersonPin';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';
 import { AuthContext } from '../../context/AuthContext';
+import { fetchDoc } from '../../../utils/firebase';
 
 function CustomerHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
+  const [userData, setUserData] = useState(); 
   const navigate = useNavigate();
   const { customerIds } = useContext(AuthContext);
 
   useEffect(() => {
     if (customerIds.uid && customerIds.docId) {
       setIsLogin(true);
+      fetchUserData();
     }
   }, [customerIds]);
+
+  const fetchUserData = async () => {
+    try {
+      const user = await fetchDoc('users', customerIds.docId);
+      setUserData(user.docData);
+    } catch (error) {
+      console.log('Fail to fetch user data: ', error);
+    }
+  }
 
   const handleSignout = async () => {
     try {
@@ -62,9 +73,7 @@ function CustomerHeader() {
             alt="Customer Logo"
             style={{ mr: '200' }}
             onClick={() => navigate('/')}
-
           />
-          <PersonPin color="primary" sx={{ fontSize: 40, ml: '25px' }} />
           <Box
             display="flex"
             alignItems="center"
@@ -84,7 +93,7 @@ function CustomerHeader() {
                   onClick={(e) => setAnchorEl(e.currentTarget)}
                   sx={{ ml: '20px' }}
                 >
-                  <Avatar alt="User Settings" />
+                  {userData && <Avatar alt="User Settings" src={userData.imgURL || ''} />}
                 </IconButton>
                 <Menu
                   anchorEl={anchorEl}

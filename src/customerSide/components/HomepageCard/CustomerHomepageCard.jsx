@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card,
@@ -13,6 +13,7 @@ import { CardImage } from './styled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { grey } from '@mui/material/colors';
+<<<<<<< HEAD
 import { generateTimeSlots } from '../../../utils/time';
 import { renderReviewStars } from '../../utils/render';
 import { useNavigate } from 'react-router-dom';
@@ -62,6 +63,45 @@ const CustomerHomepageCard = ({ restaurant }) => {
     }
     return renderedTimeSlots;
   };
+=======
+import { renderReviewStars, renderTimeSlots } from '../../utils/render';
+import { AuthContext } from '../../context/AuthContext';
+import { fetchDoc } from '../../../utils/firebase';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+import { BookingDataContext } from '../../context/BookingDataContext';
+
+export const handleReservationBooking = async (
+  timeSlot,
+  restaurant,
+  customerIds,
+  setBookingData,
+  navigate,
+  date,
+  capacity = '2 people'
+) => {
+  try {
+    const bookingData = { timeSlot, ...restaurant, date, capacity };
+
+    if (Object.keys(customerIds).length > 0 && customerIds.docId !== null) {
+      const user = await fetchDoc('users', customerIds.docId);
+      const userData = user.docData;
+      bookingData.user = userData;
+    }
+
+    setBookingData(bookingData);
+    navigate('/customer/booking-confirmation');
+  } catch (error) {
+    console.log('Fail to book a reservation: ', error);
+  }
+};
+
+const CustomerHomepageCard = ({ restaurant }) => {
+  const { customerIds } = useContext(AuthContext);
+  const { setBookingData } = useContext(BookingDataContext);
+
+  const navigate = useNavigate();
+>>>>>>> 7853b9857910c48e03f178f6536c1c43fa2ef738
 
   const handleShowAddress = () => {
     return restaurant.address
@@ -124,7 +164,29 @@ const CustomerHomepageCard = ({ restaurant }) => {
       </CardContent>
       <CardActions>
         <Box display="flex" flexWrap="wrap" gap={2}>
-          {renderTimeSlots()}
+          {renderTimeSlots().map((timeSlot, index) => {
+            return (
+              <Button
+                key={index}
+                onClick={() =>
+                  {const date = dayjs();
+                    handleReservationBooking(
+                    timeSlot,
+                    restaurant,
+                    customerIds,
+                    setBookingData,
+                    navigate,
+                    date,
+                    '2 people'
+                  )}
+                }
+                variant="contained"
+                style={{ color: 'white' }}
+              >
+                {timeSlot}
+              </Button>
+            );
+          })}
         </Box>
       </CardActions>
     </Card>

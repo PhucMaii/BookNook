@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore';
+import { and, where } from 'firebase/firestore';
 import { fetchData, fetchDoc } from '../../utils/firebase';
 import { daysOfWeek } from '../../utils/constants';
 
@@ -36,10 +36,15 @@ export const checkIsRestaurantOpenCurrently = async (
   }
 };
 
-export const checkRestaurantHasTable = async (restaurant, currentHour) => {
+export const checkRestaurantHasTable = async (
+  restaurant,
+  currentHour,
+  openHour,
+  closeHour
+) => {
   // check 2 hours before and 2 hours after to get time slots range in between 1 hour
-  const startRangeHour = currentHour - 200;
-  const endRangeHour = currentHour + 200;
+  const startRangeHour = openHour ? openHour : currentHour - 200;
+  const endRangeHour = closeHour ? closeHour : currentHour + 200;
   try {
     const restaurantTables = await fetchData(
       'diningTables',
@@ -113,4 +118,34 @@ export const checkIsRestaurantAvailable = async (restaurant) => {
   } catch (error) {
     console.log('Fail to check restaurant availability: ', error);
   }
+};
+
+export const getUnavailableTimeSlots = async (
+  restaurant,
+  date,
+  startRangeHour,
+  endRangeHour
+) => {
+  const restaurantReservations = await fetchData(
+    'reservations',
+    and(where('restaurantId', '==', restaurant.id), where('date', '==', date))
+  );
+
+  if (!restaurantReservations) {
+    return [];
+  }
+
+  const reservationWithTimeSlot = restaurantReservations.map((reservation) => {
+    let reservationTime = 0;
+    const reservationDate = reservation.date.toDate();
+    reservationTime += reservationDate.getHours() * 100;
+    reservationTime += reservationDate.getMinutes();
+    return reservationTime;
+  });
+
+  const unavailableTimeSlots = reservationWithTimeSlot.filter((timeSlot) => {
+    return timeSlot > startRangeHour && timeSlot < endRangeHour;
+  });
+
+  return unavailableTimeSlots;
 };

@@ -2,7 +2,7 @@ import React from 'react'
 import {Box} from '@mui/material'
 import PropTypes from 'prop-types'
 
-export default function SettingsPagePanel(props) {
+export default function Panel(props) {
     const { children, value, index, ...other } = props;
     return (
         <div
@@ -13,7 +13,7 @@ export default function SettingsPagePanel(props) {
             {...other}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
+                <Box sx={{ p: 2 }}>
                     {children}
                 </Box>
             )}
@@ -21,7 +21,7 @@ export default function SettingsPagePanel(props) {
     );
 }
 
-SettingsPagePanel.propTypes = {
+Panel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
