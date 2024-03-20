@@ -1,4 +1,4 @@
-import { where } from 'firebase/firestore';
+import { and, where } from 'firebase/firestore';
 import { fetchData, fetchDoc } from '../../utils/firebase';
 import { daysOfWeek } from '../../utils/constants';
 
@@ -8,6 +8,11 @@ export const checkIsRestaurantOpenToday = async (restaurant, today) => {
       'closedDays',
       where('restaurantId', '==', restaurant.id)
     );
+
+    if (restaurantClosedDays.length === 0) {
+      return false;
+    }
+
     return !restaurantClosedDays[0].closedDays.includes(today);
   } catch (error) {
     console.log('Fail to check restaurant available: ', error);
@@ -31,10 +36,15 @@ export const checkIsRestaurantOpenCurrently = async (
   }
 };
 
-export const checkRestaurantHasTable = async (restaurant, currentHour) => {
+export const checkRestaurantHasTable = async (
+  restaurant,
+  currentHour,
+  openHour,
+  closeHour
+) => {
   // check 2 hours before and 2 hours after to get time slots range in between 1 hour
-  const startRangeHour = currentHour - 200;
-  const endRangeHour = currentHour + 200;
+  const startRangeHour = openHour ? openHour : currentHour - 200;
+  const endRangeHour = closeHour ? closeHour : currentHour + 200;
   try {
     const restaurantTables = await fetchData(
       'diningTables',
@@ -65,10 +75,10 @@ export const checkRestaurantHasTable = async (restaurant, currentHour) => {
       const availableTables = restaurantTables.filter(
         (table) => !unavailableTables.includes(table.id)
       );
-      return availableTables.length > 0;
+      return availableTables.length > 0 ? availableTables : false;
     }
 
-    return true;
+    return restaurantTables;
   } catch (error) {
     console.log('Fail to check restaurant has table: ', error);
   }
@@ -77,6 +87,7 @@ export const checkRestaurantHasTable = async (restaurant, currentHour) => {
 export const checkIsRestaurantAvailable = async (restaurant) => {
   const currentDate = new Date();
   const today = daysOfWeek[currentDate.getDay()];
+  // Convert the hour to 4 digits number
   const currentHour = currentDate.getHours() * 100 + currentDate.getMinutes();
 
   try {
@@ -84,19 +95,57 @@ export const checkIsRestaurantAvailable = async (restaurant) => {
       restaurant,
       today
     );
+
+    if (!isRestaurantAvailableToday) {
+      return false;
+    }
+
     const isRestaurantOpen = await checkIsRestaurantOpenCurrently(
       restaurant,
       currentHour
     );
+
+    if (!isRestaurantOpen) {
+      return false;
+    }
+
     const isRestaurantHasTables = await checkRestaurantHasTable(
       restaurant,
       currentHour
     );
 
-    return (
-      isRestaurantAvailableToday && isRestaurantOpen && isRestaurantHasTables
-    );
+    return isRestaurantHasTables;
   } catch (error) {
     console.log('Fail to check restaurant availability: ', error);
   }
+};
+
+export const getUnavailableTimeSlots = async (
+  restaurant,
+  date,
+  startRangeHour,
+  endRangeHour
+) => {
+  const restaurantReservations = await fetchData(
+    'reservations',
+    and(where('restaurantId', '==', restaurant.id), where('date', '==', date))
+  );
+
+  if (!restaurantReservations) {
+    return [];
+  }
+
+  const reservationWithTimeSlot = restaurantReservations.map((reservation) => {
+    let reservationTime = 0;
+    const reservationDate = reservation.date.toDate();
+    reservationTime += reservationDate.getHours() * 100;
+    reservationTime += reservationDate.getMinutes();
+    return reservationTime;
+  });
+
+  const unavailableTimeSlots = reservationWithTimeSlot.filter((timeSlot) => {
+    return timeSlot > startRangeHour && timeSlot < endRangeHour;
+  });
+
+  return unavailableTimeSlots;
 };

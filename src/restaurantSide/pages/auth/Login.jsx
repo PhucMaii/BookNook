@@ -25,12 +25,14 @@ import {
   getAdditionalUserInfo,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
 } from 'firebase/auth';
-import { auth, db, googleProvider } from '../../../../firebaseConfig';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { auth, googleProvider } from '../../../../firebaseConfig';
+import { where } from 'firebase/firestore';
 import { handleErrorMsg } from '../../../utils/error';
 import { AuthContext } from '../../context/AuthContext';
 import UnprotectedRoute from '../../context/UnprotectedRoute';
+import { fetchData } from '../../../utils/firebase';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -47,22 +49,17 @@ const Login = () => {
 
   const checkIsUserInDB = async (email) => {
     try {
-      const restaurantCollection = collection(db, 'restaurants');
-      const restaurantQuery = query(
-        restaurantCollection,
-        where('email', '==', email)
-      );
-      const querySnapshot = await getDocs(restaurantQuery);
-
-      let id;
-      querySnapshot.forEach((doc) => {
-        id = doc.id;
-      });
-      return id ? id : false;
+      const existingRestaurants = await fetchData('restaurants', where('email', '==', email));
+      return existingRestaurants.length > 0;
     } catch (error) {
       console.log('Fail to check user in DB: ', error);
     }
   };
+
+  const checkIsEmailInUserDB = async (email) => {
+    const existingUsers = await fetchData('users', where('email', '==', email));
+    return existingUsers.length > 0;
+  } 
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -90,6 +87,18 @@ const Login = () => {
         setIsLoading(false);
         return;
       }
+
+      const isEmailUseInUsertDB = await checkIsEmailInUserDB(email);
+      if (isEmailUseInUsertDB) {
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email is not available for this role',
+        });
+        setIsLoading(false);
+        return;
+      }
+
       await signInWithEmailAndPassword(auth, email, password);
 
       setRestaurantIds((prevIds) => ({ ...prevIds, docId: isUserValid }));
@@ -139,6 +148,18 @@ const Login = () => {
           on: true,
           severity: 'error',
           message: 'User Not Found',
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      const isEmailInUserDB = await checkIsEmailInUserDB(userCredentials.user.email);
+      if (isEmailInUserDB) {
+        await signOut(auth);
+        setNotification({
+          on: true,
+          severity: 'error',
+          message: 'Email is not available for this role',
         });
         setIsLoading(false);
         return;

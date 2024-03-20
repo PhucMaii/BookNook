@@ -16,13 +16,16 @@ import { calculateDistance } from '../../../utils/location';
 import { checkIsRestaurantAvailable } from '../../utils/logic';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { grey } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
 
 export default function CustomerHomepage() {
   const [isLoading, setIsLoading] = useState(true);
   const [closestRestaurantList, setClosestRestaurantList] = useState([]);
   const [restaurantList, setRestaurantList] = useState([]);
   const [popularRestaurantList, setPopularRestaurantList] = useState([]);
+  const [filterParams, setFilterParams] = useState('');
   const { customerIds } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const breakpoints = [
     { width: 400, itemsToShow: 1 },
@@ -32,10 +35,6 @@ export default function CustomerHomepage() {
     { width: 1500, itemsToShow: 5 },
   ];
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
-
-  useEffect(() => {
-    // checkIsRestaurantAvailable();
-  }, [])
 
   useEffect(() => {
     const handleFetchRestaurants = async () => {
@@ -111,13 +110,20 @@ export default function CustomerHomepage() {
         if (!restaurant.address) {
           return null;
         }
-        const distance = calculateDistance(data.address.lat, data.address.lng, restaurant.address.lat, restaurant.address.lng);
+        const distance = calculateDistance(
+          data.address.lat,
+          data.address.lng,
+          restaurant.address.lat,
+          restaurant.address.lng
+        );
         return { ...restaurant, distance };
       });
 
-      const filteredRestaurants = newRestaurantList.filter((restaurant) => restaurant !== null);
-      const sortedByDistance = filteredRestaurants.sort((restaurantA, restaurantB) => restaurantA.distance - restaurantB.distance);
-      setClosestRestaurantList(sortedByDistance.slice(0, 5));
+      // get restaurant in radius 100km based on user location
+      const filteredRestaurants = newRestaurantList.filter(
+        (restaurant) => restaurant !== null && restaurant.distance < 100
+      );
+      setClosestRestaurantList(filteredRestaurants);
     } catch (error) {
       console.log('Fail to get closest restaurants: ', error);
     }
@@ -142,9 +148,9 @@ export default function CustomerHomepage() {
         justifyContent="flex-start"
         gap={2}
       >
-        <Searchbar />
+        <Searchbar filterParams={filterParams} />
         <Box width="100%" display="flex" alignItems="flex-start" gap={2}>
-          <FilterSidebar />
+          <FilterSidebar onDataReceived={(data) => setFilterParams(data)} />
           <Box width="100%" sx={{ width: '100vw' }}>
             {popularRestaurantList.length === 0 ? (
               <Box
@@ -154,13 +160,13 @@ export default function CustomerHomepage() {
                 alignItems="center"
                 gap={2}
               >
-                <ErrorOutlineIcon sx={{color: grey[700]}} fontSize='large' />
+                <ErrorOutlineIcon sx={{ color: grey[700] }} fontSize="large" />
                 <Typography
                   textAlign="center"
                   variant="h4"
                   mb={2}
                   fontWeight="bold"
-                  sx={{color: grey[700]}}
+                  sx={{ color: grey[700] }}
                 >
                   No Available Restaurants At The Moment
                 </Typography>

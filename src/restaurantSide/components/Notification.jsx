@@ -6,7 +6,7 @@ export default function Notification({notification, onClose}) {
   return (
     <Snackbar
       open={notification.on}
-      autoHideDuration={5000}
+      autoHideDuration={3000}
       onClose={onClose}
     >
       <Alert severity={notification.severity}>{notification.message}</Alert>
