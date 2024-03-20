@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Avatar, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Rating, Select, TextField, Typography } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search';
-import { dummyAvatar } from '../../utils/constants';
+import { Avatar, Grid, Rating, Typography } from '@mui/material'
 import { Box } from '@mui/system';
 import { primary } from '../../theme/colors';
-import ReviewCreateModal from './Modals/ReviewCreateModal/ReviewCreateModal';
 import { fetchDoc } from '../../utils/firebase';
 import { SplashScreen } from '../../lib/utils';
-import { convertTimestampToDate } from '../../utils/time';
 import moment from 'moment/moment';
 
 const RestaurantReviewBlock = ({ data }) => {
@@ -16,12 +12,12 @@ const RestaurantReviewBlock = ({ data }) => {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        fetchUserData()
-    },[])
+        fetchUserData(data.userId)
+    }, [data.userId])
 
-    const fetchUserData = async () => {
+    const fetchUserData = async (userId) => {
         try {
-            const fetchResult = await fetchDoc('users', data.userId)
+            const fetchResult = await fetchDoc('users', userId)
             setUserData(fetchResult.docData)
             setIsLoading(false)
         } catch (error) {
@@ -32,18 +28,18 @@ const RestaurantReviewBlock = ({ data }) => {
 
     if (isLoading) {
         return (
-          <>
-            <SplashScreen />
-          </>
+            <>
+                <SplashScreen />
+            </>
         );
-      }
+    }
 
     return (
         <>
             {/* Map through the comment data with layout below */}
             <Grid container justifyContent='space-between' alignItems='center'>
                 <Grid container item xs={9} p={1} direction='row' alignItems='center' justifyContent='flex-start'>
-                    <Avatar sx={{ height: 56, width: 56 }} alt='User Profile Pics' src={userData.avatar} />
+                    <Avatar sx={{ height: 45, width: 45 }} alt='User Profile Pics' src={userData.avatar} />
                     <Box ml={1}>
                         <Typography variant='subtitle1' fontWeight='bold'>{userData.name}</Typography>
                         <Typography variant='subtitle2'>{moment(data.postTime.toDate()).fromNow()}</Typography>
@@ -52,8 +48,8 @@ const RestaurantReviewBlock = ({ data }) => {
 
                 <Grid item xs={3}>
                     <Box display={'flex'} alignItems="center">
+                        <Typography variant='h6' sx={{ marginRight: '10px' }}>{data.stars}</Typography>
                         <Rating name="Overall rating" value={data.stars} precision={0.5} size='large' sx={{ color: primary }} readOnly />
-                        <Typography variant='h6' sx={{ marginLeft: '5px' }}>{data.stars}</Typography>
                     </Box>
                 </Grid>
                 <Grid item xs={12} p={2}>
@@ -65,7 +61,7 @@ const RestaurantReviewBlock = ({ data }) => {
 }
 
 RestaurantReviewBlock.propTypes = {
-    data: PropTypes.object
+    data: PropTypes.object,
 }
 
 export default RestaurantReviewBlock

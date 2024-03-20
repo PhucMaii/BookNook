@@ -72,9 +72,11 @@ const CustomerHomepageCard = ({ restaurant }) => {
           src={restaurant.imgURL ? restaurant.imgURL : '/unavailable_image.png'}
           alt="Card Image"
         />
-        <Typography variant="h5" fontWeight="bold" mt={1}>
-          {restaurant.name}
-        </Typography>
+        <div onClick={() => navigate(`customer/restaurantDetails/${restaurant.id}`)}>
+          <Typography variant="h5" fontWeight="bold" mt={1}>
+            {restaurant.name}
+          </Typography>
+        </div>
         <Box
           display="flex"
           flexDirection="row"

@@ -53,6 +53,17 @@ function CustomerHeader() {
     }
   };
 
+  const handleProfile = async () => {
+    try {
+      if (isLogin) {
+        await signOut(auth);
+      }
+      navigate('/customer/setting');
+    } catch (error) {
+      console.log('Fail to sign out: ', error);
+    }
+  };
+
   return (
     <Box display="flex" flexDirection="column" height={100}>
       <AppBar position="static" color="background">
@@ -117,7 +128,7 @@ function CustomerHeader() {
                   transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 >
-                  <MenuItem>
+                  <MenuItem onClick={handleProfile}>
                     <ListItemIcon>
                       <ManageAccountsIcon />
                     </ListItemIcon>

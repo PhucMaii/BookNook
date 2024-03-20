@@ -1,33 +1,56 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Avatar, Button, Grid, Modal, Rating, TextField, Typography } from '@mui/material'
-import { dummyAvatar } from '../../../../utils/constants';
 import { primary } from '../../../../theme/colors';
-import { doc } from 'firebase/firestore';
+import { Timestamp, addDoc, collection} from 'firebase/firestore';
 import { db } from '../../../../../firebaseConfig';
+import Notification from '../../../../restaurantSide/components/Notification';
 
-const ReviewCreateModal = ({data}) => {
+const ReviewCreateModal = ({ data, uid, restaurantId, onChange }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [notification, setNotification] = useState({})
     const [starValue, setStarValue] = useState(0)
     const [message, setMessage] = useState('')
-    const [reviewData, setReviewData] = useState({
-        stars: 0,
-        message: ''
-    })
 
-    const uploadData = async() => {
+
+    const myTimestamp = Timestamp.fromDate(new Date());
+
+    const uploadData = async () => {
         try {
-            const reviewRef = doc(db,'reviews',data.docId)
+            await addDoc(collection(db, 'reviews'), {
+                message: message,
+                postTime: myTimestamp,
+                reply: '',
+                restaurantId: restaurantId,
+                stars: starValue,
+                userId: uid
+            })
+                .then(() => {
+                    setNotification({
+                        on: true,
+                        severity: 'success',
+                        message: 'Your review posted successfully!.'
+                    })
+                })
+                onChange();
         } catch (error) {
-            console.log('Fail to upload data: ',error)
+            console.log('Fail to upload review: ', error)
+            setNotification({
+                on: true,
+                severity: 'error',
+                message: 'Failed to upload Review.'
+            })
         }
     }
 
     return (
         <>
-
+            <Notification
+                notification={notification}
+                onClose={() => setNotification({ ...notification, on: false })}
+            />
             <Button onClick={handleOpen}>WRITE A REVIEW</Button>
             <Modal
                 open={open}
@@ -75,7 +98,7 @@ const ReviewCreateModal = ({data}) => {
                         <Grid item>
                             <Button variant='contained' sx={{ color: 'white' }}
                                 onClick={() => {
-                                    
+                                    uploadData()
                                     handleClose()
                                 }}
                             >
@@ -90,7 +113,10 @@ const ReviewCreateModal = ({data}) => {
 }
 
 ReviewCreateModal.propTypes = {
-    data:PropTypes.object
+    data: PropTypes.object,
+    uid: PropTypes.string,
+    restaurantId: PropTypes.string,
+    onChange: PropTypes.func
 }
 
 export default ReviewCreateModal

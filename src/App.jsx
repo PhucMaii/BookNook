@@ -23,6 +23,8 @@ import SearchResultPage from './customerSide/pages/SearchResultPage';
 import BookingDataProvider from './customerSide/context/BookingDataContext';
 import ErrorPage from './customerSide/pages/404/404';
 import ActiveBooking from './customerSide/pages/ActiveBooking/ActiveBooking';
+import UserSettingPage from './customerSide/pages/UserSettingPage/UserSettingPage';
+
 
 function App() {
   return (
