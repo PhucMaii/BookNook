@@ -41,9 +41,7 @@ const RestaurantDetail = () => {
   const { restaurantId } = useParams();
 
   useEffect(() => {
-    console.log('modal chaneg ')
     if (restaurantId) {
-      console.log('modal changed with restaurant id', {restaurantId, modalClosed});
       fetchHostData()
       fetchReviews()
     }
@@ -54,7 +52,6 @@ const RestaurantDetail = () => {
   }, [restaurantId, docId, modalClosed])
 
   useEffect(() => {
-    console.log(modalClosed, 'modal Closed')
   }, [modalClosed])
 
   const handleModalClose = () => {
