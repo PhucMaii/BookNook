@@ -16,7 +16,7 @@ const UpdateUserPicture = ({ imgURL, onClose }) => {
     const updateURL = async () => {
         try {
             const hostRef = doc(db, 'users', docId)
-            updateDoc(hostRef, { imgURL: userImage })
+            updateDoc(hostRef, { avatar : userImage })
             setIsOpen(false)
             onClose();
         } catch (error) {

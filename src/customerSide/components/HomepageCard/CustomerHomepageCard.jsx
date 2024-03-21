@@ -13,57 +13,6 @@ import { CardImage } from './styled';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { grey } from '@mui/material/colors';
-<<<<<<< HEAD
-import { generateTimeSlots } from '../../../utils/time';
-import { renderReviewStars } from '../../utils/render';
-import { useNavigate } from 'react-router-dom';
-
-const CustomerHomepageCard = ({ restaurant }) => {
-
-  const navigate = useNavigate()
-
-  const renderTimeSlots = () => {
-    const currentDate = new Date();
-    let currentHour = currentDate.getHours();
-    let currentMinutes = currentDate.getMinutes();
-    currentMinutes = Math.ceil(currentMinutes / 15) * 15;
-
-    // Adjust to 0 when reaching 60
-    if (currentMinutes === 60) {
-      currentMinutes = `00`;
-      currentHour += 1;
-    }
-
-    const currentTime = `${currentHour}:${currentMinutes}`;
-    const timeSlots = generateTimeSlots();
-    let currentHourIndex = timeSlots.indexOf(currentTime);
-
-    const renderedTimeSlots = [];
-    let i = currentHourIndex;
-    while (i < timeSlots.length && i <= currentHourIndex + 3) {
-      renderedTimeSlots.push(
-        <Button key={i} variant="contained" style={{ color: 'white' }}>
-          {timeSlots[i]}
-        </Button>
-      );
-      i++;
-    }
-    // handle if i is larger than time slots length but still smaller than currentHourIndex
-    if (i >= currentHourIndex) {
-      currentHourIndex = currentHourIndex - (timeSlots.length - 1);
-      i = 0;
-      while (i <= currentHourIndex + 3) {
-        renderedTimeSlots.push(
-          <Button key={i} variant="contained" style={{ color: 'white' }}>
-            {timeSlots[i]}
-          </Button>
-        );
-        i++;
-      }
-    }
-    return renderedTimeSlots;
-  };
-=======
 import { renderReviewStars, renderTimeSlots } from '../../utils/render';
 import { AuthContext } from '../../context/AuthContext';
 import { fetchDoc } from '../../../utils/firebase';
@@ -101,7 +50,6 @@ const CustomerHomepageCard = ({ restaurant }) => {
   const { setBookingData } = useContext(BookingDataContext);
 
   const navigate = useNavigate();
->>>>>>> 7853b9857910c48e03f178f6536c1c43fa2ef738
 
   const handleShowAddress = () => {
     return restaurant.address

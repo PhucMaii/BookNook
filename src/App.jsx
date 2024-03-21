@@ -23,6 +23,7 @@ import SearchResultPage from './customerSide/pages/SearchResultPage';
 import BookingDataProvider from './customerSide/context/BookingDataContext';
 import ErrorPage from './customerSide/pages/404/404';
 import ActiveBooking from './customerSide/pages/ActiveBooking/ActiveBooking';
+import UserSettingPage from './customerSide/pages/UserSettingPage/UserSettingPage';
 
 function App() {
   return (
@@ -46,9 +47,11 @@ function App() {
         <CustomerAuthProvider>
           <BookingDataProvider>
             <Routes>
+              <Route path="/customer/restaurantDetails/:restaurantId" element={<RestaurantDetail />} />
               <Route path="/customer/history" element={<CustomerHistory />} />
               <Route path="/customer/login" element={<CustomerLogin />} />
               <Route path="/customer/signup" element={<CustomerSignup />} />
+              <Route path="/customer/setting" element={<UserSettingPage/>} />
               <Route
                 path="/customer/booking-confirmation"
                 element={<CustomerConfirmationBooking />}

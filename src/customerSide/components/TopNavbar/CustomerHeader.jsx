@@ -54,14 +54,7 @@ function CustomerHeader() {
   };
 
   const handleProfile = async () => {
-    try {
-      if (isLogin) {
-        await signOut(auth);
-      }
-      navigate('/customer/setting');
-    } catch (error) {
-      console.log('Fail to sign out: ', error);
-    }
+    navigate('/customer/setting');
   };
 
   return (
@@ -93,7 +86,7 @@ function CustomerHeader() {
                   onClick={(e) => setAnchorEl(e.currentTarget)}
                   sx={{ ml: '20px' }}
                 >
-                  {userData && <Avatar alt="User Settings" src={userData.imgURL || ''} />}
+                  {userData && <Avatar alt="User Settings" src={userData.avatar || ''} />}
                 </IconButton>
                 <Menu
                   anchorEl={anchorEl}

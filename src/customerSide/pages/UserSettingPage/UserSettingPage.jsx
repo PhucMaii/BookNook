@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { Avatar, Button, Divider, Grid, IconButton, InputAdornment, OutlinedInput, TextField, Typography } from '@mui/material'
+import { Avatar, Divider, Grid, IconButton, InputAdornment, OutlinedInput, TextField, Typography } from '@mui/material'
 import CustomerHeader from '../../components/TopNavbar/CustomerHeader'
 import AddressInput from '../../../restaurantSide/components/AddressInput'
 import UpdateUserPicture from '../../components/Modals/UpdateProfilePictureModal.jsx/UpdateUserPicture'
@@ -13,11 +12,11 @@ import { doc, updateDoc } from 'firebase/firestore'
 import { fetchLatLong } from '../../../utils/location'
 import Notification from '../../../restaurantSide/components/Notification'
 import { SplashScreen } from '../../../lib/utils'
+import { LoadingButton } from '@mui/lab'
 
-const UserSettingPage = props => {
+const UserSettingPage = () => {
     const [address, setAddress] = useState({ description: '' });
     const [imgURL, setImgURL] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('')
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [firstName, setFirstName] = useState('')
@@ -25,7 +24,8 @@ const UserSettingPage = props => {
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isUploading, setIsUploading] = useState(false);
     const [showSettingsOldPassword, setSettingsOldPassword] = useState(false);
     const [showSettingsNewPassword, setSettingsNewPassword] = useState(false);
     const [showSettingsConfirmPassword, setSettingsConfirmPassword] = useState(false);
@@ -48,8 +48,6 @@ const UserSettingPage = props => {
 
     const { customerIds: { docId } } = useContext(AuthContext)
 
-    console.log(docId, 'docId')
-
     useEffect(() => {
         if (docId) {
             fetchUserData()
@@ -58,7 +56,6 @@ const UserSettingPage = props => {
     }, [docId, modalClosed])
 
     const fetchUserData = async () => {
-        setIsLoading(true);
         try {
             const fetchResult = await fetchDoc('users', docId)
             const userData = fetchResult.docData
@@ -66,18 +63,16 @@ const UserSettingPage = props => {
             setAddress({ description: userData.address.description })
             setEmail(userData.email)
             setImgURL(userData.avatar)
+            console.log(imgURL,'  image')
             setName(userData.name)
 
             const nameArr = name.split(' ')
             if (nameArr.length > 1) {
                 setFirstName(nameArr[0])
                 setFirstName(nameArr[1])
-            }else{
+            } else {
                 setFirstName(name)
             }
-
-            //Need to update firebase first
-            //setPhoneNumber(userData.phoneNumber)
 
             setIsLoading(false)
         } catch (error) {
@@ -87,11 +82,12 @@ const UserSettingPage = props => {
 
     const uploadData = async () => {
         try {
+            setIsUploading(true)
             const fullName = `${firstName} ${lastName}`
             setUpdateData({ ...updateData, name: fullName })
             const location = await fetchLatLong(address.description);
             updateData.address = { description: address.description, ...location };
-            const userRef = doc(db, 'restaurants', docId)
+            const userRef = doc(db, 'users', docId)
             const submitData = {};
             Object.keys(updateData).map((key) => {
                 if (updateData[key]) {
@@ -107,6 +103,7 @@ const UserSettingPage = props => {
                         message: 'Updated your info successfully.'
                     })
                 })
+            setIsUploading(false)
         } catch (error) {
             console.log('Error: ' + error)
             setNotification({
@@ -114,11 +111,13 @@ const UserSettingPage = props => {
                 severity: 'error',
                 message: 'Failed to update info.'
             })
+            setIsUploading(false)
         }
     }
 
     const updateUserPassword = async () => {
         try {
+            setIsUploading(true)
             const user = auth.currentUser;
             // Reauthenticate the user before updating the password
             const credential = EmailAuthProvider.credential(
@@ -147,6 +146,7 @@ const UserSettingPage = props => {
                 severity: 'success',
                 message: 'Password updated successfully.',
             });
+            setIsUploading(false)
         } catch (error) {
             console.error('Password update error:', error.message);
 
@@ -155,13 +155,14 @@ const UserSettingPage = props => {
                 severity: 'error',
                 message: error.message,
             });
+            setIsUploading(false)
         }
     };
 
     if (isLoading) {
         return (
             <>
-                <SplashScreen color="secondary" />
+                <SplashScreen />
             </>
         );
     }
@@ -185,10 +186,7 @@ const UserSettingPage = props => {
                     </Grid>
                     <Grid container item direction='column' justifyContent='flex-start' xs={8.5}>
                         <Grid item>
-                            <Typography variant='h4' fontWeight='bold'>Random Guy</Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography variant='h5'>Burnaby,BC</Typography>
+                            <Typography variant='h4' fontWeight='bold'>{name}</Typography>
                         </Grid>
                     </Grid>
                     <Grid item xs={12} md={2} mt={2}>
@@ -207,46 +205,44 @@ const UserSettingPage = props => {
 
                     <Grid item xs={6}>
                         <TextField fullWidth id='firstName' label='First Name'
-                        value={firstName}
-                        onChange={(e) => {
-                            setFirstName(e.target.value)
-                          }}/>
+                            value={firstName}
+                            onChange={(e) => {
+                                setFirstName(e.target.value)
+                            }} />
                     </Grid>
+
                     <Grid item xs={6}>
                         <TextField fullWidth id='lastName' label='Last Name'
-                        value={lastName}
-                        onChange={(e) => {
-                            setLastName(e.target.value)
-                          }}/>
+                            value={lastName}
+                            onChange={(e) => {
+                                setLastName(e.target.value)
+                            }} />
                     </Grid>
-                    <Grid item xs={6}>
-                        <TextField fullWidth id='phoneNumber' label='Phone Number' 
-                        value={phoneNumber} 
-                        onChange={(e) => {
-                            setPhoneNumber(e.target.value)
-                            setUpdateData({ ...updateData, phoneNumber: e.target.value })
-                          }}
-                        />
-                    </Grid>
+
                     <Grid item xs={6}>
                         <TextField fullWidth id='email' label='E-Mail Address'
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value)
-                            setUpdateData({ ...updateData, email: e.target.value })
-                          }}
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value)
+                                setUpdateData({ ...updateData, email: e.target.value })
+                            }}
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <AddressInput 
-                        onDataReceived={(data) => setAddress(data)}
-                        initialValue={address} />
+                    <Grid item xs={6}>
+                        <AddressInput
+                            onDataReceived={(data) => setAddress(data)}
+                            initialValue={address} />
                     </Grid>
                     <Grid item xs={12} textAlign='right'>
-                        <Button
+                        <LoadingButton
+                            loading={isUploading}
+                            loadingIndicator='Uploading...'
                             variant='contained'
-                            sx={{ color: 'white', minWidth: '100px' }}
-                            onClick={uploadData}>Save</Button>
+                            sx={{ color: 'white' }}
+                            onClick={uploadData}
+                        >
+                            Save
+                        </LoadingButton>
                     </Grid>
                 </Grid>
 
@@ -363,11 +359,13 @@ const UserSettingPage = props => {
                         ></OutlinedInput>
                     </Grid>
                     <Grid item xs={12} textAlign='right'>
-                        <Button
+                        <LoadingButton
+                            loading={isUploading}
+                            loadingIndicator='Updating'
                             variant='contained'
                             sx={{ color: 'white', minWidth: '100px' }}
                             onClick={updateUserPassword}
-                        >Change Password</Button>
+                        >Change Password</LoadingButton>
                     </Grid>
                 </Grid>
 
