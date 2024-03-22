@@ -10,6 +10,7 @@ import { handleReservationBooking } from './HomepageCard/CustomerHomepageCard';
 import { BookingDataContext } from '../context/BookingDataContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import dayjs from 'dayjs';
 
 export default function SearchRestaurantCard({restaurant}) {
   const { customerIds } = useContext(AuthContext);
@@ -23,7 +24,7 @@ export default function SearchRestaurantCard({restaurant}) {
     const searchParams = new URLSearchParams(location.search);
     searchParams.forEach((value, key) => {
       if (key === 'date') {
-        setDate(value);
+        setDate(dayjs(value));
       }
 
       if (key === 'numberOfGuests') {
