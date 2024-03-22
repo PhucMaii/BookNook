@@ -297,7 +297,7 @@ export default function HomePage() {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <HomepageCard
-              data={reviewStars}
+              data={reviewStars || 0}
               title="Avg Review Stars"
               icon='/Review.png' />
           </Grid>
