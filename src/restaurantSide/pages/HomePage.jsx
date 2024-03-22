@@ -211,7 +211,6 @@ export default function HomePage() {
       const querySnapshot = await getDocs(reservationQuery);
 
       const reservationPromises = querySnapshot.docs.map(async (document) => {
-        console.log(document, 'reservation');
         const reservationData = document.data();
         const reservationId = document.id;
         const tableRef = doc(db, 'diningTables', reservationData.tableId);
@@ -270,7 +269,7 @@ export default function HomePage() {
   if (isLoading) {
     return (
       <Sidebar>
-        <SplashScreen />
+        <SplashScreen color="secondary" />
       </Sidebar>
     );
   }

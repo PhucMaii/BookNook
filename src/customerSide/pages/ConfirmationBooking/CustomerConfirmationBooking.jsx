@@ -126,12 +126,13 @@ const CustomerConfirmationBooking = () => {
     };
 
     const handleBookReservation = async () => {
-      if (!bookingData.user) {
+      if (!bookingData.user || !bookingData.user.name || !bookingData.user.email ) {
         setNotification({
           on: true,
           severity: 'error',
-          message: 'Please fill out all the blanks'
+          message: 'You are missing either name or email address'
         })
+        return;
       }
       try {
         const restaurant = await fetchDoc('restaurants', bookingData.id);

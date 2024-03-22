@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, CardActions, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -9,6 +9,10 @@ import { generateCapacity } from '../../../utils/generateConstants';
 import { daysOfWeek } from '../../../utils/constants';
 import { checkIsRestaurantOpenCurrently, checkIsRestaurantOpenToday, checkRestaurantHasTable } from '../../utils/logic';
 import { Box } from '@mui/system';
+import { handleReservationBooking } from '../HomepageCard/CustomerHomepageCard';
+import { AuthContext } from '../../context/AuthContext';
+import { BookingDataContext } from '../../context/BookingDataContext';
+import { useNavigate } from 'react-router-dom';
 
 const getCurrentTime = () => {
     const currentDate = new Date();
@@ -41,6 +45,9 @@ const ReservationMakingBlock = ({ restaurantData }) => {
     const [timeValue, setTimeValue] = useState(() => formatTime(time));
     const [size, setSize] = useState('2 people');
     const [availableTable, setAvailableTable] = useState(null);
+    const { customerIds } = useContext(AuthContext);
+    const { setBookingData } = useContext(BookingDataContext);
+    const navigate = useNavigate();
 
     const currentDate = new Date();
 
@@ -120,22 +127,42 @@ const ReservationMakingBlock = ({ restaurantData }) => {
     }, [availableTable]);
 
     const renderAvailableTimeSlots = () => {
-        
         let currentHourIndex = timeSlots.indexOf(time);
         const renderedTimeSlots = []
         let i = currentHourIndex;
         if (availableTable && availableTable.length > 0) {
             let i = currentHourIndex;
             while (i < timeSlots.length && i <= currentHourIndex + 3) {
-                renderedTimeSlots.push(
-                    <Button key={i} variant="contained" style={{ color: 'white' }}>
-                        {timeSlots[i]}
-                    </Button>
-                );
-                i++;
-            }
-        } else{
-            return <Typography variant='h5' fontWeight='bold'>No Available Time</Typography>
+              console.log(timeSlots[i], 'available time slot');
+              const timeSlot = timeSlots[i];
+            renderedTimeSlots.push(
+              <Button
+                onClick={() =>
+                  handleReservationBooking(
+                    timeSlot,
+                    restaurantData,
+                    customerIds,
+                    setBookingData,
+                    navigate,
+                    date,
+                    size
+                  )
+                }
+                key={i}
+                variant="contained"
+                style={{ color: 'white' }}
+              >
+                {timeSlots[i]}
+              </Button>
+            );
+            i++;
+          }
+        } else {
+          return (
+            <Typography variant="h5" fontWeight="bold">
+              No Available Time
+            </Typography>
+          );
         }
 
         if (i >= currentHourIndex) {
