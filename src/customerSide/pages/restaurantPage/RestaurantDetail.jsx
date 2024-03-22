@@ -5,8 +5,8 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import { primary } from '../../../theme/colors';
 import { ProgressStyled, StyledAvatar, iconStyled } from './styled';
-import RestaurantReviewBlock from '../../components/restaurantReviewBlock';
-import ReservationMakingBlock from '../../components/ReservatioinMakingBlock/ReservationMakingBlock';
+import RestaurantReviewBlock from '../../components/RestaurantReviewBlock';
+import ReservationMakingBlock from '../../components/ReservationMakingBlock/ReservationMakingBlock';
 import CustomerHeader from '../../components/TopNavbar/CustomerHeader';
 import { SplashScreen } from '../../../lib/utils';
 import { fetchData, fetchDoc } from '../../../utils/firebase';
@@ -15,6 +15,8 @@ import { where } from 'firebase/firestore';
 import SearchIcon from '@mui/icons-material/Search';
 import ReviewCreateModal from '../../components/Modals/ReviewCreateModal/ReviewCreateModal';
 import { AuthContext } from '../../context/AuthContext';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import { grey } from '@mui/material/colors';
 
 
 const RestaurantDetail = () => {
@@ -372,22 +374,24 @@ const RestaurantDetail = () => {
                       handleModalClose()
                     }}/>
                 </Grid>
-
               )
             }
           </Grid>
           {/* Review Block */}
-          {reviewData.map((review, index) => {
+          {reviewData.length > 0 ? reviewData.map((review, index) => {
             return <RestaurantReviewBlock key={index} data={review} 
           />
-          })}
-
-
+          }) : (
+            <Box display="flex" flexDirection="column" gap={1} width="100%" alignItems="center" justifyContent="center">
+              <RateReviewIcon sx={{fontSize: 50, color: grey[700]}} />
+              <Typography variant="h6" color={grey[700]}>Be the first person to write a review here.</Typography>
+              </Box>
+          )}
         </Grid>
 
         <Grid xs={3.7} item container>
           <Paper sx={{ maxHeight: '50vh', position: 'sticky', top: 0 }}>
-            <ReservationMakingBlock restaurantData = {hostData} />
+            <ReservationMakingBlock restaurantData={hostData} />
           </Paper>
         </Grid>
       </Grid>
