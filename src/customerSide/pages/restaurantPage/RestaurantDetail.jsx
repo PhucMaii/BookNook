@@ -214,12 +214,31 @@ const RestaurantDetail = () => {
   return (
     <>
       <CustomerHeader />
-      <img src={hostData.imgURL ? hostData.imgURL : '/unavailable_image.png'} alt='Restaurant picture' width='100%' height='350px' />
-      <Grid container p={3} m={0.5} justifyContent='space-between'>
-        <Grid xs={8} item container direction='column' rowGap={2} p={2} sx={{ backgroundColor: 'white', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px' }}>
-          <Typography variant='h4' fontWeight='bold'>{hostData.name}</Typography>
-          <Grid container>
-            <Grid item xs={4}>
+      <img
+        src={hostData.imgURL ? hostData.imgURL : '/unavailable_image.png'}
+        alt="Restaurant picture"
+        width="100%"
+        height="350px"
+      />
+      <Grid container p={3} m={0.5} rowGap={2} justifyContent="space-between">
+        <Grid
+          xs={12}
+          md={8}
+          item
+          container
+          direction="column"
+          rowGap={2}
+          p={2}
+          sx={{
+            backgroundColor: 'white',
+            boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
+          }}
+        >
+          <Typography variant="h4" fontWeight="bold">
+            {hostData.name}
+          </Typography>
+          <Grid container alignItems="center" justifyContent="center">
+            <Grid item xs={12} sm={4}>
               <Grid container justifyContent="space-around" alignItems="center">
                 <Grid item>
                   <StyledAvatar>
@@ -227,18 +246,22 @@ const RestaurantDetail = () => {
                   </StyledAvatar>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h4' fontWeight='bold' color={primary}>{avgStar || 0}</Typography>
+                  <Typography variant="h4" fontWeight="bold" color={primary}>
+                    {avgStar || 0}
+                  </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant='body2'>({hostReviews.length} reviews)</Typography>
+                  <Typography variant="body2">
+                    ({hostReviews.length} reviews)
+                  </Typography>
                 </Grid>
                 <Grid item>
-                  <Divider component='span' orientation='vertical' />
+                  <Divider component="span" orientation="vertical" />
                 </Grid>
               </Grid>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Grid container justifyContent="space-around" alignItems="center">
                 <Grid item>
                   <StyledAvatar>
@@ -246,15 +269,17 @@ const RestaurantDetail = () => {
                   </StyledAvatar>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h4' fontWeight='bold' color={primary}>{hostData.type}</Typography>
+                  <Typography variant="h4" fontWeight="bold" color={primary}>
+                    {hostData.type}
+                  </Typography>
                 </Grid>
                 <Grid item>
-                  <Divider component='span' orientation='vertical'/>
+                  <Divider component="span" orientation="vertical" />
                 </Grid>
               </Grid>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={4}>
               <Grid container justifyContent="space-around" alignItems="center">
                 <Grid item>
                   <StyledAvatar>
@@ -262,95 +287,154 @@ const RestaurantDetail = () => {
                   </StyledAvatar>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h4' fontWeight='bold' color={primary}>{hostData.avgPrice}</Typography>
+                  <Typography variant="h4" fontWeight="bold" color={primary}>
+                    {hostData.avgPrice === 'Greater than $200'
+                      ? '$200 +'
+                      : hostData.avgPrice}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
 
-          <Typography variant='h6' fontWeight='bold'>Description</Typography>
+          <Typography variant="h6" fontWeight="bold">
+            Description
+          </Typography>
           <Divider />
-          <Typography variant='subtitle2'>{hostData.description || 'N/A'}</Typography>
-          <Typography variant='h6' fontWeight='bold'>Reviews</Typography>
+          <Typography variant="subtitle2">
+            {hostData.description || 'N/A'}
+          </Typography>
+          <Typography variant="h6" fontWeight="bold">
+            Reviews
+          </Typography>
           <Divider />
-          <Grid container
-            justifyContent='space-around'
-            alignItems='center'
-            mt={2}>
-            <Grid item xs={6} container
-              direction='column'
+          <Grid
+            container
+            justifyContent="space-around"
+            alignItems="center"
+            mt={2}
+          >
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              container
+              direction="column"
               alignItems="space-around"
+              rowGap={2}
             >
-              <Typography variant='h6' sx={{ marginLeft: '5px' }}>Overall Rating</Typography>
+              <Typography variant="h6" sx={{ marginLeft: '5px' }}>
+                Overall Rating
+              </Typography>
               <Box display={'flex'} alignItems="center">
-                <Rating name="Overall rating" value={avgStar || 0} precision={0.1} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
-                <Typography variant='h6' sx={{ marginLeft: '5px' }}>{avgStar || 0}</Typography>
+                <Rating
+                  name="Overall rating"
+                  value={avgStar || 0}
+                  precision={0.1}
+                  size="large"
+                  sx={{ color: primary, borderColor: primary }}
+                  readOnly
+                />
+                <Typography variant="h6" sx={{ marginLeft: '5px' }}>
+                  {avgStar || 0}
+                </Typography>
               </Box>
-              <Typography variant='h6' sx={{ marginLeft: '5px' }}>{hostReviews.length} reviews</Typography>
+              <Typography variant="h6" sx={{ marginLeft: '5px' }}>
+                {hostReviews.length} reviews
+              </Typography>
             </Grid>
 
-            <Grid item xs={6} container
-              direction='column'
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              container
+              direction="column"
               justifyContent="center"
             >
-              <Box display='flex' alignItems="center">
-                <Typography variant='h6' minWidth='75px' >5 Stars</Typography>
-                <ProgressStyled variant="determinate" value={getStarValue(starsObj.fiveStar)} />
+              <Box display="flex" alignItems="center">
+                <Typography variant="h6" minWidth="75px">
+                  5 Stars
+                </Typography>
+                <ProgressStyled
+                  variant="determinate"
+                  value={getStarValue(starsObj.fiveStar)}
+                />
               </Box>
-              <Box display='flex' alignItems="center">
-                <Typography variant='h6' minWidth='75px'>4 Stars</Typography>
-                <ProgressStyled variant="determinate" value={getStarValue(starsObj.fourStar)} />
+              <Box display="flex" alignItems="center">
+                <Typography variant="h6" minWidth="75px">
+                  4 Stars
+                </Typography>
+                <ProgressStyled
+                  variant="determinate"
+                  value={getStarValue(starsObj.fourStar)}
+                />
               </Box>
-              <Box display='flex' alignItems="center">
-                <Typography variant='h6' minWidth='75px'>3 Stars</Typography>
-                <ProgressStyled variant="determinate" value={getStarValue(starsObj.threeStar)} />
+              <Box display="flex" alignItems="center">
+                <Typography variant="h6" minWidth="75px">
+                  3 Stars
+                </Typography>
+                <ProgressStyled
+                  variant="determinate"
+                  value={getStarValue(starsObj.threeStar)}
+                />
               </Box>
-              <Box display='flex' alignItems="center">
-                <Typography variant='h6' minWidth='75px'>2 Stars</Typography>
-                <ProgressStyled variant="determinate" value={getStarValue(starsObj.twoStar)} />
+              <Box display="flex" alignItems="center">
+                <Typography variant="h6" minWidth="75px">
+                  2 Stars
+                </Typography>
+                <ProgressStyled
+                  variant="determinate"
+                  value={getStarValue(starsObj.twoStar)}
+                />
               </Box>
-              <Box display='flex' alignItems="center">
-                <Typography variant='h6' minWidth='75px'>1 Stars</Typography>
-                <ProgressStyled variant="determinate" value={getStarValue(starsObj.oneStar)} />
+              <Box display="flex" alignItems="center">
+                <Typography variant="h6" minWidth="75px">
+                  1 Stars
+                </Typography>
+                <ProgressStyled
+                  variant="determinate"
+                  value={getStarValue(starsObj.oneStar)}
+                />
               </Box>
             </Grid>
           </Grid>
 
-          <Grid container justifyContent='space-between' spacing={2} alignItems='center'>
+          <Grid
+            container
+            justifyContent="space-between"
+            spacing={2}
+            alignItems="center"
+          >
             <Grid item xs={3}>
               <FormControl fullWidth>
-                <InputLabel id='filter' color='secondary'>Filter</InputLabel>
+                <InputLabel id="filter" color="secondary">
+                  Filter
+                </InputLabel>
                 <Select
-                  color='secondary'
-                  labelId='filter'
-                  id='filter-select'
+                  color="secondary"
+                  labelId="filter"
+                  id="filter-select"
                   value={reviewFilter}
-                  label='Filter'
-                  onChange={handleSelect}>
-                  <MenuItem value='ALL'>
-                    ALL
-                  </MenuItem>
-                  <MenuItem value='NEWEST'>
-                    NEWEST
-                  </MenuItem>
-                  <MenuItem value='HIGHEST'>
-                    HIGHEST
-                  </MenuItem>
-                  <MenuItem value='LOWEST'>
-                    LOWEST
-                  </MenuItem>
+                  label="Filter"
+                  onChange={handleSelect}
+                >
+                  <MenuItem value="ALL">ALL</MenuItem>
+                  <MenuItem value="NEWEST">NEWEST</MenuItem>
+                  <MenuItem value="HIGHEST">HIGHEST</MenuItem>
+                  <MenuItem value="LOWEST">LOWEST</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={6}>
               <TextField
-                color='secondary'
+                color="secondary"
                 fullWidth
-                variant='standard'
-                placeholder='Hit ENTER to search content or stars.'
+                variant="standard"
+                placeholder="Hit ENTER to search content or stars."
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position='start'>
+                    <InputAdornment position="start">
                       <SearchIcon />
                     </InputAdornment>
                   ),
@@ -359,45 +443,53 @@ const RestaurantDetail = () => {
                 onInput={(event) => setSearchTerm(event.target.value)}
                 onKeyDown={handleKeyDown}
                 onChange={() => {
-                  setReviewData(hostReviews)
+                  setReviewData(hostReviews);
                 }}
               />
             </Grid>
-            {
-              userData && (
-                <Grid item xs={3}>
-                  <ReviewCreateModal
-                    data={userData}
-                    uid={docId}
-                    restaurantId={restaurantId}
-                    onChange={()=>{
-                      handleModalClose()
-                    }}/>
-                </Grid>
-              )
-            }
+            {userData && (
+              <Grid item xs={3}>
+                <ReviewCreateModal
+                  data={userData}
+                  uid={docId}
+                  restaurantId={restaurantId}
+                  onChange={() => {
+                    handleModalClose();
+                  }}
+                />
+              </Grid>
+            )}
           </Grid>
           {/* Review Block */}
-          {reviewData.length > 0 ? reviewData.map((review, index) => {
-            return <RestaurantReviewBlock key={index} data={review} 
-          />
-          }) : (
-            <Box display="flex" flexDirection="column" gap={1} width="100%" alignItems="center" justifyContent="center">
-              <RateReviewIcon sx={{fontSize: 50, color: grey[700]}} />
-              <Typography variant="h6" color={grey[700]}>Be the first person to write a review here.</Typography>
-              </Box>
+          {reviewData.length > 0 ? (
+            reviewData.map((review, index) => {
+              return <RestaurantReviewBlock key={index} data={review} />;
+            })
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              width="100%"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <RateReviewIcon sx={{ fontSize: 50, color: grey[700] }} />
+              <Typography variant="h6" color={grey[700]}>
+                Be the first person to write a review here.
+              </Typography>
+            </Box>
           )}
         </Grid>
 
-        <Grid xs={3.7} item container>
+        <Grid xs={12} md={3.7} item container>
           <Paper sx={{ maxHeight: '50vh', position: 'sticky', top: 0 }}>
             <ReservationMakingBlock restaurantData={hostData} />
           </Paper>
         </Grid>
       </Grid>
     </>
-
-  )
+  );
 }
 
 export default RestaurantDetail;
