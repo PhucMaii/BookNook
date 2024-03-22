@@ -13,6 +13,7 @@ import {
 import { HeaderLogo } from './styled';
 import { Link, useNavigate } from 'react-router-dom';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';
@@ -78,6 +79,9 @@ function CustomerHeader() {
             <Link component="button" to="/restaurant/login">
               Merchant Login
             </Link>
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
 
             {isLogin ? (
               <>
