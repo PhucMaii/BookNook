@@ -52,7 +52,37 @@ const RestaurantDetail = () => {
   }, [restaurantId, docId, modalClosed])
 
   useEffect(() => {
-  }, [modalClosed])
+    switch (reviewFilter) {
+      case 'All': {
+        setReviewData(hostReviews);
+        break;
+      }
+      case 'NEWEST': {
+        // Sort reviews by timestamp in descending order to get the newest first
+        const newestFirst = hostReviews.slice().sort((a, b) => {
+          return b.postTime.seconds - a.postTime.seconds || b.postTime.nanoseconds - a.postTime.nanoseconds;
+        });
+        setReviewData(newestFirst);
+        break;
+      }
+      case 'HIGHEST': {
+        // Sort reviews by stars in descending order to get the highest rated first
+        const highestFirst = hostReviews.slice().sort((a, b) => b.stars - a.stars);
+        setReviewData(highestFirst);
+        break;
+      }
+      case 'LOWEST': {
+        // Sort reviews by stars in ascending order to get the lowest rated first
+        const lowestFirst = hostReviews.slice().sort((a, b) => a.stars - b.stars);
+        setReviewData(lowestFirst);
+        break;
+      }
+      default: {
+        setReviewData(hostReviews);
+        break;
+      }
+    }
+  }, [reviewFilter, hostReviews]);
 
   const handleModalClose = () => {
     setModalClosed(true);
@@ -83,7 +113,13 @@ const RestaurantDetail = () => {
 
   const processReviews = (reviews) => {
     let totalStar = 0;
-    let tempStarsObj = { ...starsObj };
+    let tempStarsObj = {
+      oneStar: 0,
+      twoStar: 0,
+      threeStar: 0,
+      fourStar: 0,
+      fiveStar: 0,
+    };
 
     if (!reviews) {
       console.error('Reviews is undefined or null.');
@@ -135,11 +171,12 @@ const RestaurantDetail = () => {
     }
   }
 
-
   const getStarValue = (starCount) => {
     if (hostReviews.length === 0) {
       return 0;
     }
+
+    console.log((starCount / hostReviews.length) * 100);
     return (starCount / hostReviews.length) * 100;
   }
 
@@ -155,46 +192,14 @@ const RestaurantDetail = () => {
   };
 
   const handleSearch = (word) => {
-    console.log(reviewData[0].message.includes(word))
-    const filteredReviews = reviewData.filter(item =>
-      item.message.includes(word) || item.stars == word
+    const filteredReviews = reviewData.filter(item => {
+      const itemMessage = item.message.toLowerCase();
+      const searchKeyword = word.toLowerCase();
+      return itemMessage.includes(searchKeyword) || item.stars == word
+    }
     );
     setReviewData(filteredReviews)
-  }
-
-  useEffect(() => {
-    switch (reviewFilter) {
-      case 'All': {
-        setReviewData(hostReviews);
-        break;
-      }
-      case 'NEWEST': {
-        // Sort reviews by timestamp in descending order to get the newest first
-        const newestFirst = hostReviews.slice().sort((a, b) => {
-          return b.postTime.seconds - a.postTime.seconds || b.postTime.nanoseconds - a.postTime.nanoseconds;
-        });
-        setReviewData(newestFirst);
-        break;
-      }
-      case 'HIGHEST': {
-        // Sort reviews by stars in descending order to get the highest rated first
-        const highestFirst = hostReviews.slice().sort((a, b) => b.stars - a.stars);
-        setReviewData(highestFirst);
-        break;
-      }
-      case 'LOWEST': {
-        // Sort reviews by stars in ascending order to get the lowest rated first
-        const lowestFirst = hostReviews.slice().sort((a, b) => a.stars - b.stars);
-        setReviewData(lowestFirst);
-        break;
-      }
-      default: {
-        setReviewData(hostReviews);
-        break;
-      }
-    }
-  }, [reviewFilter, hostReviews]);
-  
+  }  
 
   if (isLoading) {
     return (
@@ -220,7 +225,7 @@ const RestaurantDetail = () => {
                   </StyledAvatar>
                 </Grid>
                 <Grid item>
-                  <Typography variant='h4' fontWeight='bold' color={primary}>{avgStar}</Typography>
+                  <Typography variant='h4' fontWeight='bold' color={primary}>{avgStar || 0}</Typography>
                 </Grid>
                 <Grid item>
                   <Typography variant='body2'>({hostReviews.length} reviews)</Typography>
@@ -263,7 +268,7 @@ const RestaurantDetail = () => {
 
           <Typography variant='h6' fontWeight='bold'>Description</Typography>
           <Divider />
-          <Typography variant='subtitle2'>{hostData.description}</Typography>
+          <Typography variant='subtitle2'>{hostData.description || 'N/A'}</Typography>
           <Typography variant='h6' fontWeight='bold'>Reviews</Typography>
           <Divider />
           <Grid container
@@ -276,8 +281,8 @@ const RestaurantDetail = () => {
             >
               <Typography variant='h6' sx={{ marginLeft: '5px' }}>Overall Rating</Typography>
               <Box display={'flex'} alignItems="center">
-                <Rating name="Overall rating" value={avgStar} precision={0.1} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
-                <Typography variant='h6' sx={{ marginLeft: '5px' }}>{avgStar}</Typography>
+                <Rating name="Overall rating" value={avgStar || 0} precision={0.1} size='large' sx={{ color: primary, borderColor: primary }} readOnly />
+                <Typography variant='h6' sx={{ marginLeft: '5px' }}>{avgStar || 0}</Typography>
               </Box>
               <Typography variant='h6' sx={{ marginLeft: '5px' }}>{hostReviews.length} reviews</Typography>
             </Grid>
@@ -340,7 +345,7 @@ const RestaurantDetail = () => {
                 color='secondary'
                 fullWidth
                 variant='standard'
-                placeholder='Hit ENTER to search name or stars.'
+                placeholder='Hit ENTER to search content or stars.'
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position='start'>

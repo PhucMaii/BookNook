@@ -25,6 +25,7 @@ import ErrorPage from './customerSide/pages/404/404';
 import ActiveBooking from './customerSide/pages/ActiveBooking/ActiveBooking';
 import UserSettingPage from './customerSide/pages/UserSettingPage/UserSettingPage';
 
+import EditTableTimeSlot from './restaurantSide/pages/EditTable&TimeSlot/EditTable&TimeSlot';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Routes>
             <Route path="/restaurant/overview" element={<HomePage />} />
             <Route path="/restaurant/history" element={<HistoryPage />} />
+            <Route path="/restaurant/edit-tables&timeslots" element={<EditTableTimeSlot />} />
             <Route path="/restaurant/edit-profile" element={<SettingsPage />} />
             <Route
               path="/restaurant/forgot-password"
@@ -41,8 +43,6 @@ function App() {
             />
             <Route path="/restaurant/login" element={<Login />} />
             <Route path="/restaurant/signup" element={<SignUp />} />
-            <Route path="/customer/login" element={<CustomerLogin />} />
-            <Route path="/customer/signup" element={<CustomerSignup />} />
             <Route path="/customer/setting" element={<UserSettingPage />} />
           </Routes>
         </AuthProvider>

@@ -72,7 +72,12 @@ const CustomerHomepageCard = ({ restaurant }) => {
           src={restaurant.imgURL ? restaurant.imgURL : '/unavailable_image.png'}
           alt="Card Image"
         />
-        <div onClick={() => navigate(`customer/restaurantDetails/${restaurant.id}`)}>
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() =>
+            navigate(`/customer/restaurantDetails/${restaurant.id}`)
+          }
+        >
           <Typography variant="h5" fontWeight="bold" mt={1}>
             {restaurant.name}
           </Typography>
@@ -116,9 +121,9 @@ const CustomerHomepageCard = ({ restaurant }) => {
             return (
               <Button
                 key={index}
-                onClick={() =>
-                  {const date = dayjs();
-                    handleReservationBooking(
+                onClick={() => {
+                  const date = dayjs();
+                  handleReservationBooking(
                     timeSlot,
                     restaurant,
                     customerIds,
@@ -126,8 +131,8 @@ const CustomerHomepageCard = ({ restaurant }) => {
                     navigate,
                     date,
                     '2 people'
-                  )}
-                }
+                  );
+                }}
                 variant="contained"
                 style={{ color: 'white' }}
               >

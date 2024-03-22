@@ -158,6 +158,7 @@ const CustomerConfirmationBooking = () => {
           tableId: availableTables[0].id,
           userId: customerIds.docId || 'guest',
           user: bookingData.user,
+          timeSlot: bookingData.timeSlot
         };
 
         const reservationCollection = collection(db, 'reservations');

@@ -39,7 +39,7 @@ const ReservationMakingBlock = ({ restaurantData }) => {
     const [date, setDate] = useState(dayjs());
     const [time, setTime] = useState(() => getCurrentTime());
     const [timeValue, setTimeValue] = useState(() => formatTime(time));
-    const [size, setSize] = useState('');
+    const [size, setSize] = useState('2 people');
     const [availableTable, setAvailableTable] = useState(null);
 
     const currentDate = new Date();

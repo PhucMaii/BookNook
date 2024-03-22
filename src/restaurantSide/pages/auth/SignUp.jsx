@@ -141,7 +141,7 @@ const SignUp = () => {
       const submittedData = {
         email: userCredential.user.email,
         uid: userCredential.user.uid,
-        closedTime: '21:00',
+        closeTime: '21:00',
         openTime: '9:00'
       };
 

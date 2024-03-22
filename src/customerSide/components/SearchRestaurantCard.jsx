@@ -44,9 +44,16 @@ export default function SearchRestaurantCard({restaurant}) {
 
       <Grid item xs={12} md={8}>
         <Box display="flex" flexDirection="column" gap={1}>
-          <Typography fontWeight="bold" variant="h6">
-            {restaurant.name}
-          </Typography>
+          <div
+            onClick={() =>
+              navigate(`/customer/restaurantDetails/${restaurant.id}`)
+            }
+            style={{cursor: 'pointer'}}
+          >
+            <Typography variant="h5" fontWeight="bold" mt={1}>
+              {restaurant.name}
+            </Typography>
+          </div>
           <Box display="flex" gap={1}>
             <LocationOnIcon sx={{ color: grey[600] }} />
             <Typography

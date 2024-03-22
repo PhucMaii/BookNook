@@ -33,7 +33,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { SplashScreen } from '../../lib/utils';
-import { formatHoursAndMinutes, generateToday } from '../../utils/time';
+import { generateToday } from '../../utils/time';
 import { ReservationEditModal } from '../components/Modals/ReservationEditModal';
 import Notification from '../components/Notification';
 
@@ -61,6 +61,7 @@ export default function HomePage() {
       fetchReviews();
     }
   }, [restaurantIds]);
+
 
   useEffect(() => {
     switch (filter) {
@@ -210,16 +211,12 @@ export default function HomePage() {
       const querySnapshot = await getDocs(reservationQuery);
 
       const reservationPromises = querySnapshot.docs.map(async (document) => {
+        console.log(document, 'reservation');
         const reservationData = document.data();
         const reservationId = document.id;
         const tableRef = doc(db, 'diningTables', reservationData.tableId);
         const tableSnapshot = await getDoc(tableRef);
         const tableData = tableSnapshot.data();
-
-        const userRef = doc(db, 'users', reservationData.userId);
-        const userSnapshot = await getDoc(userRef);
-        const userData = userSnapshot.data();
-
         // Convert firebase timestamp to js timestamp
         const date = reservationData.date.toDate();
 
@@ -227,15 +224,17 @@ export default function HomePage() {
           reservationId,
           userId: reservationData.userId,
           numberOfGuests: reservationData.numberOfGuests,
-          customerName: userData.name,
+          customerName: reservationData.user.name,
           tableId: reservationData.tableId,
           tableNumber: tableData.tableNumber,
           status: reservationData.status,
           date: date,
-          email: userData.email
+          email: reservationData.user.email ,
+          timeSlot: reservationData.timeSlot
         };
 
         tempList.push(formattedData);
+        console.log(tempList, 'temp list');
       });
       await Promise.all(reservationPromises);
 
@@ -297,7 +296,7 @@ export default function HomePage() {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <HomepageCard
-              data={reviewStars}
+              data={reviewStars || 0}
               title="Avg Review Stars"
               icon='/Review.png' />
           </Grid>
@@ -376,7 +375,7 @@ export default function HomePage() {
                 <TableRow key={index}>
                   <TableCell>{row.customerName}</TableCell>
                   <TableCell>{row.tableNumber}</TableCell>
-                  <TableCell>{formatHoursAndMinutes(row.date)}</TableCell>
+                  <TableCell>{row.timeSlot}</TableCell>
                   <TableCell style={{ width: '12%' }}>
                     <StatusText
                       text={row.status}

@@ -14,7 +14,7 @@ import { guestSelect } from '../../../utils/constants';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
 import PropTypes from 'prop-types';
-import { formatHoursAndMinutes, generateTimeSlots } from '../../../utils/time';
+import { generateTimeSlots } from '../../../utils/time';
 
 const style = {
   position: 'absolute',
@@ -28,17 +28,18 @@ const style = {
 };
 
 export const ReservationEditModal = ({ data, tableData, updateUI}) => {
+  console.log(data, 'data');
   const [open, setOpen] = useState(false);
   const [tableId, setTableId] = useState(data.tableId);
   const [date, setDate] = useState(dayjs(data.date));
-  const [time, setTime] = useState(formatHoursAndMinutes(data.date));
+  const [timeSlot, setTimeSlot] = useState(data.timeSlot);
   const [guestNumber, setGuestNumber] = useState(data.numberOfGuests);
   const [status, setStatus] = useState(data.status);
 
   const [updatedData, setUpdatedData] = useState({
     tableId: null,
     date: null,
-    time: null,
+    timeSlot: data.timeSlot,
     numberOfGuests: null,
     status: null
   });
@@ -159,15 +160,11 @@ export const ReservationEditModal = ({ data, tableData, updateUI}) => {
                   <Select
                     color='secondary'
                     labelId='timeSelectLabel'
-                    value={time}
+                    value={timeSlot}
                     label='Time'
                     onChange={(e) => {
-                      const time = e.target.value;
-                      setTime(e.target.value)
-                      const updatedDate = new Date(date);
-                      updatedDate.setHours(time.split(':')[0]);
-                      updatedDate.setMinutes(time.split(':')[1]);
-                      setUpdatedData({...updatedData, date: updatedDate})
+                      setTimeSlot(e.target.value)
+                      setUpdatedData({...updatedData, timeSlot: e.target.value})
                     }}
                   >
                     {generateTimeSlots().map((item, index) =>
