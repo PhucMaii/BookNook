@@ -4,49 +4,68 @@
 
 ## Contributer
 
-Bin Mai [Github Link](linkhere) | [LinkedIn Link]()<br>
+Bin Mai [Github Link](https://github.com/PhucMaii) | [LinkedIn Link](https://linkedin.com/in/binmai0102)<br>
 Chuanche Liu [Github Link]() | [LinkedIn Link]()<br>
 Inigo [Github Link]() | [LinkedIn Link]()<br>
 Leoval [Github Link]() | [LinkedIn Link]()<br>
 
-BookNook is a web application where 
+## Description
 
-#### Manual/Development
+BookNook is a booking restaurant reservation application developed with two sides: restaurant side and user side. Users are people who will book a reservation based on their requirements about date, time, capacity, types of restaurants, etc. Restaurant side will receive reservations from customers and prepare tables for them at the booked time. 
 
-1. Clone this repo.
-2. In Chrome, open the Extensions settings. (Wrench button, Tools, Extensions.)
-3. On the Extensions settings page, click the "Developer Mode" checkbox.
-4. Click the now-visible "Load unpacked extension…" button. Navigate to the directory where you cloned the repo, then the `src` directory under that.
-5. The *Markdown Here* extension should now be visible in your extensions list.
-6. Reload your webmail page (and maybe application) before trying to convert an email.
-   
-## Usage Instructions
+## Key Features
+<ul>
+    <li>Fetch nearby restaurants for customer by calculating the longtitude and langtitude of all the restaurants' addresses compare to user's address
+    </li>
+    <li>Utilize search function with give users lots of options to select and search based on what they need.</li>
+    <li>
+Users have the capability to edit their booking details while ensuring that all available restaurant time slots are checked for availability.</li>
+<li>Users are able to leave a review of their dining experience for a restaurant</li>
+</ul>
 
-Install it, and then…
+## Installation
 
-1. In Chrome/Safari/Opera, *make sure* you reload your web mail page before trying to use Markdown Here.
-2. In Chrome/Firefox/Safari/Opera, log into your Gmail, Hotmail, or Yahoo account and start a new email. In Thunderbird, start a new message.
-3. Make sure you're using the rich editor.
-   * In Gmail, click the "Rich formatting" link, if it's visible.
-   * In Thunderbird, make sure "Compose messages in HTML format" is enabled in your "Account Settings", "Composition & Addressing" pane.
-4. Compose an email in Markdown. For example:
+1. **Clone the repo:**
+```bash
+git clone https://github.com/PhucMaii/dmg-blockchain-test.git
+```
 
-   <pre>
-   **Hello** `world`.
+2. **Install Dependencies**
+```bash
+npm i
+# or
+npm install
+```
 
-   ```javascript
-   alert('Hello syntax highlighting.');
-   ```
-   </pre>
+## Run Server
+```bash
+npm run dev
+```
 
-5. Right-click in the compose box and choose the "Markdown Toggle" item from the context menu. Or click the button that appears in your address bar. Or use the hotkey (<kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>M</kbd> by default).
-6. You should see your email rendered correctly from Markdown into rich HTML.
-7. Send your awesome email to everyone you know. It will appear to them the same way it looks to you.
+Open [http://localhost:5173](http://localhost:5173) with your browser to see the result.
 
-### Logo
+All restaurant side pages and components are come from `/src/restaurantSide`.
 
-Copyright 2015, [Austin Anderson](http://protractor.ninja/). Licensed to Markdown Here under the [MDH contributor license agreement](https://github.com/adam-p/markdown-here/blob/master/CLA-individual.md).
+All customer side pages and components are come from `/src/customerSide`.
 
-### Other images
+## Set up env file
+1. **Set up firebase**
+You need to set up a firebase in order to store data. Here are env keys are related to firebase:
+`VITE_FIREBASE_API_KEY;
+VITE_FIREBASE_AUTH_DOMAIN;
+VITE_FIREBASE_PROJECT_ID;
+VITE_FIREBASE_STORAGE_BUCKET;
+VITE_FIREBASE_MESSAGE_ID;
+VITE_FIREBASE_APP_ID;
+VITE_FIREBASE_MESUREMENT_ID`;
 
-[Creative Commons Attribution 3.0 Unported (CC BY 3.0) License](http://creativecommons.org/licenses/by/3.0/)
+2. **Set up Google Maps API**
+You need to create an account for Google Maps Platform to get the API Key. Here is the key in env file for it:
+`VITE_MAPS_KEY`
+
+## Tech Stacks
+Programming Language: `Javascript`
+
+Frameworks: `React.js and Vite`
+
+Database: `Firebase`
