@@ -13,7 +13,7 @@ import { fetchData, fetchDoc } from '../../../utils/firebase';
 import { useParams } from 'react-router-dom';
 import { where } from 'firebase/firestore';
 import SearchIcon from '@mui/icons-material/Search';
-import ReviewCreateModal from '../../components/Modals/ReviewCreateModal/ReviewCreateModal';
+import ReviewCreateModal from '../../components/Modals/ReviewCreateModal';
 import { AuthContext } from '../../context/AuthContext';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import { grey } from '@mui/material/colors';

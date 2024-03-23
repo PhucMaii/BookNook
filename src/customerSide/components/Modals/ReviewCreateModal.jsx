@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Avatar, Button, Grid, Modal, Rating, TextField, Typography } from '@mui/material'
-import { primary } from '../../../../theme/colors';
+import { primary } from '../../../theme/colors';
 import { Timestamp, addDoc, collection} from 'firebase/firestore';
-import { db } from '../../../../../firebaseConfig';
-import Notification from '../../../../restaurantSide/components/Notification';
+import { db } from '../../../../firebaseConfig';
+import Notification from '../../../restaurantSide/components/Notification';
 
 const ReviewCreateModal = ({ data, uid, restaurantId, onChange }) => {
     const [open, setOpen] = useState(false);

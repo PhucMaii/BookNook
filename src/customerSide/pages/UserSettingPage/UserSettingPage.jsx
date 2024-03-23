@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Avatar, Divider, Grid, IconButton, InputAdornment, OutlinedInput, TextField, Typography } from '@mui/material'
 import CustomerHeader from '../../components/TopNavbar/CustomerHeader'
 import AddressInput from '../../../restaurantSide/components/AddressInput'
-import UpdateUserPicture from '../../components/Modals/UpdateProfilePictureModal.jsx/UpdateUserPicture'
+import UpdateUserPicture from '../../components/Modals/UpdateUserPicture'
 import { AuthContext } from '../../context/AuthContext'
 import { fetchDoc } from '../../../utils/firebase'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
@@ -76,7 +76,8 @@ const UserSettingPage = () => {
 
             setIsLoading(false)
         } catch (error) {
-            console.log('ERROR: ' + error)
+            console.log('ERROR: ' + error);
+            setIsLoading(false)
         }
     }
 

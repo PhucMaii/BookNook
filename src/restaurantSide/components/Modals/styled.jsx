@@ -8,4 +8,5 @@ export const BoxStyled = styled(Box)`
     transform: translate(-50%, -50%);
     width: 500;
     background-color: white;
+    border-radius: 10px !important;
 `
