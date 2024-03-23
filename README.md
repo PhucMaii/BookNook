@@ -4,7 +4,7 @@
 
 ## Contributer
 
-Bin Mai [Github Link]() | [LinkedIn Link]()<br>
+Bin Mai [Github Link](linkhere) | [LinkedIn Link]()<br>
 Chuanche Liu [Github Link]() | [LinkedIn Link]()<br>
 Inigo [Github Link]() | [LinkedIn Link]()<br>
 Leoval [Github Link]() | [LinkedIn Link]()<br>
