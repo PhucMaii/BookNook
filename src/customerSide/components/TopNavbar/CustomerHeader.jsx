@@ -19,10 +19,12 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';
 import { AuthContext } from '../../context/AuthContext';
 import { fetchDoc } from '../../../utils/firebase';
+import SearchModal from '../Modals/SearchModal';
 
 function CustomerHeader() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [userData, setUserData] = useState(); 
   const navigate = useNavigate();
   const { customerIds } = useContext(AuthContext);
@@ -60,6 +62,7 @@ function CustomerHeader() {
 
   return (
     <Box display="flex" flexDirection="column" height={100}>
+      <SearchModal open={isSearchOpen} onClose={() => setIsSearchOpen(false)}/>
       <AppBar position="static" color="background">
         <Toolbar>
           <HeaderLogo
@@ -79,7 +82,7 @@ function CustomerHeader() {
             <Link component="button" to="/restaurant/login">
               Merchant Login
             </Link>
-            <IconButton>
+            <IconButton onClick={() => setIsSearchOpen(true)}>
               <SearchIcon />
             </IconButton>
 

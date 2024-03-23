@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Grid, Modal, TextField } from '@mui/material';
-import { primary } from '../../../../theme/colors';
-import { BoxStyled } from '../../../../restaurantSide/components/Modals/styled';
-import { AuthContext } from '../../../context/AuthContext';
+import { primary } from '../../../theme/colors';
+import { BoxStyled } from '../../../restaurantSide/components/Modals/styled';
+import { AuthContext } from '../../context/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../../../../firebaseConfig';
+import { db } from '../../../../firebaseConfig';
 
 const UpdateUserPicture = ({ imgURL, onClose }) => {
     const [isOpen, setIsOpen] = useState(false);
