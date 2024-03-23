@@ -76,7 +76,8 @@ const UserSettingPage = () => {
 
             setIsLoading(false)
         } catch (error) {
-            console.log('ERROR: ' + error)
+            console.log('ERROR: ' + error);
+            setIsLoading(false)
         }
     }
 

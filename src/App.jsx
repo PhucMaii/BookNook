@@ -43,7 +43,6 @@ function App() {
             />
             <Route path="/restaurant/login" element={<Login />} />
             <Route path="/restaurant/signup" element={<SignUp />} />
-            <Route path="/customer/setting" element={<UserSettingPage />} />
           </Routes>
         </AuthProvider>
         <CustomerAuthProvider>
