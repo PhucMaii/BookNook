@@ -5,7 +5,7 @@
 ## Contributer
 
 Bin Mai [Github Link](https://github.com/PhucMaii) | [LinkedIn Link](https://linkedin.com/in/binmai0102)<br>
-Chuanche Liu [Github Link]() | [LinkedIn Link]()<br>
+Chuanche Liu [Github Link](https://github.com/FR33MAN9808) | [LinkedIn Link](www.linkedin.com/in/chuancheliu)<br>
 Inigo [Github Link]() | [LinkedIn Link]()<br>
 Leoval [Github Link]() | [LinkedIn Link]()<br>
 
@@ -51,15 +51,16 @@ All customer side pages and components are come from `/src/customerSide`.
 ## Set up env file
 1. **Set up firebase**
 You need to set up a firebase in order to store data. Here are env keys are related to firebase:
+```
 `VITE_FIREBASE_API_KEY;
 VITE_FIREBASE_AUTH_DOMAIN;
 VITE_FIREBASE_PROJECT_ID;
 VITE_FIREBASE_STORAGE_BUCKET;
 VITE_FIREBASE_MESSAGE_ID;
 VITE_FIREBASE_APP_ID;
-VITE_FIREBASE_MESUREMENT_ID`;
+VITE_FIREBASE_MESUREMENT_ID`
 
-2. **Set up Google Maps API**
+3. **Set up Google Maps API**
 You need to create an account for Google Maps Platform to get the API Key. Here is the key in env file for it:
 `VITE_MAPS_KEY`
 
