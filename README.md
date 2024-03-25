@@ -6,7 +6,7 @@
 
 Bin Mai [Github Link](https://github.com/PhucMaii) | [LinkedIn Link](https://linkedin.com/in/binmai0102)<br>
 Chuanche Liu [Github Link](https://github.com/FR33MAN9808) | [LinkedIn Link](www.linkedin.com/in/chuancheliu)<br>
-Inigo [Github Link]() | [LinkedIn Link]()<br>
+Inigo [Github Link](https://github.com/inigomari) | [LinkedIn Link](https://www.linkedin.com/in/inigorosada/)<br>
 Leoval [Github Link]() | [LinkedIn Link]()<br>
 
 ## Description
