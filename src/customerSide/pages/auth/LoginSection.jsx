@@ -34,11 +34,13 @@ import { auth, googleProvider } from '../../../../firebaseConfig';
 import { AuthContext } from '../../context/AuthContext';
 import { LoadingButton } from '@mui/lab';
 import { handleErrorMsg } from '../../../utils/error';
+import { BookingDataContext } from '../../context/BookingDataContext';
 
 const LoginSection = ({ setNotification, modal, onCloseModal }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { setCustomerIds } = useContext(AuthContext);
+  const { bookingData, setBookingData } = useContext(BookingDataContext);
   const navigate = useNavigate();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -315,6 +317,7 @@ const LoginSection = ({ setNotification, modal, onCloseModal }) => {
             color="inherit"
             onClick={() => {
               onCloseModal();
+              setBookingData({...bookingData, user: {}})
             }}
             sx={{ mt: 4 }} 
             variant="outlined" 

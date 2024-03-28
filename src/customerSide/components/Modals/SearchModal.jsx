@@ -69,7 +69,7 @@ export default function SearchModal({
                 value={searchKeywords}
                 onChange={(e) => setSearchKeywords(e.target.value)}
                 endAdornment={
-                  <InputAdornment>
+                  <InputAdornment position="start">
                     <SearchIcon />
                   </InputAdornment>
                 }
