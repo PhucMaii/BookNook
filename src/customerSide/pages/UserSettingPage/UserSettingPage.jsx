@@ -84,27 +84,26 @@ const UserSettingPage = () => {
     const uploadData = async () => {
         try {
             setIsUploading(true)
-            const fullName = `${firstName} ${lastName}`
-            setUpdateData({ ...updateData, name: fullName })
+            const fullName = `${firstName} ${lastName}`;
             const location = await fetchLatLong(address.description);
-            updateData.address = { description: address.description, ...location };
-            const userRef = doc(db, 'users', docId)
-            const submitData = {};
-            Object.keys(updateData).map((key) => {
-                if (updateData[key]) {
-                    submitData[key] = updateData[key];
-                }
-            })
 
-            updateDoc(userRef, submitData)
-                .then(() => {
-                    setNotification({
-                        on: true,
-                        severity: 'success',
-                        message: 'Updated your info successfully.'
-                    })
+            const updatedAddress = { description: address.description, ...location };
+            const submittedData = {...updateData, name: fullName, address: updatedAddress, imgURL};
+            console.log(submittedData, 'sunmittedData');
+            const userRef = doc(db, 'users', docId);
+
+            updateDoc(userRef, submittedData)
+            .then(() => {
+                setNotification({
+                    on: true,
+                    severity: 'success',
+                    message: 'Updated your info successfully.'
                 })
-            setIsUploading(false)
+            })
+            setUpdateData({ ...updateData, name: fullName })
+            setIsUploading(false);
+            setImgURL(submittedData.imgURL);
+            setName(submittedData.name);
         } catch (error) {
             console.log('Error: ' + error)
             setNotification({
